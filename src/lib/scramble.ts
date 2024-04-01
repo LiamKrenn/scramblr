@@ -12,6 +12,8 @@ export let typemap: {[type: string]: string} = {
   "cross": "Cross",
   "oll": "OLL",
   "pll": "PLL",
+  "cmll": "CMLL",
+  "lse": "LSE",
 }
 
 export async function new_scramble(type: string) {
