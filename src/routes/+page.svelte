@@ -24,15 +24,16 @@
 
 	async function click() {
 		await new_scramble($type);
-		if (twisty_player) {
-			twisty_player.alg = $scramble;
-		}
 	}
 
 	async function textClick() {
 		if (getSelectedText() == '') {
 			click();
 		}
+	}
+
+	$: if (twisty_player && $scramble) {
+		twisty_player.alg = $scramble;
 	}
 </script>
 

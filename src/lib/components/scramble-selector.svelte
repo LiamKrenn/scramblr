@@ -3,10 +3,7 @@
   import Button from "$lib/components/ui/button/button.svelte";
   import { new_scramble, type, typemap, types } from "$lib/scramble";
 
-  let old_type = $type
-
-  $: if (old_type != $type) {
-    old_type = $type
+  $: if ($type) {
     new_scramble($type)
   }
 </script>
