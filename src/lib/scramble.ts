@@ -5,7 +5,21 @@ export const scramble = writable("loading...");
 
 export const type = writable("333");
 
-export let typemap: {[type: string]: string} = {
+export const types = [
+  "_Cubes",
+  "333",
+  "222",
+  "444",
+  "_CFOP",
+  "cross",
+  "oll",
+  "pll",
+  "_Roux",
+  "cmll",
+  "lse",
+]
+
+export const typemap: {[type: string]: string} = {
   "333": "3x3x3",
   "222": "2x2x2",
   "444": "4x4x4",
@@ -15,6 +29,7 @@ export let typemap: {[type: string]: string} = {
   "cmll": "CMLL",
   "lse": "LSE",
 }
+
 
 export async function new_scramble(type: string) {
   let tmp = "";

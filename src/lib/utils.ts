@@ -60,3 +60,13 @@ export const flyAndScale = (
 		easing: cubicOut
 	};
 };
+
+export function getSelectedText() {
+  var text = "";
+  if (typeof window.getSelection != "undefined") {
+      text = window.getSelection()?.toString() || "";
+  } else if (typeof document.getSelection() != "undefined" && document.getSelection()?.type == "Text") {
+      text = document.getSelection()?.getRangeAt(0).toString() || "";
+  }
+  return text;
+}

@@ -1,21 +1,36 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-	import ScrambleSelector from "$lib/components/scramble-selector.svelte";
-	import { new_scramble, scramble, type } from "$lib/scramble";
+	import { onMount } from 'svelte';
+	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
+	import { new_scramble, scramble, type } from '$lib/scramble';
+	import { getSelectedText } from '$lib/utils';
 
 	onMount(async () => {
-    await click()
+		await click();
 	});
 
-  async function click() {
-    await new_scramble($type)
-  }
+	async function click() {
+		await new_scramble($type);
+	}
+
+	async function textClick() {
+		if (getSelectedText() == '') {
+			click();
+		}
+	}
 </script>
 
+<div class="relative flex h-full w-full items-center justify-center">
+	<ScrambleSelector />
 
-<div class="relative h-full w-full">
-  <ScrambleSelector />
-  <button on:click={click} class="h-full w-full flex flex-col justify-center items-center cursor-pointer">
-    <p class="text-3xl lg:text-5xl w-[83%] text-balance text-center !leading-[125%]">{$scramble}</p>
-  </button>
+	<button
+		on:click={click}
+		class="absolute flex h-full w-full cursor-pointer flex-col items-center justify-center"
+	/>
+	<button
+		on:click={textClick}
+		class="absolute mx-[8%] cursor-text select-text text-balance px-2 text-center text-3xl !leading-[125%] lg:text-5xl"
+		><p class="w-full">
+      {$scramble}
+    </p></button
+	>
 </div>
