@@ -28,8 +28,8 @@
 	/>
 	<button
 		on:click={textClick}
-		class="absolute mx-[8%] cursor-text select-text text-balance px-2 text-center text-3xl !leading-[125%] lg:text-5xl"
-		><p class="w-full">
+		class="absolute mx-[8%] cursor-text select-text text-balance  text-center text-3xl !leading-[125%] lg:text-5xl"
+		><p class="w-full px-4">
       {$scramble}
     </p></button
 	>
