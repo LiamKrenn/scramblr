@@ -3,12 +3,17 @@ import base from './base';
 const pll = function (register) {
   const scrambler = (function (scrambler) {
     const getPLLScramble = function () {
-      return scrambler.customScramble(
-        [4, 5, 6, 7],
-        [8, 9, 10, 11],
-        [],
-        []
-      );
+      while (true) {
+        let scramble = scrambler.customScramble(
+          [4, 5, 6, 7],
+          [8, 9, 10, 11],
+          [],
+          []
+        );
+        if (scramble.scramble_string.split(' ').length > 1) {
+          return scramble;
+        }
+      }
     }
 
     return {
