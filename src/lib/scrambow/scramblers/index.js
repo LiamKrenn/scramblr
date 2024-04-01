@@ -1,6 +1,6 @@
 import scramble222 from './222';
 import scramble333 from './333';
-import scrambleNNN from './nnn';
+import scrambleNNN from './NNN';
 import clock from './clock';
 import mega from './mega';
 import minx from './minx';
