@@ -20,7 +20,7 @@
 	});
 
   $: if (twisty_player && $scramble) {
-		twisty_player.alg = $scramble;
+		twisty_player.alg = typemap[$type].pre_moves + " " + $scramble;
 	}
   $: if (twisty_player && $type ) {
     twisty_player.puzzle = typemap[$type].puzzle;
