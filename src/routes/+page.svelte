@@ -18,7 +18,15 @@
 			click();
 		}
 	}
+
+  async function onKeyDown(e: KeyboardEvent) {
+    if (e.keyCode == 32) {
+      await click()
+    }
+  }
 </script>
+
+<svelte:window on:keydown|preventDefault={onKeyDown} />
 
 <div class="relative flex h-full w-full items-center justify-center">
 	<ScrambleSelector />
