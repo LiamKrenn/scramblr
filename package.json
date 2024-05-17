@@ -50,7 +50,6 @@
     "lucide-svelte": "^0.363.0",
     "scrambow": "^1.8.1",
     "tailwind-merge": "^2.2.2",
-    "tailwind-variants": "^0.2.1",
-    "vite-plugin-pwa": "^0.20.0"
+    "tailwind-variants": "^0.2.1"
   }
 }
