@@ -1,8 +1,27 @@
-<script>
+<script lang="ts">
 	import { new_scramble, type } from '$lib/scramble';
 	import { onMount } from 'svelte';
 	import '../app.pcss';
 
+	async function detectSWUpdate() {
+		const registration = await navigator.serviceWorker.ready;
+
+		registration.addEventListener('updatefound', () => {
+			const newSW = registration.installing;
+			newSW?.addEventListener('statechange', () => {
+				if (newSW.state === 'installed') {
+          if (confirm('New version available. Reload to update!')) {
+            newSW.postMessage({ type: 'SKIP_WAITING' });
+            window.location.reload();
+          }
+				}
+			});
+		});
+	}
+
+	onMount(async () => {
+		await detectSWUpdate();
+	});
 </script>
 
 <title>scramblr</title>
@@ -26,6 +45,3 @@
 		<span class="underline"> Liam Krenn </span>
 	</a>
 </h1>
-
-
-
