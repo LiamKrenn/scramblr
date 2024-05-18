@@ -1,7 +1,6 @@
 import { Scrambow } from '$lib/scrambow/scrambow';
 import type { PuzzleID } from 'cubing/twisty';
-import { writable } from 'svelte/store';
-import clock from './scrambow/scramblers/clock';
+import { get, writable } from 'svelte/store';
 
 export const scramble = writable('loading...');
 
@@ -45,6 +44,6 @@ export const typemap: { [type: string]: { display: string; puzzle: PuzzleID; pre
 		lse: { display: 'LSE', puzzle: '3x3x3', pre_moves: 'z2' }
 	};
 
-export async function new_scramble(type: string) {
-	scramble.set(new Scrambow().setType(type).get()[0].scramble_string);
+export async function new_scramble() {
+	scramble.set(new Scrambow().setType(get(type)).get()[0].scramble_string);
 }

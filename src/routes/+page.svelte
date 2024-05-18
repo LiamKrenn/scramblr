@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
-	import { new_scramble, scramble, type } from '$lib/scramble';
+	import { new_scramble, scramble } from '$lib/scramble';
 	import { getSelectedText } from '$lib/utils';
 	import ScramblePreview from '$lib/components/scramble-preview.svelte';
 
@@ -10,7 +10,7 @@
 	});
 
 	async function click() {
-		await new_scramble($type);
+		await new_scramble();
 		resize_to_fit();
 	}
 

@@ -4,7 +4,7 @@
 	import { new_scramble, type, typemap, types } from '$lib/scramble';
 
 	$: if ($type) {
-		new_scramble($type);
+		new_scramble();
 	}
 </script>
 

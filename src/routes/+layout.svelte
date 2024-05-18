@@ -2,6 +2,7 @@
 	import { new_scramble, type } from '$lib/scramble';
 	import { onMount } from 'svelte';
 	import '../app.pcss';
+	import { get } from 'svelte/store';
 
 	async function detectSWUpdate() {
 		const registration = await navigator.serviceWorker.ready;
@@ -10,10 +11,10 @@
 			const newSW = registration.installing;
 			newSW?.addEventListener('statechange', () => {
 				if (newSW.state === 'installed') {
-          if (confirm('New version available. Reload to update!')) {
-            newSW.postMessage({ type: 'SKIP_WAITING' });
-            window.location.reload();
-          }
+					if (confirm('New version available. Reload to update!')) {
+						newSW.postMessage({ type: 'SKIP_WAITING' });
+						window.location.reload();
+					}
 				}
 			});
 		});
@@ -21,6 +22,7 @@
 
 	onMount(async () => {
 		await detectSWUpdate();
+		if (get(type) == '333') type.set('333');
 	});
 </script>
 
@@ -33,7 +35,7 @@
 	<button
 		class="font-semibold"
 		on:click={() => {
-			new_scramble($type);
+			new_scramble();
 		}}>scramblr</button
 	>
 
@@ -48,8 +50,7 @@
 </h1>
 
 <style>
-  :global(:fullscreen, ::backdrop) {
-    background-color: #020817;
-  }
+	:global(:fullscreen, ::backdrop) {
+		background-color: #020817;
+	}
 </style>
-
