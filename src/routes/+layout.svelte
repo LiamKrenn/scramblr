@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import '../app.pcss';
 	import { get } from 'svelte/store';
+	import Menu from '$lib/components/menu.svelte';
 
 	async function detectSWUpdate() {
 		const registration = await navigator.serviceWorker.ready;
@@ -27,13 +28,17 @@
 </script>
 
 <title>scramblr</title>
-<slot />
+<div class="h-full overflow-hidden">
+  <slot />
+</div>
+
+<Menu/>
 
 <h1
 	class="absolute left-0 top-0 ml-4 mt-2 flex cursor-pointer select-none flex-col text-3xl md:text-5xl"
 >
 	<button
-		class="font-semibold"
+		class="font-semibold opacity-90"
 		on:click={() => {
 			new_scramble();
 		}}>scramblr</button

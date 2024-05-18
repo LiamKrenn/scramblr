@@ -9,11 +9,11 @@
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger asChild let:builder class="absolute right-4 top-4">
+	<DropdownMenu.Trigger asChild let:builder class="">
 		<Button
 			variant="outline"
 			builders={[builder]}
-			class="absolute right-4 top-4 z-10 select-none lg:h-16 lg:w-auto lg:text-xl"
+			class="absolute lg:right-24 right-[5.5rem] top-4 z-10 select-none h-14  lg:h-16 lg:w-auto lg:text-xl"
 			>{typemap[$type].display}</Button
 		>
 	</DropdownMenu.Trigger>
