@@ -42,7 +42,7 @@
 		href="https://github.com/LiamKrenn"
 		target="_blank"
 	>
-		byy
+		by
 		<span class="underline"> Liam Krenn </span>
 	</a>
 </h1>
