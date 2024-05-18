@@ -13,7 +13,7 @@
 		<Button
 			variant="outline"
 			builders={[builder]}
-			class="absolute lg:right-24 right-[5.5rem] top-4 z-10 select-none h-14  lg:h-16 lg:w-auto lg:text-xl"
+			class="absolute lg:right-24 right-[5.5rem] top-4 z-10 select-none h-14  text-lg lg:h-16 lg:w-auto lg:text-xl"
 			>{typemap[$type].display}</Button
 		>
 	</DropdownMenu.Trigger>
