@@ -6,7 +6,7 @@
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 
-  import Separator from '$lib/components/ui/separator/separator.svelte';
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 
 	export let data: PageData;
 
@@ -15,95 +15,86 @@
 	onMount(async () => {
 		await new_scramble();
 	});
-
-  
 </script>
 
-
-
-<button class="relative flex flex-col h-full w-full select-none items-center justify-center">
-  <!-- Absolutes -->
+<button class="relative flex h-full w-full select-none flex-col items-center justify-center">
+	<!-- Absolutes -->
 	<ScrambleSelector />
 	<div
 		id="scrambleContainer"
-		class="absolute md:top-4 top-20 block h-[32%] max-h-[32%] md:mx-36 text-balance text-center text-3xl !leading-[125%]"
+		class="absolute top-20 !-z-10 block h-[32%] max-h-[32%] justify-center text-balance text-center text-3xl !leading-[125%] md:top-4 md:mx-36"
 	>
-		<p class="-z-10 w-full cursor-default  select-none px-4" id="scramble">
-			{$scramble}
-		</p>
+		<div class="flex h-full items-center">
+			<p class="w-full cursor-default select-none px-4" id="scramble">
+				{$scramble}
+			</p>
+		</div>
 	</div>
-  <!-- Flex's -->
-  <div class="grow w-full h-full !-z-20"/>
+	<!-- Flex's -->
+	<div class="!-z-20 h-full w-full grow" />
 	<Timer bind:time />
 
-  <div class="w-full px-4">
-    <Separator class="my-1 h-1 rounded"/>
-  </div>
-  
-  <!-- UI -->
-  <div class="grow w-full h-full  flex-row p-2 flex">
-    <!-- Left -->
-    <div class="grow ">
-      times
-    </div>
+	<div class="w-full px-4">
+		<Separator class="my-1 h-1 rounded" />
+	</div>
 
-    <Separator class="mx-1 w-1 rounded" orientation="vertical"/>
+	<!-- UI -->
+	<div class="z-20 flex h-full w-full grow flex-row p-2">
+		<!-- Left -->
+		<div class="grow">times</div>
 
-    <!-- Middle -->
+		<Separator class="mx-1 w-1 rounded" orientation="vertical" />
 
-    <div class="grow md:flex items-center flex-col hidden ">
-      <!-- Stats -->
-      <div class=" grow w-full">
-        stats
-      </div>
+		<!-- Middle -->
 
-      <!-- Logo -->
-      <h1 class="grow-0 w-max cursor-pointer flex justify-center items-end select-none text-3xl ">
-        <p class=" font-semibold opacity-90">scramblr</p>
-      
-        <a
-          class="!z-20 text-sm opacity-75 ml-2 "
-          href="https://github.com/LiamKrenn"
-          target="_blank"
-        >
-          by
-          <span class="underline"> Liam Krenn </span>
-        </a>
-      </h1>
-    </div>
+		<div class="hidden grow flex-col items-center md:flex">
+			<!-- Stats -->
+			<div class=" w-full grow">stats</div>
 
-    <Separator class="mx-1 w-1 rounded md:flex hidden" orientation="vertical"/>
+			<!-- Logo -->
+			<h1 class="flex w-max grow-0 cursor-pointer select-none items-end justify-center text-3xl">
+				<p class=" font-semibold opacity-90">scramblr</p>
 
-    <!-- Right -->
-    <div class="flex flex-col md:grow grow-[0.3] ">
-      
-      <!-- Preview -->
-      <ScramblePreview class="p-2 grow-0 w-full md:h-full h-[30%]"/>
-      
-      <div class="md:hidden flex w-full px-2">
-        <Separator class=" h-1 rounded " />
-      </div>
+				<a
+					class="!z-20 ml-2 text-sm opacity-75"
+					href="https://github.com/LiamKrenn"
+					target="_blank"
+				>
+					by
+					<span class="underline"> Liam Krenn </span>
+				</a>
+			</h1>
+		</div>
 
-      <!-- Stats -->
-      <div class="md:hidden flex  grow w-full">
-        stats
-      </div>
+		<Separator class="mx-1 hidden w-1 rounded md:flex" orientation="vertical" />
 
-      <!-- Logo -->
-      <h1 class="md:hidden flex cursor-pointer select-none flex-col text-3xl md:text-4xl lg:text-5xl ">
-        <p class=" font-semibold opacity-90">scramblr</p>
-      
-        <a
-          class="!z-20 text-sm opacity-75 lg:mt-1 md:text-base"
-          href="https://github.com/LiamKrenn"
-          target="_blank"
-        >
-          by
-          <span class="underline"> Liam Krenn </span>
-        </a>
-      </h1>
-    </div>
-  </div>
+		<!-- Right -->
+		<div class="flex grow-[0.3] flex-col md:grow">
+			<!-- Preview -->
+			<ScramblePreview class="h-[30%] w-full grow-0 p-2 md:h-full" />
 
- 
+			<div class="flex w-full px-2 md:hidden">
+				<Separator class=" h-1 rounded " />
+			</div>
+
+			<!-- Stats -->
+			<div class="flex w-full grow md:hidden">stats</div>
+
+			<!-- Logo -->
+			<h1
+				class="flex cursor-pointer select-none flex-col text-3xl md:hidden md:text-4xl lg:text-5xl"
+			>
+				<p class=" font-semibold opacity-90">scramblr</p>
+
+				<a
+					class="!z-20 text-sm opacity-75 md:text-base lg:mt-1"
+					href="https://github.com/LiamKrenn"
+					target="_blank"
+				>
+					by
+					<span class="underline"> Liam Krenn </span>
+				</a>
+			</h1>
+		</div>
+	</div>
 </button>
