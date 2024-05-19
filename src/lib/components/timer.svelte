@@ -91,6 +91,8 @@
   on:mouseup={onMouseUp}
 	on:keydown|preventDefault={onKeyDown}
 	on:keyup={onKeyUp}
+  on:touchstart={onMouseDown}
+  on:touchend={onMouseUp}
 />
 
 {#if ready}
