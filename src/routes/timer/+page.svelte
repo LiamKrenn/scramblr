@@ -22,7 +22,7 @@
 		id="scrambleContainer"
 		class="absolute top-20 block h-[37%] max-h-[37%] w-[90%] select-text text-balance text-center text-3xl !leading-[125%] opacity-80"
 	>
-		<p class="w-full cursor-text px-4" id="scramble">
+		<p class="w-full px-4 select-none -z-10 cursor-default" id="scramble">
 			{$scramble}
 		</p>
 	</div>
