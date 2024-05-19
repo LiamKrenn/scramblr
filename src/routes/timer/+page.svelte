@@ -20,7 +20,7 @@
 	<ScramblePreview />
 	<div
 		id="scrambleContainer"
-		class="absolute top-20 block h-[37%] max-h-[37%] w-[90%] select-text text-balance text-center text-3xl !leading-[125%] opacity-80"
+		class="absolute bg-red-500 md:top-4 top-20 block h-[32%] max-h-[32%] md:mx-36 select-text text-balance text-center text-3xl !leading-[125%]"
 	>
 		<p class="-z-10 w-full cursor-default select-none px-4" id="scramble">
 			{$scramble}

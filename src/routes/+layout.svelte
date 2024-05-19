@@ -48,7 +48,7 @@
 
 <Menu />
 
-<h1 class="absolute left-4 top-4 flex cursor-pointer select-none flex-col text-3xl md:text-5xl">
+<h1 class="absolute left-4 bottom-4 flex cursor-pointer select-none flex-col text-3xl md:text-5xl">
 	<p class="-z-10 font-semibold opacity-90">scramblr</p>
 
 	<a
