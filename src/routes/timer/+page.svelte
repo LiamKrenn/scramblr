@@ -15,16 +15,16 @@
 	});
 </script>
 
-<div class="relative flex h-full w-full items-center justify-center select-none">
+<button class="relative flex h-full w-full select-none items-center justify-center">
 	<ScrambleSelector />
 	<ScramblePreview />
 	<div
 		id="scrambleContainer"
 		class="absolute top-20 block h-[37%] max-h-[37%] w-[90%] select-text text-balance text-center text-3xl !leading-[125%] opacity-80"
 	>
-		<p class="w-full px-4 select-none -z-10 cursor-default" id="scramble">
+		<p class="-z-10 w-full cursor-default select-none px-4" id="scramble">
 			{$scramble}
 		</p>
 	</div>
 	<Timer bind:time />
-</div>
+</button>

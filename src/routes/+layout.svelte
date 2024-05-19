@@ -42,18 +42,11 @@
 
 <Menu />
 
-<h1
-	class="absolute left-0 top-0 ml-4 mt-2 flex cursor-pointer select-none flex-col text-3xl md:text-5xl"
->
-	<button
-		class="font-semibold opacity-90"
-		on:click={() => {
-			new_scramble();
-		}}>scramblr</button
-	>
+<h1 class="absolute left-4 top-4 flex cursor-pointer select-none flex-col text-3xl md:text-5xl">
+	<p class="-z-10 font-semibold opacity-90">scramblr</p>
 
 	<a
-		class="text-sm opacity-75 md:mt-1 md:text-base"
+		class="!z-20 text-sm opacity-75 md:mt-1 md:text-base"
 		href="https://github.com/LiamKrenn"
 		target="_blank"
 	>

@@ -28,7 +28,7 @@
 
 <svelte:window on:keydown|preventDefault={onKeyDown} />
 
-<div class="relative flex h-full w-full items-center justify-center">
+<div class="relative z-10 flex h-full w-full items-center justify-center">
 	<ScrambleSelector />
 	<ScramblePreview />
 	<button

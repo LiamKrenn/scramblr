@@ -13,11 +13,11 @@
 		<Button
 			variant="outline"
 			builders={[builder]}
-			class="absolute right-[5.5rem] top-4 z-10 h-14 select-none text-lg  lg:right-24 lg:h-16 lg:w-auto lg:text-xl"
+			class="absolute right-[5.5rem] top-4 z-20 h-14 select-none text-lg  lg:right-24 lg:h-16 lg:w-auto lg:text-xl"
 			>{typemap[$type].display}</Button
 		>
 	</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="z-10 lg:w-40">
+	<DropdownMenu.Content class="z-20 lg:w-40">
 		<DropdownMenu.RadioGroup bind:value={$type}>
 			{#each Object.keys(types) as group}
 				<DropdownMenu.Sub>

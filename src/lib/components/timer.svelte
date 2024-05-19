@@ -49,11 +49,11 @@
 		}
 	}
 
-  let mousedown = false;
+	let mousedown = false;
 
 	async function onMouseDown() {
-    mousedown = true;
-    
+		mousedown = true;
+
 		if (key_down == 0 && start_time == 0) {
 			key_down = Date.now();
 		} else if (key_down != 0 && start_time == 0 && Date.now() - key_down > READY_DELAY) {
@@ -67,38 +67,37 @@
 		}
 	}
 
-  let intervalId: NodeJS.Timeout;
-  $: if (mousedown) {
-    intervalId = setInterval(onMouseDown, 50);
-  } else {
-    clearInterval(intervalId);
-  }
+	let intervalId: NodeJS.Timeout;
+	$: if (mousedown) {
+		intervalId = setInterval(onMouseDown, 50);
+	} else {
+		clearInterval(intervalId);
+	}
 
 	async function onMouseUp() {
-    mousedown = false;
-    if (key_down != 0) {
-		if (Date.now() - key_down > READY_DELAY) {
-			start_time = Date.now();
-			ready = false;
+		mousedown = false;
+		if (key_down != 0) {
+			if (Date.now() - key_down > READY_DELAY) {
+				start_time = Date.now();
+				ready = false;
+			}
+			key_down = 0;
 		}
-		key_down = 0;
-    }
 	}
 </script>
 
-<svelte:window
-	on:mousedown={onMouseDown}
-  on:mouseup={onMouseUp}
-	on:keydown|preventDefault={onKeyDown}
-	on:keyup={onKeyUp}
-  on:touchstart={onMouseDown}
-  on:touchend={onMouseUp}
-/>
+<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} />
 
-{#if ready}
-	<p class="text-8xl text-green-500">{display_time}</p>
-{:else if key_down != 0 && !ready}
-	<p class="text-8xl text-red-600">{display_time}</p>
-{:else}
-	<p class="text-8xl">{display_time}</p>
-{/if}
+<button
+	on:touchstart={onMouseDown}
+	on:touchend={onMouseUp}
+	class="z-10 flex h-full w-full cursor-default items-center justify-center"
+>
+	{#if ready}
+		<p class="text-8xl text-green-500">{display_time}</p>
+	{:else if key_down != 0 && !ready}
+		<p class="text-8xl text-red-600">{display_time}</p>
+	{:else}
+		<p class="text-8xl">{display_time}</p>
+	{/if}
+</button>
