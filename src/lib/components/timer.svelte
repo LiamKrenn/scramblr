@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { new_scramble } from '$lib/scramble';
+
 	const SPACEBAR_KEYCODE = 32;
 	const READY_DELAY = 300;
 	const TIMER_UPDATE_INTERVAL = 100;
@@ -64,6 +66,7 @@
 			display_time = timeToFormattedString((Date.now() - start_time) / 1000, TIMER_DECIMALS);
 			time = parseFloat(display_time);
 			start_time = 0;
+			await new_scramble();
 		}
 	}
 
