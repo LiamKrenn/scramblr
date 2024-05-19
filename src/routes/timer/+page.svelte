@@ -15,7 +15,7 @@
 	});
 </script>
 
-<div class="relative flex h-full w-full items-center justify-center">
+<div class="relative flex h-full w-full items-center justify-center select-none">
 	<ScrambleSelector />
 	<ScramblePreview />
 	<div
