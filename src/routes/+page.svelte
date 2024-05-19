@@ -11,7 +11,6 @@
 
 	async function click() {
 		await new_scramble();
-		resize_to_fit();
 	}
 
 	async function textClick() {
@@ -23,22 +22,6 @@
 	async function onKeyDown(e: KeyboardEvent) {
 		if (e.keyCode == 32) {
 			await click();
-		}
-	}
-
-	function resize_to_fit(first = true) {
-		let output = document.getElementById('scramble');
-		let outputContainer = document.getElementById('scrambleContainer');
-		if (output == null || outputContainer == null) return;
-		if (first) {
-			setTimeout(resize_to_fit, 100);
-			output.style.fontSize = '3rem';
-			output.style.lineHeight = '150%';
-		}
-		let fontSize = window.getComputedStyle(output).fontSize;
-		if (output.clientHeight >= outputContainer.clientHeight) {
-			output.style.fontSize = parseFloat(fontSize) - 1 + 'px';
-			resize_to_fit(false);
 		}
 	}
 </script>

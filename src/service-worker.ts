@@ -10,7 +10,7 @@ const CACHE = `cache-${version}`;
 
 const ASSETS = [
 	...build, // the app itself
-	...files  // everything in `static`
+	...files // everything in `static`
 ];
 
 self.addEventListener('install', (event) => {
@@ -62,7 +62,7 @@ self.addEventListener('fetch', (event) => {
 				throw new Error('invalid response from fetch');
 			}
 
-      const isNotExtension = url.protocol === 'http:' || url.protocol === 'https:';
+			const isNotExtension = url.protocol === 'http:' || url.protocol === 'https:';
 			const isSuccess = response.status === 200;
 
 			if (isNotExtension && isSuccess) {
@@ -91,4 +91,3 @@ self.addEventListener('message', (event) => {
 		self.skipWaiting();
 	}
 });
-

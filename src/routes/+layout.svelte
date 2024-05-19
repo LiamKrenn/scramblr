@@ -4,6 +4,7 @@
 	import '../app.pcss';
 	import { get } from 'svelte/store';
 	import Menu from '$lib/components/menu.svelte';
+	import { resize_to_fit } from '$lib/utils';
 
 	async function detectSWUpdate() {
 		const registration = await navigator.serviceWorker.ready;
@@ -24,15 +25,22 @@
 	onMount(async () => {
 		await detectSWUpdate();
 		if (get(type) == '333') type.set('333');
+		resize_to_fit(document);
 	});
 </script>
 
+<svelte:window
+	on:resize={() => {
+		resize_to_fit(document);
+	}}
+/>
+
 <title>scramblr</title>
 <div class="h-full overflow-hidden">
-  <slot />
+	<slot />
 </div>
 
-<Menu/>
+<Menu />
 
 <h1
 	class="absolute left-0 top-0 ml-4 mt-2 flex cursor-pointer select-none flex-col text-3xl md:text-5xl"

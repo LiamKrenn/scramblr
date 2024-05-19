@@ -1,12 +1,21 @@
 import { Scrambow } from '$lib/scrambow/scrambow';
 import type { PuzzleID } from 'cubing/twisty';
 import { get, writable } from 'svelte/store';
+import { resize_to_fit } from './utils';
+import { browser } from '$app/environment';
 
 export const scramble = writable('loading...');
 
+scramble.subscribe((value) => {
+	setTimeout(() => {
+		if (!browser) return;
+		resize_to_fit(document);
+	}, 1);
+});
+
 export const type = writable('333');
 
-export const types: {[group: string]: string[]} = {
+export const types: { [group: string]: string[] } = {
 	WCA: [
 		'333',
 		'222',

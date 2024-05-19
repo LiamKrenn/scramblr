@@ -11,7 +11,7 @@
 			<slot />
 		</DropdownMenu.Item>
 	{:else}
-		<DropdownMenu.Item class="cursor-pointer pr-4 lg:py-2 text-lg lg:text-xl">
+		<DropdownMenu.Item class="cursor-pointer pr-4 text-lg lg:py-2 lg:text-xl">
 			<slot />
 		</DropdownMenu.Item>
 	{/if}

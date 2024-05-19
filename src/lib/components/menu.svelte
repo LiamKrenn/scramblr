@@ -6,7 +6,7 @@
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger asChild let:builder  class="absolute right-4 top-4">
+	<DropdownMenu.Trigger asChild let:builder class="absolute right-4 top-4">
 		<Button
 			variant="outline"
 			builders={[builder]}
@@ -24,7 +24,7 @@
 			<p>Timer</p>
 		</MenuItem>
 		<DropdownMenu.Separator />
-		<DropdownMenu.Item class="cursor-pointer lg:py-2 text-lg lg:text-xl">
+		<DropdownMenu.Item class="cursor-pointer text-lg lg:py-2 lg:text-xl">
 			<Settings class="mr-2" />
 			<p>Settings</p>
 		</DropdownMenu.Item>

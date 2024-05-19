@@ -27,4 +27,4 @@
 	}
 </script>
 
-<twisty-player class="absolute bottom-4 right-0 hidden max-w-full max-h-[20%]  px-2" />
+<twisty-player class="absolute bottom-4 right-0 hidden max-h-[20%] max-w-full px-2" />
