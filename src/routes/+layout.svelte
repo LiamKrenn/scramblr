@@ -6,6 +6,12 @@
 	import Menu from '$lib/components/menu.svelte';
 	import { resize_to_fit } from '$lib/utils';
 
+  import { page } from '$app/stores';
+  import { persisted } from 'svelte-persisted-store'
+
+  page.subscribe(value => {console.log(value)});
+
+
 	async function detectSWUpdate() {
 		const registration = await navigator.serviceWorker.ready;
 

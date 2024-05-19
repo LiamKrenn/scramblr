@@ -86,9 +86,9 @@
 	}
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} />
+<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup|preventDefault={onKeyUp} />
 
-<button
+<div
 	on:touchstart={onMouseDown}
 	on:touchend={onMouseUp}
 	class="z-10 flex h-full w-full cursor-default items-center justify-center"
@@ -100,4 +100,4 @@
 	{:else}
 		<p class="text-8xl">{display_time}</p>
 	{/if}
-</button>
+</div>

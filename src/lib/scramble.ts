@@ -3,6 +3,7 @@ import type { PuzzleID } from 'cubing/twisty';
 import { get, writable } from 'svelte/store';
 import { resize_to_fit } from './utils';
 import { browser } from '$app/environment';
+import { persisted } from 'svelte-persisted-store'
 
 export const scramble = writable('loading...');
 
@@ -13,7 +14,7 @@ scramble.subscribe((value) => {
 	}, 1);
 });
 
-export const type = writable('333');
+export const type = persisted('type', '333');
 
 export const types: { [group: string]: string[] } = {
 	WCA: [
