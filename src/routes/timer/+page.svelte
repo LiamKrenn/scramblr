@@ -36,26 +36,33 @@
   <div class="grow w-full h-full !-z-20"/>
 	<Timer bind:time />
 
-  <Separator class="my-1 h-1"/>
+  <div class="w-full px-4">
+    <Separator class="my-1 h-1 rounded"/>
+  </div>
+  
   <!-- UI -->
-  <div class="grow w-full h-full bg-yellow-500 flex-row p-2 flex">
+  <div class="grow w-full h-full  flex-row p-2 flex">
     <!-- Left -->
-    <div class="grow bg-red-500">
+    <div class="grow ">
       times
     </div>
+
+    <Separator class="mx-1 w-1 rounded" orientation="vertical"/>
+
     <!-- Middle -->
 
-    <div class="grow md:flex flex-col hidden bg-gray-500">
+    <div class="grow md:flex items-center flex-col hidden ">
       <!-- Stats -->
-      <div class="bg-orange-500 grow w-full">
+      <div class=" grow w-full">
         stats
       </div>
+
       <!-- Logo -->
-      <h1 class="cursor-pointer flex select-none flex-col text-3xl lg:text-4xl xl:text-5xl bg-black">
+      <h1 class="grow-0 w-max cursor-pointer flex justify-center items-end select-none text-3xl ">
         <p class=" font-semibold opacity-90">scramblr</p>
       
         <a
-          class="!z-20 text-sm opacity-75 lg:mt-1 md:text-base"
+          class="!z-20 text-sm opacity-75 ml-2 "
           href="https://github.com/LiamKrenn"
           target="_blank"
         >
@@ -65,19 +72,25 @@
       </h1>
     </div>
 
+    <Separator class="mx-1 w-1 rounded md:flex hidden" orientation="vertical"/>
+
     <!-- Right -->
-    <div class="flex flex-col md:grow grow-[0.3] bg-violet-500">
+    <div class="flex flex-col md:grow grow-[0.3] ">
       
       <!-- Preview -->
-      <ScramblePreview class="bg-green-500 grow-0 w-full md:h-full h-[30%]"/>
+      <ScramblePreview class="p-2 grow-0 w-full md:h-full h-[30%]"/>
       
+      <div class="md:hidden flex w-full px-2">
+        <Separator class=" h-1 rounded " />
+      </div>
+
       <!-- Stats -->
-      <div class="md:hidden flex bg-orange-500 grow w-full">
+      <div class="md:hidden flex  grow w-full">
         stats
       </div>
 
       <!-- Logo -->
-      <h1 class="md:hidden flex cursor-pointer select-none flex-col text-3xl md:text-4xl lg:text-5xl bg-black">
+      <h1 class="md:hidden flex cursor-pointer select-none flex-col text-3xl md:text-4xl lg:text-5xl ">
         <p class=" font-semibold opacity-90">scramblr</p>
       
         <a
