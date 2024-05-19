@@ -94,10 +94,10 @@
 	class="z-10 flex h-full w-full cursor-default items-center justify-center"
 >
 	{#if ready}
-		<p class="text-8xl text-green-500">{display_time}</p>
+		<p class="lg:text-8xl text-6xl text-green-500">{display_time}</p>
 	{:else if key_down != 0 && !ready}
-		<p class="text-8xl text-red-600">{display_time}</p>
+		<p class="lg:text-8xl text-6xl text-red-600">{display_time}</p>
 	{:else}
-		<p class="text-8xl">{display_time}</p>
+		<p class="lg:text-8xl text-6xl">{display_time}</p>
 	{/if}
 </div>
