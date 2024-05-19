@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { scramble, type, typemap } from '$lib/scramble';
+	import { cn } from '$lib/utils';
 	import { TwistyPlayer } from 'cubing/twisty';
 	import { onMount } from 'svelte';
 
@@ -25,6 +26,10 @@
 	$: if (twisty_player && $type) {
 		twisty_player.puzzle = typemap[$type].puzzle;
 	}
+
+  
+	let className: string = "";
+	export { className as class };
 </script>
 
-<twisty-player class="absolute bottom-4 right-0 hidden max-h-[20%] max-w-full px-2" />
+<twisty-player class={cn(className, "hidden" )} />
