@@ -6,6 +6,8 @@
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 
+  import Separator from '$lib/components/ui/separator/separator.svelte';
+
 	export let data: PageData;
 
 	let time = 0;
@@ -34,6 +36,7 @@
   <div class="grow w-full h-full !-z-20"/>
 	<Timer bind:time />
 
+  <Separator class="my-1 h-1"/>
   <!-- UI -->
   <div class="grow w-full h-full bg-yellow-500 flex-row p-2 flex">
     <!-- Left -->
@@ -42,7 +45,7 @@
     </div>
     <!-- Middle -->
 
-    <div class="grow lg:flex flex-col hidden bg-gray-500">
+    <div class="grow md:flex flex-col hidden bg-gray-500">
       <!-- Stats -->
       <div class="bg-orange-500 grow w-full">
         stats
@@ -63,18 +66,18 @@
     </div>
 
     <!-- Right -->
-    <div class="flex flex-col lg:grow grow-[0.3] bg-violet-500">
+    <div class="flex flex-col md:grow grow-[0.3] bg-violet-500">
       
       <!-- Preview -->
-      <ScramblePreview class="bg-green-500 grow-0 w-full lg:h-full h-[30%]"/>
+      <ScramblePreview class="bg-green-500 grow-0 w-full md:h-full h-[30%]"/>
       
       <!-- Stats -->
-      <div class="lg:hidden flex bg-orange-500 grow w-full">
+      <div class="md:hidden flex bg-orange-500 grow w-full">
         stats
       </div>
 
       <!-- Logo -->
-      <h1 class="lg:hidden flex cursor-pointer select-none flex-col text-3xl lg:text-4xl lg:text-5xl bg-black">
+      <h1 class="md:hidden flex cursor-pointer select-none flex-col text-3xl md:text-4xl lg:text-5xl bg-black">
         <p class=" font-semibold opacity-90">scramblr</p>
       
         <a
