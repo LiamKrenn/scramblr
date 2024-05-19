@@ -91,7 +91,7 @@
 <div
 	on:touchstart={onMouseDown}
 	on:touchend={onMouseUp}
-	class="z-10 grow-0 my-4 flex h-min w-full cursor-default items-center justify-center"
+	class="z-10 grow h-full my-4 flex  w-full cursor-default items-center justify-center"
 >
 	{#if ready}
 		<p class="lg:text-8xl text-6xl text-green-500">{display_time}</p>

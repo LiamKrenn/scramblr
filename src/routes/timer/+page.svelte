@@ -31,17 +31,24 @@
 		</p>
 	</div>
   <!-- Flex's -->
-  <div class="grow w-full h-full"/>
+  <div class="grow w-full h-full !-z-20"/>
 	<Timer bind:time />
-  <div class="grow w-full h-full bg-yellow-500 flex flex-row p-2">
+
+  <!-- UI -->
+  <div class="grow w-full h-full bg-yellow-500 flex-row p-2 flex">
     <!-- Left -->
     <div class="grow bg-red-500">
-      other
+      times
     </div>
-    <!-- Right -->
-    <div class="grow-[0.3] bg-violet-500">
+    <!-- Middle -->
+
+    <div class="grow xl:flex flex-col hidden bg-gray-500">
+      <!-- Stats -->
+      <div class="bg-orange-500 grow w-full">
+        stats
+      </div>
       <!-- Logo -->
-      <h1 class="flex cursor-pointer select-none flex-col text-3xl lg:text-4xl xl:text-5xl bg-black">
+      <h1 class="cursor-pointer flex select-none flex-col text-3xl lg:text-4xl xl:text-5xl bg-black">
         <p class=" font-semibold opacity-90">scramblr</p>
       
         <a
@@ -53,10 +60,34 @@
           <span class="underline"> Liam Krenn </span>
         </a>
       </h1>
+    </div>
+
+    <!-- Right -->
+    <div class="flex flex-col xl:grow grow-[0.3] bg-violet-500">
+      
       <!-- Preview -->
-      <ScramblePreview class="bg-green-500 grow-0 w-full h-[30%]"/>
+      <ScramblePreview class="bg-green-500 grow-0 w-full xl:h-full h-[30%]"/>
+      
+      <!-- Stats -->
+      <div class="xl:hidden flex bg-orange-500 grow w-full">
+        stats
+      </div>
+
+      <!-- Logo -->
+      <h1 class="xl:hidden flex cursor-pointer select-none flex-col text-3xl lg:text-4xl xl:text-5xl bg-black">
+        <p class=" font-semibold opacity-90">scramblr</p>
+      
+        <a
+          class="!z-20 text-sm opacity-75 lg:mt-1 md:text-base"
+          href="https://github.com/LiamKrenn"
+          target="_blank"
+        >
+          by
+          <span class="underline"> Liam Krenn </span>
+        </a>
+      </h1>
     </div>
   </div>
 
-  
+ 
 </button>
