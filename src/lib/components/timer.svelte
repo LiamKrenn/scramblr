@@ -19,17 +19,17 @@
 		stopTimerUpdate();
 	}
 
-  function timeToFormattedString(time: number, decimals: number) {
-    let minutes = Math.floor(time / 60);
-    let seconds = (time % 60).toFixed(decimals);
-    if (minutes == 0) return seconds;
-    if (parseFloat(seconds) < 10) seconds = '0' + seconds;
-    return `${minutes}:${seconds}`;
-  }
+	function timeToFormattedString(time: number, decimals: number) {
+		let minutes = Math.floor(time / 60);
+		let seconds = (time % 60).toFixed(decimals);
+		if (minutes == 0) return seconds;
+		if (parseFloat(seconds) < 10) seconds = '0' + seconds;
+		return `${minutes}:${seconds}`;
+	}
 
 	function startTimerUpdate() {
 		timerInterval = setInterval(() => {
-      display_time = timeToFormattedString((Date.now() - start_time) / 1000, TIMER_UPDATE_DECIMALS)
+			display_time = timeToFormattedString((Date.now() - start_time) / 1000, TIMER_UPDATE_DECIMALS);
 		}, TIMER_UPDATE_INTERVAL);
 	}
 
@@ -39,32 +39,59 @@
 
 	async function onKeyDown(e: KeyboardEvent) {
 		if (e.keyCode == SPACEBAR_KEYCODE) {
-			if (key_down == 0 && start_time == 0) {
-				key_down = Date.now();
-			} else if (key_down != 0 && start_time == 0 && Date.now() - key_down > READY_DELAY) {
-				ready = true;
-				display_time = '0.0';
-				time = 0;
-			} else if (start_time != 0) {
-				display_time = timeToFormattedString((Date.now() - start_time) / 1000, TIMER_DECIMALS);
-				time = parseFloat(display_time);
-				start_time = 0;
-			}
+			await onMouseDown();
 		}
 	}
 
 	async function onKeyUp(e: KeyboardEvent) {
-		if (e.keyCode == SPACEBAR_KEYCODE && key_down != 0) {
-			if (Date.now() - key_down > READY_DELAY) {
-				start_time = Date.now();
-				ready = false;
-			}
-			key_down = 0;
+		if (e.keyCode == SPACEBAR_KEYCODE) {
+			await onMouseUp();
 		}
+	}
+
+  let mousedown = false;
+
+	async function onMouseDown() {
+    mousedown = true;
+    
+		if (key_down == 0 && start_time == 0) {
+			key_down = Date.now();
+		} else if (key_down != 0 && start_time == 0 && Date.now() - key_down > READY_DELAY) {
+			ready = true;
+			display_time = '0.0';
+			time = 0;
+		} else if (start_time != 0) {
+			display_time = timeToFormattedString((Date.now() - start_time) / 1000, TIMER_DECIMALS);
+			time = parseFloat(display_time);
+			start_time = 0;
+		}
+	}
+
+  let intervalId: NodeJS.Timeout;
+  $: if (mousedown) {
+    intervalId = setInterval(onMouseDown, 50);
+  } else {
+    clearInterval(intervalId);
+  }
+
+	async function onMouseUp() {
+    mousedown = false;
+    if (key_down != 0) {
+		if (Date.now() - key_down > READY_DELAY) {
+			start_time = Date.now();
+			ready = false;
+		}
+		key_down = 0;
+    }
 	}
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} />
+<svelte:window
+	on:mousedown={onMouseDown}
+  on:mouseup={onMouseUp}
+	on:keydown|preventDefault={onKeyDown}
+	on:keyup={onKeyUp}
+/>
 
 {#if ready}
 	<p class="text-8xl text-green-500">{display_time}</p>
