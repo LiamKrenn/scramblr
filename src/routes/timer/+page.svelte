@@ -42,8 +42,12 @@
     <p class="scramble text-[4cqmin] text-balance" >
       {$scramble}
     </p>
-    {:else }
+    {:else if $scramble.length > 50}
     <p class="scramble text-[5cqmin] text-balance" >
+      {$scramble}
+    </p>
+    {:else}
+    <p class="scramble text-[6cqmin] text-balance" >
       {$scramble}
     </p>
     {/if}
