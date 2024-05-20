@@ -9,7 +9,7 @@
 	import { persisted } from 'svelte-persisted-store';
 
 	page.subscribe((value) => {
-		console.log(value);
+		//console.log(value);
 	});
 
 	async function detectSWUpdate() {
