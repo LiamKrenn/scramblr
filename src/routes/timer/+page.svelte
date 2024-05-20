@@ -32,22 +32,22 @@
 	<!-- Absolutes -->
 	<ScrambleSelector />
 
-  <div class="scrambleContainer absolute w-full h-[20%] md:top-4 top-20 md:px-28 px-4 bg-red-500 block ">
+  <div class="scrambleContainer absolute w-full h-[20%] md:top-4 top-20 md:px-28 px-4  block ">
     {#if $scramble.length > 200}
     
-    <p class="scramble text-[3cqmin] text-balance" >
+    <p class="scramble text-[3.3cqmin] text-balance" >
       {$scramble}
     </p>
     {:else if  $scramble.length > 100}
-    <p class="scramble text-[4cqmin] text-balance" >
-      {$scramble}
-    </p>
-    {:else if $scramble.length > 50}
     <p class="scramble text-[5cqmin] text-balance" >
       {$scramble}
     </p>
-    {:else}
+    {:else if $scramble.length > 50}
     <p class="scramble text-[6cqmin] text-balance" >
+      {$scramble}
+    </p>
+    {:else}
+    <p class="scramble text-[7cqmin] text-balance" >
       {$scramble}
     </p>
     {/if}
