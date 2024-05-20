@@ -115,12 +115,12 @@
 
 					<!-- Logo -->
 					<h1
-						class="mb-2 flex w-max grow-0 cursor-pointer select-none items-end justify-center text-3xl"
+						class="lslogos mb-1 flex w-max grow-0 cursor-pointer select-none items-end justify-center"
 					>
 						<p class=" font-semibold opacity-90">scramblr</p>
 
 						<a
-							class="!z-20 ml-2 text-sm opacity-75"
+							class="!z-20 lslogob mb-[0.5cqb] ml-2 opacity-75"
 							href="https://github.com/LiamKrenn"
 							target="_blank"
 						>
@@ -147,5 +147,12 @@
 <style>
   .scramble {
     font-size: clamp(1.2rem, 3.3cqmin, 3.5rem);
+  }
+
+  .lslogos {
+    font-size: clamp(1rem, 3cqmin, 3.5rem);
+  }
+  .lslogob {
+    font-size: clamp(0.7rem, 1.5cqmin, 2rem);
   }
 </style>
