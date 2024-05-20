@@ -10,7 +10,7 @@ export const scramble = writable('loading...');
 scramble.subscribe((value) => {
 	setTimeout(() => {
 		if (!browser) return;
-		resize_to_fit(document);
+		//resize_to_fit(document);
 	}, 1);
 });
 

@@ -4,7 +4,6 @@
 	import '../app.pcss';
 	import { get } from 'svelte/store';
 	import Menu from '$lib/components/menu.svelte';
-	import { resize_to_fit } from '$lib/utils';
 
   import { page } from '$app/stores';
   import { persisted } from 'svelte-persisted-store'
@@ -31,13 +30,13 @@
 	onMount(async () => {
 		await detectSWUpdate();
 		if (get(type) == '333') type.set('333');
-		resize_to_fit(document);
+		//resize_to_fit(document);
 	});
 </script>
 
 <svelte:window
 	on:resize={() => {
-		resize_to_fit(document);
+		//resize_to_fit(document);
 	}}
 />
 

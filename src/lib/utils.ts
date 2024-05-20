@@ -76,12 +76,12 @@ export function resize_to_fit(document: Document, first = true) {
 		output.style.fontSize = '3rem';
 		output.style.lineHeight = '150%';
 		setTimeout(() => {
-			resize_to_fit(document, false);
+			//resize_to_fit(document, false);
 		}, 100);
 	}
 	let fontSize = window.getComputedStyle(output).fontSize;
 	if (output.clientHeight >= outputContainer.clientHeight) {
 		output.style.fontSize = parseFloat(fontSize) - 2 + 'px';
-		resize_to_fit(document, false);
+		//resize_to_fit(document, false);
 	}
 }
