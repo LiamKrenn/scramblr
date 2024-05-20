@@ -143,3 +143,9 @@
 		</div>
 	{/if}
 </button>
+
+<style>
+  .scramble {
+    font-size: clamp(1.2rem, 3.3cqmin, 3.5rem);
+  }
+</style>
