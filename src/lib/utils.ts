@@ -85,3 +85,12 @@ export function resize_to_fit(document: Document, first = true) {
 		//resize_to_fit(document, false);
 	}
 }
+
+export function timeToFormattedString(time: number, decimals: number) {
+  time = time / 1000;
+  let minutes = Math.floor(time / 60);
+  let seconds = (time % 60).toFixed(decimals);
+  if (minutes == 0) return seconds;
+  if (parseFloat(seconds) < 10) seconds = '0' + seconds;
+  return `${minutes}:${seconds}`;
+}

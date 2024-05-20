@@ -16,6 +16,8 @@ scramble.subscribe((value) => {
 
 export const type = persisted('type', '333');
 
+export const times = persisted('times', []);
+
 export const types: { [group: string]: string[] } = {
 	WCA: [
 		'333',

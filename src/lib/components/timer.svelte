@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { new_scramble } from '$lib/scramble';
+	import { timeToFormattedString } from '$lib/utils';
 
 	const SPACEBAR_KEYCODE = 32;
 	const READY_DELAY = 300;
@@ -24,17 +25,9 @@
     in_solve = false;
 	}
 
-	function timeToFormattedString(time: number, decimals: number) {
-		let minutes = Math.floor(time / 60);
-		let seconds = (time % 60).toFixed(decimals);
-		if (minutes == 0) return seconds;
-		if (parseFloat(seconds) < 10) seconds = '0' + seconds;
-		return `${minutes}:${seconds}`;
-	}
-
 	function startTimerUpdate() {
 		timerInterval = setInterval(() => {
-			display_time = timeToFormattedString((Date.now() - start_time) / 1000, TIMER_UPDATE_DECIMALS);
+			display_time = timeToFormattedString((Date.now() - start_time), TIMER_UPDATE_DECIMALS);
 		}, TIMER_UPDATE_INTERVAL);
 	}
 
@@ -67,8 +60,9 @@
 			display_time = '0.0';
 			time = 0;
 		} else if (start_time != 0) {
-			display_time = timeToFormattedString((Date.now() - start_time) / 1000, TIMER_DECIMALS);
-			time = parseFloat(display_time);
+      let msecs = Date.now() - start_time;
+			display_time = timeToFormattedString(msecs, TIMER_DECIMALS);
+			time = msecs;
 			start_time = 0;
 			await new_scramble();
 		}

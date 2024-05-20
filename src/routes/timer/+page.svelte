@@ -2,27 +2,40 @@
 	import ScramblePreview from '$lib/components/scramble-preview.svelte';
 	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
 	import Timer from '$lib/components/timer.svelte';
-	import { new_scramble, scramble } from '$lib/scramble';
+	import { new_scramble, scramble, times } from '$lib/scramble';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Menu from '$lib/components/menu.svelte';
+	import type { Session, Time } from '$lib/types';
+	import { get } from 'svelte/store';
+  import { timeToFormattedString } from '$lib/utils';
 
 	export let data: PageData;
 
 	let time = 0;
 	let in_solve = false;
 
+	$: if (time) {
+		times.update((times) => {
+			return [...times, [[0, time], $scramble, '', Date.now()]];
+		});
+		console.log(get(times));
+		time = 0;
+	}
+
 	onMount(async () => {
 		await new_scramble();
 	});
 </script>
 
-<button class="relative flex h-full w-full select-none flex-col items-center justify-center cursor-default">
+<button
+	class="relative flex h-full w-full cursor-default select-none flex-col items-center justify-center"
+>
 	{#if !in_solve}
 		<!-- Absolutes -->
-    
-    <Menu />
+
+		<Menu />
 		<ScrambleSelector />
 
 		<div
@@ -78,14 +91,19 @@
 	<Timer bind:time bind:in_solve />
 
 	{#if !in_solve}
-		<div class="absolute bottom-0 h-[33%] w-full">
+		<div class="absolute bottom-0 h-[25%] w-full sm:h-[33%]">
 			<div class="w-full px-4">
 				<Separator class="my-1 h-0.5 rounded xl:h-1" />
 			</div>
 			<!-- UI -->
 			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
 				<!-- Left -->
-				<div class="grow">times</div>
+				<div class="grow overflow-y-auto">
+          {#each $times as time}
+          <p>{timeToFormattedString(time[0][1], 3)}</p>
+             
+          {/each}
+        </div>
 
 				<Separator class="mx-1 rounded" orientation="vertical" />
 
@@ -97,7 +115,7 @@
 
 					<!-- Logo -->
 					<h1
-						class="flex w-max mb-2 grow-0 cursor-pointer select-none items-end justify-center text-3xl"
+						class="mb-2 flex w-max grow-0 cursor-pointer select-none items-end justify-center text-3xl"
 					>
 						<p class=" font-semibold opacity-90">scramblr</p>
 
