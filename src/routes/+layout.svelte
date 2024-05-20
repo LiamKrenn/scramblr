@@ -5,11 +5,12 @@
 	import { get } from 'svelte/store';
 	import Menu from '$lib/components/menu.svelte';
 
-  import { page } from '$app/stores';
-  import { persisted } from 'svelte-persisted-store'
+	import { page } from '$app/stores';
+	import { persisted } from 'svelte-persisted-store';
 
-  page.subscribe(value => {console.log(value)});
-
+	page.subscribe((value) => {
+		console.log(value);
+	});
 
 	async function detectSWUpdate() {
 		const registration = await navigator.serviceWorker.ready;
@@ -45,11 +46,11 @@
 	<slot />
 </div>
 
-
-
-
 <style>
 	:global(:fullscreen, ::backdrop) {
 		background-color: #020817;
+	}
+	:global(body) {
+		overscroll-behavior-y: contain;
 	}
 </style>
