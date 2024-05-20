@@ -17,7 +17,7 @@
 			>{typemap[$type].display}</Button
 		>
 	</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="z-20 lg:w-40">
+	<DropdownMenu.Content class="lg:w-40">
 		<DropdownMenu.RadioGroup bind:value={$type}>
 			{#each Object.keys(types) as group}
 				<DropdownMenu.Sub>

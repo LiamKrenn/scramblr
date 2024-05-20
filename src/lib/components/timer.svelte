@@ -14,11 +14,14 @@
 	let timerInterval: NodeJS.Timeout;
 
 	export let time = 0;
+  export let in_solve = false;
 
 	$: if (start_time != 0) {
+    in_solve = true;
 		startTimerUpdate();
 	} else {
 		stopTimerUpdate();
+    in_solve = false;
 	}
 
 	function timeToFormattedString(time: number, decimals: number) {
@@ -60,6 +63,7 @@
 			key_down = Date.now();
 		} else if (key_down != 0 && start_time == 0 && Date.now() - key_down > READY_DELAY) {
 			ready = true;
+      in_solve = true;
 			display_time = '0.0';
 			time = 0;
 		} else if (start_time != 0) {

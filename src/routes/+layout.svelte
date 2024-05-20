@@ -45,7 +45,6 @@
 	<slot />
 </div>
 
-<Menu />
 
 
 

@@ -3,18 +3,22 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Box, Menu, Timer, Settings } from 'lucide-svelte';
 	import MenuItem from './menu-item.svelte';
+	import { cn } from '$lib/utils';
+
+  let className: string = "";
+	export { className as class };
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger asChild let:builder class="absolute right-4 top-4">
+	<DropdownMenu.Trigger asChild let:builder class="absolute z-20  right-4 top-4">
 		<Button
 			variant="outline"
 			builders={[builder]}
-			class="absolute right-4 top-4 z-10 h-14 w-14 p-3 lg:h-16 lg:w-16"
+			class={cn(className, "absolute z-20  right-4 top-4 h-14 w-14 p-3 lg:h-16 lg:w-16")}
 			><Menu class="h-full w-full" /></Button
 		>
 	</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="z-10 ">
+	<DropdownMenu.Content class="z-20 ">
 		<MenuItem path="/">
 			<Box class="mr-2 " />
 			<p>Scrambler</p>
