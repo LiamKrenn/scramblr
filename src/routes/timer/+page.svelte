@@ -10,19 +10,20 @@
 	import type { Session, Time } from '$lib/types';
 	import { get } from 'svelte/store';
   import { timeToFormattedString } from '$lib/utils';
+  import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
 
 	export let data: PageData;
 
 	let time = 0;
 	let in_solve = false;
 
-	$: if (time) {
-		times.update((times) => {
-			return [...times, [[0, time], $scramble, '', Date.now()]];
-		});
-		console.log(get(times));
-		time = 0;
-	}
+  $: if (time) {
+    times.update((times) => {
+      return [[[0, time], $scramble, '', Date.now()], ...times];
+    });
+    console.log(get(times));
+    time = 0;
+  }
 
 	onMount(async () => {
 		await new_scramble();
@@ -98,12 +99,12 @@
 			<!-- UI -->
 			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
 				<!-- Left -->
-				<div class="grow overflow-y-auto">
+				<ScrollArea class="grow overflow-y-auto">
           {#each $times as time}
           <p>{timeToFormattedString(time[0][1], 3)}</p>
              
           {/each}
-        </div>
+        </ScrollArea>
 
 				<Separator class="mx-1 rounded" orientation="vertical" />
 
