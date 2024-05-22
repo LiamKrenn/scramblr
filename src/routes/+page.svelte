@@ -47,7 +47,7 @@
 		<ScrambleSelector />
 
 		<div
-			class="scrambleContainer absolute top-20 block h-[20%] w-full text-balance px-4 text-center md:top-8 md:px-28"
+			class="scrambleContainer absolute top-20 block h-[20%] w-full text-balance px-4 text-center md:top-4 md:px-28"
 		>
 			{#if $scramble.length > 270}
 				<p class="scramble text-balance text-[clamp(1rem,2.9cqmin,3.9rem)]">
