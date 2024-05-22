@@ -9,26 +9,33 @@
 	import Menu from '$lib/components/menu.svelte';
 	import type { Session, Time } from '$lib/types';
 	import { get } from 'svelte/store';
-  import { timeToFormattedString } from '$lib/utils';
-  import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
+	import { timeToFormattedString } from '$lib/utils';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
+	import TimeItem from '$lib/components/time-item.svelte';
+	import TimePopup from '$lib/components/time-popup.svelte';
 
 	export let data: PageData;
 
 	let time = 0;
 	let in_solve = false;
 
-  $: if (time) {
-    times.update((times) => {
-      return [[[0, time], $scramble, '', Date.now()], ...times];
-    });
-    console.log(get(times));
-    time = 0;
-  }
+	$: index = $times.length > 0 ? $times[0][4] + 1 : 0;
 
+	$: if (time) {
+		times.update((times) => {
+			return [[[0, time], $scramble, '', Date.now(), index], ...times];
+		});
+		console.log(get(times));
+		time = 0;
+	}
+
+	let time_popup: TimePopup;
 	onMount(async () => {
 		await new_scramble();
 	});
 </script>
+
+<TimePopup bind:this={time_popup} />
 
 <button
 	class="relative flex h-full w-full cursor-default select-none flex-col items-center justify-center"
@@ -100,11 +107,12 @@
 			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
 				<!-- Left -->
 				<ScrollArea class="grow overflow-y-auto">
-          {#each $times as time}
-          <p>{timeToFormattedString(time[0][1], 3)}</p>
-             
-          {/each}
-        </ScrollArea>
+					{#each $times as time}
+						{#if time_popup != undefined}
+							<TimeItem {time} openTimePopup={time_popup.openTimePopup} />
+						{/if}
+					{/each}
+				</ScrollArea>
 
 				<Separator class="mx-1 rounded" orientation="vertical" />
 
@@ -121,7 +129,7 @@
 						<p class=" font-semibold opacity-90">scramblr</p>
 
 						<a
-							class="!z-20 lslogob mb-[0.5cqb] ml-2 opacity-75"
+							class="lslogob !z-20 mb-[0.5cqb] ml-2 opacity-75"
 							href="https://github.com/LiamKrenn"
 							target="_blank"
 						>
@@ -146,14 +154,14 @@
 </button>
 
 <style>
-  .scramble {
-    font-size: clamp(1.2rem, 3.3cqmin, 3.5rem);
-  }
+	.scramble {
+		font-size: clamp(1.2rem, 3.3cqmin, 3.5rem);
+	}
 
-  .lslogos {
-    font-size: clamp(1rem, 3cqmin, 3.5rem);
-  }
-  .lslogob {
-    font-size: clamp(0.7rem, 1.5cqmin, 2rem);
-  }
+	.lslogos {
+		font-size: clamp(1rem, 3cqmin, 3.5rem);
+	}
+	.lslogob {
+		font-size: clamp(0.7rem, 1.5cqmin, 2rem);
+	}
 </style>
