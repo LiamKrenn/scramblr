@@ -26,7 +26,7 @@
 						{group}
 					</DropdownMenu.SubTrigger>
 					<DropdownMenu.SubContent class="w-auto ">
-            <ScrollArea class="!overflow-y-auto max-h-[100vh]">
+            <ScrollArea class="!overflow-y-auto max-h-svh">
               {#each types[group] as cube}
 							<DropdownMenu.RadioItem class="cursor-pointer pr-4 lg:py-2 lg:text-xl" value={cube}
 								>{typemap[cube].display}</DropdownMenu.RadioItem
