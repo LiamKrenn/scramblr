@@ -49,7 +49,11 @@
 		<div
 			class="scrambleContainer absolute top-20 block h-[20%] w-full text-balance px-4 text-center md:top-8 md:px-28"
 		>
-			{#if $scramble.length > 200}
+			{#if $scramble.length > 270}
+				<p class="scramble text-balance text-[clamp(1rem,2.9cqmin,3.9rem)]">
+					{$scramble}
+				</p>
+			{:else if $scramble.length > 200}
 				<p class="scramble text-balance text-[clamp(1.2rem,3.3cqmin,4rem)]">
 					{$scramble}
 				</p>

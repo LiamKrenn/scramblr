@@ -58,7 +58,11 @@
 		on:click={textClick}
 		class="absolute mx-[8%] block h-[40%] max-h-[40%] select-text text-balance text-center"
 	>
-		{#if $scramble.length > 200}
+		{#if $scramble.length > 270}
+			<p class="scramble text-balance text-[clamp(1rem,2.9cqmin,3.9rem)]">
+				{$scramble}
+			</p>
+		{:else if $scramble.length > 200}
 			<p class="scramble text-balance text-[clamp(1.2rem,3.3cqmin,4rem)]">
 				{$scramble}
 			</p>
