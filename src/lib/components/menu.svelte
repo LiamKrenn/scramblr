@@ -20,13 +20,13 @@
 		>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="z-20 ">
-		<MenuItem path="/">
+    <MenuItem path="/">
+      <Timer class="mr-2" />
+      <p>Timer</p>
+    </MenuItem>
+		<MenuItem path="/scrambler">
 			<Box class="mr-2 " />
 			<p>Scrambler</p>
-		</MenuItem>
-		<MenuItem path="/timer">
-			<Timer class="mr-2" />
-			<p>Timer</p>
 		</MenuItem>
 		<DropdownMenu.Separator />
 		<DropdownMenu.Item class="cursor-pointer text-lg lg:py-2 lg:text-xl">

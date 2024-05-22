@@ -1,85 +1,163 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
-	import { new_scramble, scramble } from '$lib/scramble';
-	import { getSelectedText } from '$lib/utils';
 	import ScramblePreview from '$lib/components/scramble-preview.svelte';
+	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
+	import Timer from '$lib/components/timer.svelte';
+	import { new_scramble, scramble, times } from '$lib/scramble';
+	import type { PageData } from './timer/$types';
+	import { onMount } from 'svelte';
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Menu from '$lib/components/menu.svelte';
+	import type { Session, Time } from '$lib/types';
+	import { get } from 'svelte/store';
+	import { timeToFormattedString } from '$lib/utils';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
+	import TimeItem from '$lib/components/time-item.svelte';
+	import TimePopup from '$lib/components/time-popup.svelte';
 
+	export let data: PageData;
+
+	let time = 0;
+	let in_solve = false;
+
+	$: index = $times.length > 0 ? $times[0][4] + 1 : 0;
+
+	$: if (time) {
+		times.update((times) => {
+			return [[[0, time], $scramble, '', Date.now(), index], ...times];
+		});
+		console.log(get(times));
+		time = 0;
+	}
+
+	let time_popup: TimePopup;
 	onMount(async () => {
-		await click();
-	});
-
-	async function click() {
 		await new_scramble();
-	}
-
-	async function textClick() {
-		if (getSelectedText() == '') {
-			click();
-		}
-	}
-
-	async function onKeyDown(e: KeyboardEvent) {
-		if (e.keyCode == 32) {
-			await click();
-		}
-	}
+	});
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+<TimePopup bind:this={time_popup} />
 
-<h1
-	class="absolute left-4 top-4 flex cursor-pointer select-none flex-col text-3xl md:bottom-4 md:top-auto lg:text-4xl xl:text-5xl"
+<button
+	class="relative flex h-full w-full cursor-default select-none flex-col items-center justify-center"
 >
-	<p class="-z-10 font-semibold opacity-90">scramblr</p>
+	{#if !in_solve}
+		<!-- Absolutes -->
 
-	<a
-		class="!z-20 text-sm opacity-75 md:text-base lg:mt-1"
-		href="https://github.com/LiamKrenn"
-		target="_blank"
-	>
-		by
-		<span class="underline"> Liam Krenn </span>
-	</a>
-</h1>
+		<Menu />
+		<ScrambleSelector />
 
-<Menu class="!z-30" />
-<div class="relative z-10 flex h-full w-full items-center justify-center">
-	<ScrambleSelector />
-	<ScramblePreview class="absolute bottom-4 right-0 max-h-[20%] max-w-full px-2" />
-	<button
-		on:click={click}
-		class="absolute flex h-full w-full cursor-pointer flex-col items-center justify-center"
-	/>
-  
-	<button
+		<div
+			class="scrambleContainer absolute top-20 block h-[20%] w-full text-balance px-4 text-center md:top-8 md:px-28"
+		>
+			{#if $scramble.length > 200}
+				<p class="scramble text-balance text-[clamp(1.2rem,3.3cqmin,4rem)]">
+					{$scramble}
+				</p>
+			{:else if $scramble.length > 100}
+				<p class="scramble text-balance text-[clamp(1.5rem,5cqmin,4.1rem)]">
+					{$scramble}
+				</p>
+			{:else if $scramble.length > 50}
+				<p class="scramble text-balance text-[clamp(2rem,6cqmin,4.3rem)]">
+					{$scramble}
+				</p>
+			{:else}
+				<p class="scramble text-balance text-[clamp(2.5rem,7cqmin,4.5rem)]">
+					{$scramble}
+				</p>
+			{/if}
+		</div>
+
+		<!-- <div
 		id="scrambleContainer"
-		on:click={textClick}
-		class="absolute mx-[8%] h-[40%] max-h-[40%] select-text text-balance block text-center"
+		class="absolute top-20 !-z-10 block h-[32%] max-h-[32%] justify-center text-balance text-center text-3xl !leading-[125%] md:top-4 md:mx-36"
 	>
-		{#if $scramble.length > 200}
-			<p class="scramble text-balance text-[3.3cqmin] ">
+		<div  class="flex h-full items-center">
+			<p class="w-full cursor-default select-none px-4" id="scramble">
 				{$scramble}
 			</p>
-		{:else if $scramble.length > 100}
-			<p class="scramble text-balance text-[5cqmin]">
-				{$scramble}
-			</p>
-		{:else if $scramble.length > 50}
-			<p class="scramble text-balance text-[6cqmin]">
-				{$scramble}
-			</p>
-		{:else}
-			<p class="scramble text-balance text-[7cqmin]">
-				{$scramble}
-			</p>
-		{/if}
-	</button>
-</div>
+		</div>
+	</div> -->
+
+		<h1
+			class=" absolute left-4 top-4 flex cursor-pointer select-none flex-col items-start text-3xl md:hidden md:text-4xl lg:text-5xl"
+		>
+			<p class=" font-semibold opacity-90">scramblr</p>
+
+			<a
+				class="!z-20 text-sm opacity-75 md:text-base lg:mt-1"
+				href="https://github.com/LiamKrenn"
+				target="_blank"
+			>
+				by
+				<span class="underline"> Liam Krenn </span>
+			</a>
+		</h1>
+		<!-- Flex's -->
+	{/if}
+
+	<Timer bind:time bind:in_solve />
+
+	{#if !in_solve}
+		<div class="absolute bottom-0 h-[25%] w-full text-center sm:h-[33%]">
+			<div class="w-full px-4">
+				<Separator class="my-1 h-0.5 rounded xl:h-1" />
+			</div>
+			<!-- UI -->
+			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
+				<!-- Left -->
+				<ScrollArea class="!w-full grow overflow-y-auto  ">
+					{#each $times as time}
+						{#if time_popup != undefined}
+							<TimeItem {time} openTimePopup={time_popup.openTimePopup} />
+						{/if}
+					{/each}
+				</ScrollArea>
+
+				<Separator class="mx-1 grow-0 rounded" orientation="vertical" />
+
+				<!-- Middle -->
+
+				<div class="hidden w-full grow flex-col items-center md:flex">
+					<!-- Stats -->
+					<div class="w-full grow">stats</div>
+
+					<!-- Logo -->
+					<h1
+						class="lslogos mb-1 flex w-full grow-0 cursor-pointer select-none items-end justify-center"
+					>
+						<p class=" font-semibold opacity-90">scramblr</p>
+
+						<a
+							class="lslogob !z-20 mb-[0.5cqb] ml-2 opacity-75"
+							href="https://github.com/LiamKrenn"
+							target="_blank"
+						>
+							by
+							<span class="underline"> Liam Krenn </span>
+						</a>
+					</h1>
+				</div>
+				<Separator class="mx-1 hidden grow-0 rounded md:flex" orientation="vertical" />
+
+				<!-- Right -->
+				<div class="flex w-full grow flex-col">
+					<!-- Preview -->
+					<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:h-full" />
+
+					<!-- Stats -->
+					<div class="flex w-full grow md:hidden">stats</div>
+				</div>
+			</div>
+		</div>
+	{/if}
+</button>
 
 <style>
-  .scramble {
-    font-size: clamp(1.2rem, 3.3cqmin, 3.5rem);
-  }
+	.lslogos {
+		font-size: clamp(1rem, 3cqmin, 3.5rem);
+	}
+	.lslogob {
+		font-size: clamp(0.7rem, 1.5cqmin, 2rem);
+	}
 </style>
