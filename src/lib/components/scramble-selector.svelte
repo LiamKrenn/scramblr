@@ -2,6 +2,7 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { new_scramble, type, typemap, types } from '$lib/scramble';
+	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 
 	$: if ($type) {
 		new_scramble();
@@ -25,11 +26,14 @@
 						{group}
 					</DropdownMenu.SubTrigger>
 					<DropdownMenu.SubContent class="w-auto ">
-						{#each types[group] as cube}
+            <ScrollArea class="!overflow-y-auto max-h-[100vh]">
+              {#each types[group] as cube}
 							<DropdownMenu.RadioItem class="cursor-pointer pr-4 lg:py-2 lg:text-xl" value={cube}
 								>{typemap[cube].display}</DropdownMenu.RadioItem
 							>
 						{/each}
+            </ScrollArea>
+						
 					</DropdownMenu.SubContent>
 				</DropdownMenu.Sub>
 			{/each}
