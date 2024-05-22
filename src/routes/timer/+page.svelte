@@ -47,7 +47,7 @@
 		<ScrambleSelector />
 
 		<div
-			class="scrambleContainer absolute top-20 block h-[20%] w-full text-balance px-4 md:top-4 md:px-28"
+			class="scrambleContainer absolute top-20 block h-[20%] w-full text-center text-balance px-4 md:top-4 md:px-28"
 		>
 			{#if $scramble.length > 200}
 				<p class="scramble text-balance text-[3.3cqmin]">
@@ -99,7 +99,7 @@
 	<Timer bind:time bind:in_solve />
 
 	{#if !in_solve}
-		<div class="absolute bottom-0 h-[25%] w-full sm:h-[33%]">
+		<div class="absolute bottom-0 h-[25%] w-full sm:h-[33%] text-center">
 			<div class="w-full px-4">
 				<Separator class="my-1 h-0.5 rounded xl:h-1" />
 			</div>
