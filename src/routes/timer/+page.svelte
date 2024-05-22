@@ -106,25 +106,26 @@
 			<!-- UI -->
 			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
 				<!-- Left -->
-				<ScrollArea class="grow overflow-y-auto">
-					{#each $times as time}
+				<ScrollArea class="grow overflow-y-auto !w-full  ">
+            {#each $times as time}
 						{#if time_popup != undefined}
 							<TimeItem {time} openTimePopup={time_popup.openTimePopup} />
 						{/if}
 					{/each}
+					
 				</ScrollArea>
 
-				<Separator class="mx-1 rounded" orientation="vertical" />
+				<Separator class="mx-1 rounded grow-0" orientation="vertical" />
 
 				<!-- Middle -->
 
-				<div class="hidden grow flex-col items-center md:flex">
+				<div class="hidden grow flex-col w-full items-center md:flex">
 					<!-- Stats -->
-					<div class=" w-full grow">stats</div>
+					<div class="w-full grow">stats</div>
 
 					<!-- Logo -->
 					<h1
-						class="lslogos mb-1 flex w-max grow-0 cursor-pointer select-none items-end justify-center"
+						class="lslogos mb-1 flex w-full grow-0 cursor-pointer select-none items-end justify-center"
 					>
 						<p class=" font-semibold opacity-90">scramblr</p>
 
@@ -138,12 +139,12 @@
 						</a>
 					</h1>
 				</div>
-				<Separator class="mx-1 hidden rounded md:flex" orientation="vertical" />
+				<Separator class="mx-1 hidden rounded md:flex grow-0" orientation="vertical" />
 
 				<!-- Right -->
-				<div class="flex grow-[0.7] flex-col md:grow">
+				<div class="flex grow w-full flex-col">
 					<!-- Preview -->
-					<ScramblePreview class="h-[30%] w-full grow-0 p-0 md:h-full" />
+					<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:h-full" />
 
 					<!-- Stats -->
 					<div class="flex w-full grow md:hidden">stats</div>
