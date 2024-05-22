@@ -2,11 +2,12 @@
 	import { new_scramble, type } from '$lib/scramble';
 	import { onMount } from 'svelte';
 	import '../app.pcss';
-	import { get } from 'svelte/store';
+	import { get, writable } from 'svelte/store';
 	import Menu from '$lib/components/menu.svelte';
 
 	import { page } from '$app/stores';
 	import { persisted } from 'svelte-persisted-store';
+	import TimePopup from '$lib/components/time-popup.svelte';
 
 	page.subscribe((value) => {
 		//console.log(value);
@@ -34,6 +35,7 @@
 		//resize_to_fit(document);
 	});
 </script>
+
 
 <svelte:window
 	on:resize={() => {

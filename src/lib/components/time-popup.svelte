@@ -30,17 +30,17 @@
 		</Dialog.Trigger>
 		<Dialog.Content class="sm:max-w-[425px] p-0">
 			{#if time != undefined}
-				<TimePopupContent {time} {deleteTime} />
+				<TimePopupContent {time} {deleteTime} {open} />
 			{/if}
 		</Dialog.Content>
 	</Dialog.Root>
 {:else}
 	<Drawer.Root bind:open>
-		<Drawer.Trigger asChild let:builder class="">
+		<Drawer.Trigger asChild let:builder class="absolute">
 		</Drawer.Trigger>
 		<Drawer.Content class="">
 			{#if time != undefined}
-				<TimePopupContent {time} {deleteTime}/>
+				<TimePopupContent {time} {deleteTime} {open}/>
 			{/if}
 		</Drawer.Content>
 	</Drawer.Root>
