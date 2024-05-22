@@ -11,7 +11,7 @@
 
 <p class="flex justify-center w-full">
 	<Button
-		class="ml-1 h-min p-0 px-1 duration-150"
+		class="ml-1 h-min p-0 px-1 text-lg duration-150"
 		variant="ghost"
 		on:click={() => {
 			openTimePopup(time[4]);
