@@ -5,6 +5,9 @@
 	import { getSelectedText } from '$lib/utils';
 	import ScramblePreview from '$lib/components/scramble-preview.svelte';
 	import Menu from '$lib/components/menu.svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	onMount(async () => {
 		await click();
@@ -44,7 +47,7 @@
 	</a>
 </h1>
 
-<Menu class="!z-30" />
+<Menu class="!z-30" user={data.user} />
 <div class="relative z-10 flex h-full w-full items-center justify-center">
 	<ScrambleSelector />
 	<ScramblePreview class="absolute bottom-4 right-0 max-h-[20%] max-w-full px-2" />

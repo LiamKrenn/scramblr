@@ -3,7 +3,7 @@
 	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
 	import Timer from '$lib/components/timer.svelte';
 	import { new_scramble, scramble, times } from '$lib/scramble';
-	import type { PageData } from './timer/$types';
+	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Menu from '$lib/components/menu.svelte';
@@ -43,7 +43,7 @@
 	{#if !in_solve}
 		<!-- Absolutes -->
 
-		<Menu />
+		<Menu user={data.user} />
 		<ScrambleSelector />
 
 		<div
