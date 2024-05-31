@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Menu from '$lib/components/menu.svelte';
-	import type { Session, Time } from '$lib/types';
+	import type { Session, Time, TimeJson } from '$lib/types';
 	import { get } from 'svelte/store';
 	import { timeToFormattedString } from '$lib/utils';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
@@ -22,10 +22,27 @@
 	$: index = $times.length > 0 ? $times[0][4] + 1 : 0;
 
 	$: if (time) {
+    let time_json: TimeJson = {
+      time: {
+        penalty: 0,
+        time: time
+      },
+      scramble: $scramble,
+      comment: '',
+      timestamp: Date.now()
+    }
+
+    fetch('/api/times', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(time_json),
+    });
+
 		times.update((times) => {
 			return [[[0, time], $scramble, '', Date.now(), index], ...times];
 		});
-		console.log(get(times));
 		time = 0;
 	}
 
@@ -33,6 +50,8 @@
 	onMount(async () => {
 		await new_scramble();
 	});
+
+	$: logged_in = data.user !== null;
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -124,7 +143,15 @@
 
 				<div class="hidden w-full grow flex-col items-center md:flex">
 					<!-- Stats -->
-					<div class="w-full grow">stats</div>
+					<div class="w-full grow">
+						{#if !logged_in}
+							<div class="mx-2 rounded-lg bg-slate-800 p-2">
+								<p>
+									<a class="underline" href="/login">Log in</a> to save your times in the cloud!
+								</p>
+							</div>
+						{/if}
+					</div>
 
 					<!-- Logo -->
 					<h1

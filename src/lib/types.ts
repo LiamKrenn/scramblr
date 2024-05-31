@@ -13,3 +13,13 @@ export type WCAUser = {
 	expiresAt: number;
 	iat: number;
 };
+
+export type TimeJson = {
+  time: {
+    penalty: number;
+    time: number;
+  },
+  scramble: string;
+  comment: string;
+  timestamp: number;
+}

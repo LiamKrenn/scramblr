@@ -91,7 +91,7 @@
 
 <div on:touchstart={onMouseDown} on:touchend={onMouseUp} class="absolute z-10 h-full w-full" />
 
-<div class="z-0 my-4 flex h-full w-full grow cursor-default items-center justify-center">
+<div class="z-0 my-4 flex relative h-full w-full grow cursor-default items-center justify-center">
 	{#if ready}
 		<p class="text-6xl text-green-500 lg:text-8xl">{display_time}</p>
 	{:else if key_down != 0 && !ready}
