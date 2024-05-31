@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import { DATABASE_URL } from '$env/static/private';
+import { DATABASE_URI } from '$env/static/private';
 import Joi from 'joi';
 
 const time_schema = Joi.object({
@@ -14,7 +14,7 @@ const time_schema = Joi.object({
 });
 
 
-const client = new MongoClient(DATABASE_URL, {
+const client = new MongoClient(DATABASE_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
