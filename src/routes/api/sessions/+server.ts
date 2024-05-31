@@ -5,17 +5,11 @@ import Joi from 'joi';
 import type { TimeJson, WCAUser } from '$lib/types';
 import jwt from 'jsonwebtoken';
 import type { Cookies } from '@sveltejs/kit';
-import { session_id } from '$lib/scramble';
 
-const time_schema = Joi.object({
-  time: Joi.object({
-    penalty: Joi.number().required(),
-    time: Joi.number().required()
-  }),
-  scramble: Joi.string().required(),
-  comment: Joi.string().allow(''),
-  timestamp: Joi.number().required(),
-  session_id: Joi.string().required()
+const session_schema = Joi.object({
+  name: Joi.string().required(),
+  order: Joi.number().required(),
+  scramble_type: Joi.string().required(),
 });
 
 const client = new MongoClient(MONGODB_URI, {
@@ -43,9 +37,9 @@ export const GET: RequestHandler = async ({request, cookies}) => {
 
   const user_id = decoded.id;
 
-  let times = await client.db('times').collection('times').find({ "user_id": user_id }).sort({ timestamp: -1 }).toArray();
+  let sessions = await client.db('times').collection('sessions').find({ "user_id": user_id }).sort({ order: 1 }).toArray();
   
-  return new Response(JSON.stringify(times), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  return new Response(JSON.stringify(sessions), { status: 200, headers: { 'Content-Type': 'application/json' } });
 };
 
 export const POST: RequestHandler = async ({request, cookies}) => {
@@ -54,12 +48,12 @@ export const POST: RequestHandler = async ({request, cookies}) => {
 
   const user_id = decoded.id;
 
-  let time = await request.json();
+  let session = await request.json();
 
-  delete time._id;
-  delete time.user_id;
+  delete session._id;
+  delete session.user_id;
 
-  const { error, value } = time_schema.validate(time);
+  const { error, value } = session_schema.validate(session);
 
   if (error) {
     console.log(error.details);
@@ -67,9 +61,9 @@ export const POST: RequestHandler = async ({request, cookies}) => {
     return new Response("Bad Request", { status: 400 });
   }
 
-  time = value;
-  time.user_id = user_id;
+  session = value;
+  session.user_id = user_id;
 
-  await client.db('times').collection('times').insertOne(time);
+  await client.db('times').collection('sessions').insertOne(session);
   return new Response(null, { status: 201 });
 }

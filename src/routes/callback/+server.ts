@@ -1,6 +1,17 @@
-import { WCA_ORIGIN, APPLICATION_ID, CLIENT_SECRET, APP_ROUTE } from '$env/static/private';
+import { WCA_ORIGIN, APPLICATION_ID, CLIENT_SECRET, APP_ROUTE, MONGODB_URI } from '$env/static/private';
+import type { SessionJson, WCAUser } from '$lib/types.js';
 import jwt from 'jsonwebtoken';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 const { sign } = jwt;
+
+const client = new MongoClient(MONGODB_URI, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+await client.connect()
 
 export async function GET(req) {
 	const code = req.url.searchParams.get('code');
@@ -44,7 +55,16 @@ export async function GET(req) {
 		CLIENT_SECRET
 	);
 
-	console.log(token);
+  let sessions = await client.db('times').collection('sessions').find({ "user_id": user.me.id }).toArray();
+  if (sessions.length === 0) {
+    let default_session = {
+      name: "Default",
+      order: 0,
+      scramble_type: "333",
+      user_id: user.me.id
+    }
+    await client.db('times').collection('sessions').insertOne(default_session);
+  }
 
 	let resp = new Response(null, {
 		status: 302,

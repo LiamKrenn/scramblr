@@ -3,15 +3,14 @@
 	import { timeToFormattedString } from '$lib/utils';
 
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { Edit } from 'lucide-svelte';
 	export let time: TimeJson;
 
 	export let openTimePopup: (id: string) => void;
 </script>
 
-<p class="flex justify-center w-full">
+<p class="flex justify-center w-full ">
 	<Button
-		class="ml-1 h-min p-0 px-1 text-lg duration-150"
+		class="ml-1 h-min p-0 px-1 text-lg font-normal duration-150"
 		variant="ghost"
 		on:click={() => {
 			openTimePopup(time._id);

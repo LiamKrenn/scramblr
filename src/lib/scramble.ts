@@ -4,6 +4,7 @@ import { get, writable } from 'svelte/store';
 import { resize_to_fit } from './utils';
 import { browser } from '$app/environment';
 import { persisted } from 'svelte-persisted-store';
+import type { SessionJson, TimeJson } from './types';
 
 export const scramble = writable('loading...');
 
@@ -16,7 +17,7 @@ scramble.subscribe((value) => {
 
 export const type = persisted('type', '333');
 
-export const times = persisted('times', []);
+export const times = persisted<TimeJson[]>('times', []);
 
 export const types: { [group: string]: string[] } = {
 	WCA: [
@@ -35,6 +36,8 @@ export const types: { [group: string]: string[] } = {
 	CFOP: ['cross', 'oll', 'pll'],
 	Roux: ['cmll', 'lse']
 };
+
+export const session_id = persisted<string>('session_id', "");
 
 export const typemap: {
 	[type: string]: { display: string; puzzle: PuzzleID; pre_moves: string; b_display: string };

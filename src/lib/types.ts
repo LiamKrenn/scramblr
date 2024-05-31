@@ -1,6 +1,4 @@
 
-export type Session = TimeJson[];
-
 export type WCAUser = {
 	id: string;
 	name: string;
@@ -24,4 +22,14 @@ export type TimeJson = {
   scramble: string;
   comment: string;
   timestamp: number;
+  session_id: string;
+}
+
+export type SessionJson = {
+  _id: string;
+  user_id: string;
+  name: string;
+  order: number;
+  scramble_type: string;
+  
 }

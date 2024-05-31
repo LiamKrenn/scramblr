@@ -2,8 +2,9 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
-import { times } from './scramble';
-import type { TimeJson } from './types';
+import { session_id, times } from './scramble';
+import type { SessionJson, TimeJson } from './types';
+import { get } from 'svelte/store';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -103,6 +104,12 @@ export async function sync_times() {
   times.set(json);
 }
 
+export async function sync_times_of_current_session() {
+  let response = await fetch(`/api/sessions/${get(session_id)}/times`, { method: 'GET' });
+  let json = await response.json();
+  times.set(json);
+}
+
 export async function post_time(time: TimeJson) {
   await fetch('/api/times', {
     method: 'POST',
@@ -111,5 +118,20 @@ export async function post_time(time: TimeJson) {
     },
     body: JSON.stringify(time)
   });
-  await sync_times();
+  await sync_times_of_current_session();
+}
+
+export async function delete_time(time_id: string) {
+  await fetch(`/api/times/${time_id}`, { method: 'DELETE' });
+  await sync_times_of_current_session();
+}
+
+export async function get_sessions(): Promise<SessionJson[]> {
+  let response = await fetch('/api/sessions', { method: 'GET' });
+  return await response.json();
+}
+
+export async function get_session(session_id: string): Promise<SessionJson> {
+  let response = await fetch(`/api/sessions/${session_id}`, { method: 'GET' });
+  return await response.json();
 }

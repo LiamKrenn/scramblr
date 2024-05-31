@@ -7,6 +7,7 @@
 	import { times } from '$lib/scramble';
 	import { get } from 'svelte/store';
 	import TimePopupContent from './time-popup-content.svelte';
+	import { delete_time } from '$lib/utils';
 
 	let open = false;
 	const isDesktop = mediaQuery('(min-width: 768px)');
@@ -18,9 +19,9 @@
 		open = true;
 	}
 
-  function deleteTime(id: string) {
-    //open = false;
-    //times.update((t) => t.filter((time) => time[4] !== id));
+  async function deleteTime(id: string) {
+    await delete_time(id)
+    open = false;
   }
 </script>
 

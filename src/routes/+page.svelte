@@ -2,24 +2,25 @@
 	import ScramblePreview from '$lib/components/scramble-preview.svelte';
 	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
 	import Timer from '$lib/components/timer.svelte';
-	import { new_scramble, scramble, times } from '$lib/scramble';
+	import { new_scramble, scramble, session_id, times } from '$lib/scramble';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Menu from '$lib/components/menu.svelte';
-	import type { Session, TimeJson } from '$lib/types';
+	import type {  TimeJson } from '$lib/types';
 	import { get } from 'svelte/store';
-	import { post_time, sync_times, timeToFormattedString } from '$lib/utils';
+	import { get_sessions, post_time, sync_times, sync_times_of_current_session, timeToFormattedString } from '$lib/utils';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import TimeItem from '$lib/components/time-item.svelte';
 	import TimePopup from '$lib/components/time-popup.svelte';
+	import SessionSelector from '$lib/components/session-selector.svelte';
 
 	export let data: PageData;
 
 	let time = 0;
 	let in_solve = false;
 
-  $: if (time) {
+	$: if (time) {
 		let time_json: TimeJson = {
 			_id: '0',
 			user_id: '0',
@@ -29,7 +30,8 @@
 			},
 			scramble: $scramble,
 			comment: '',
-			timestamp: Date.now()
+			timestamp: Date.now(),
+      session_id: get(session_id)
 		};
 
 		if (logged_in) {
@@ -43,6 +45,10 @@
 	onMount(async () => {
 		await new_scramble();
 		if (logged_in) {
+      if (get(session_id) == '') {
+        let sessions = await get_sessions();
+        session_id.set(sessions[0]._id);
+      }
 			const res = await fetch('/api/times');
 			const json = await res.json();
 			times.set(json);
@@ -53,8 +59,8 @@
 
 	$: if (logged_in) {
 		const interval = setInterval(function () {
-      console.log("syncing times");
-			sync_times();
+			console.log('syncing times');
+			sync_times_of_current_session();
 		}, 5000);
 	}
 </script>
@@ -134,15 +140,23 @@
 			<!-- UI -->
 			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
 				<!-- Left -->
-				<ScrollArea class="!w-full grow overflow-y-auto  ">
-					{#if $times.length > 0}
-						{#each $times as time}
-							{#if time_popup != undefined}
-								<TimeItem {time} openTimePopup={time_popup.openTimePopup} />
-							{/if}
-						{/each}
-					{/if}
-				</ScrollArea>
+				<div class="flex w-full flex-col pl-2 relative">
+          <div class="absolute top-0 right-2 flex items-center">
+            <SessionSelector />
+          </div>
+          <div class="flex items-center justify-center w-full h-8 mb-2">
+            <h1 class="font-semibold text-xl">Times</h1>
+          </div>
+					<ScrollArea class="!w-full grow overflow-y-auto  ">
+						{#if $times.length > 0}
+							{#each $times as time}
+								{#if time_popup != undefined}
+									<TimeItem {time} openTimePopup={time_popup.openTimePopup} />
+								{/if}
+							{/each}
+						{/if}
+					</ScrollArea>
+				</div>
 
 				<Separator class="mx-1 grow-0 rounded" orientation="vertical" />
 
@@ -184,7 +198,15 @@
 					<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:h-full" />
 
 					<!-- Stats -->
-					<div class="flex w-full grow md:hidden">stats</div>
+					<div class="flex w-full grow md:hidden">
+            {#if !logged_in}
+							<div class="mx-2 rounded-lg bg-slate-800 p-2">
+								<p>
+									<a class="underline" href="/login">Log in</a> to save your times in the cloud!
+								</p>
+							</div>
+						{/if}
+          </div>
 				</div>
 			</div>
 		</div>
