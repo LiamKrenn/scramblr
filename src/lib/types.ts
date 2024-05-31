@@ -1,5 +1,5 @@
-export type Time = [[number, number], string, string, number, number];
-export type Session = Time[];
+
+export type Session = TimeJson[];
 
 export type WCAUser = {
 	id: string;
@@ -15,6 +15,8 @@ export type WCAUser = {
 };
 
 export type TimeJson = {
+  _id: string;
+  user_id: string;
   time: {
     penalty: number;
     time: number;

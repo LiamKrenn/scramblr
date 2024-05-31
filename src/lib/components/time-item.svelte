@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { Time } from '$lib/types';
+	import type { TimeJson } from '$lib/types';
 	import { timeToFormattedString } from '$lib/utils';
 
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Edit } from 'lucide-svelte';
-	export let time: Time;
+	export let time: TimeJson;
 
-	export let openTimePopup: (id: number) => void;
+	export let openTimePopup: (id: string) => void;
 </script>
 
 <p class="flex justify-center w-full">
@@ -14,9 +14,9 @@
 		class="ml-1 h-min p-0 px-1 text-lg duration-150"
 		variant="ghost"
 		on:click={() => {
-			openTimePopup(time[4]);
+			openTimePopup(time._id);
 		}}
 	>
-		{timeToFormattedString(time[0][1], 3)}
+		{timeToFormattedString(time.time.time, 3)}
 	</Button>
 </p>

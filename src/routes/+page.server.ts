@@ -9,7 +9,7 @@ export const load = (async ({request, cookies}) => {
   let decoded: WCAUser | null = null;
   if (token) {
     decoded = jwt.verify(token, CLIENT_SECRET) as WCAUser;
-  }
+  }  
   
 	return {
     user: decoded

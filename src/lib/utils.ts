@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
+import { times } from './scramble';
+import type { TimeJson } from './types';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -93,4 +95,20 @@ export function timeToFormattedString(time: number, decimals: number) {
   if (minutes == 0) return seconds;
   if (parseFloat(seconds) < 10) seconds = '0' + seconds;
   return `${minutes}:${seconds}`;
+}
+
+export async function sync_times() {
+  let response = await fetch('/api/times', { method: 'GET' });
+  let json = await response.json();
+  times.set(json);
+}
+
+export async function post_time(time: TimeJson) {
+  fetch('/api/times', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(time)
+  });
 }

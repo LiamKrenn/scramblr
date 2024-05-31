@@ -7,9 +7,9 @@
 	import { onMount } from 'svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Menu from '$lib/components/menu.svelte';
-	import type { Session, Time, TimeJson } from '$lib/types';
+	import type { Session, TimeJson } from '$lib/types';
 	import { get } from 'svelte/store';
-	import { timeToFormattedString } from '$lib/utils';
+	import { post_time, sync_times, timeToFormattedString } from '$lib/utils';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import TimeItem from '$lib/components/time-item.svelte';
 	import TimePopup from '$lib/components/time-popup.svelte';
@@ -19,39 +19,45 @@
 	let time = 0;
 	let in_solve = false;
 
-	$: index = $times.length > 0 ? $times[0][4] + 1 : 0;
-
 	$: if (time) {
-    let time_json: TimeJson = {
-      time: {
-        penalty: 0,
-        time: time
-      },
-      scramble: $scramble,
-      comment: '',
-      timestamp: Date.now()
-    }
+		let time_json: TimeJson = {
+			_id: '0',
+			user_id: '0',
+			time: {
+				penalty: 0,
+				time: time
+			},
+			scramble: $scramble,
+			comment: '',
+			timestamp: Date.now()
+		};
 
-    fetch('/api/times', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(time_json),
-    });
+		if (logged_in) {
+			post_time(time_json);
+			sync_times();
+		}
 
-		times.update((times) => {
-			return [[[0, time], $scramble, '', Date.now(), index], ...times];
-		});
 		time = 0;
 	}
 
 	let time_popup: TimePopup;
 	onMount(async () => {
 		await new_scramble();
+		if (logged_in) {
+			const res = await fetch('/api/times');
+			const json = await res.json();
+			times.set(json);
+		}
 	});
 
 	$: logged_in = data.user !== null;
+
+	$: if (logged_in) {
+		const interval = setInterval(function () {
+      console.log("syncing times");
+			sync_times();
+		}, 5000);
+	}
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -130,11 +136,13 @@
 			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
 				<!-- Left -->
 				<ScrollArea class="!w-full grow overflow-y-auto  ">
-					{#each $times as time}
-						{#if time_popup != undefined}
-							<TimeItem {time} openTimePopup={time_popup.openTimePopup} />
-						{/if}
-					{/each}
+					{#if $times.length > 0}
+						{#each $times as time}
+							{#if time_popup != undefined}
+								<TimeItem {time} openTimePopup={time_popup.openTimePopup} />
+							{/if}
+						{/each}
+					{/if}
 				</ScrollArea>
 
 				<Separator class="mx-1 grow-0 rounded" orientation="vertical" />
