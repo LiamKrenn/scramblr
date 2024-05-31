@@ -41,7 +41,7 @@ export const GET: RequestHandler = async ({request, cookies}) => {
 
   const user_id = decoded.id;
 
-  let times = await client.db('times').collection('times').find({ "user_id": user_id }).toArray();
+  let times = await client.db('times').collection('times').find({ "user_id": user_id }).sort({ timestamp: -1 }).toArray();
   
   return new Response(JSON.stringify(times), { status: 200, headers: { 'Content-Type': 'application/json' } });
 };
