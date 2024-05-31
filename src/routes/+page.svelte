@@ -19,7 +19,7 @@
 	let time = 0;
 	let in_solve = false;
 
-	$: if (time) {
+  $: if (time) {
 		let time_json: TimeJson = {
 			_id: '0',
 			user_id: '0',
@@ -34,7 +34,6 @@
 
 		if (logged_in) {
 			post_time(time_json);
-			sync_times();
 		}
 
 		time = 0;

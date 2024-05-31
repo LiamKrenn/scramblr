@@ -104,11 +104,12 @@ export async function sync_times() {
 }
 
 export async function post_time(time: TimeJson) {
-  fetch('/api/times', {
+  await fetch('/api/times', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(time)
   });
+  await sync_times();
 }
