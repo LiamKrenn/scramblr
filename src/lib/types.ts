@@ -22,7 +22,7 @@ export type TimeJson = {
   scramble: string;
   comment: string;
   timestamp: number;
-  session_id: string;
+  session_id?: string;
 }
 
 export type SessionJson = {
@@ -31,5 +31,6 @@ export type SessionJson = {
   name: string;
   order: number;
   scramble_type: string;
-  
+  times: TimeJson[];
 }
+

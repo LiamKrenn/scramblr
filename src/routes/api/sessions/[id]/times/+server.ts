@@ -5,7 +5,7 @@ import Joi from 'joi';
 import type { TimeJson, WCAUser } from '$lib/types';
 import jwt from 'jsonwebtoken';
 import type { Cookies } from '@sveltejs/kit';
-import { session_id } from '$lib/scramble';
+import { session_id } from '$lib/sync';
 
 const client = new MongoClient(MONGODB_URI, {
   serverApi: {

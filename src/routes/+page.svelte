@@ -2,18 +2,21 @@
 	import ScramblePreview from '$lib/components/scramble-preview.svelte';
 	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
 	import Timer from '$lib/components/timer.svelte';
-	import { new_scramble, scramble, session_id, times } from '$lib/scramble';
+	import { new_scramble, scramble } from '$lib/scramble';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Menu from '$lib/components/menu.svelte';
-	import type {  TimeJson } from '$lib/types';
+	import type { TimeJson } from '$lib/types';
 	import { get } from 'svelte/store';
-	import { get_sessions, post_time, sync_times, sync_times_of_current_session, timeToFormattedString } from '$lib/utils';
+	import { timeToFormattedString } from '$lib/utils';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import TimeItem from '$lib/components/time-item.svelte';
 	import TimePopup from '$lib/components/time-popup.svelte';
 	import SessionSelector from '$lib/components/session-selector.svelte';
+	import { useQueryClient, createQuery, createMutation } from '@tanstack/svelte-query';
+	import { sync, session_id, times, fetching } from '$lib/sync';
+	import { RefreshCw } from 'lucide-svelte';
 
 	export let data: PageData;
 
@@ -31,38 +34,37 @@
 			scramble: $scramble,
 			comment: '',
 			timestamp: Date.now(),
-      session_id: get(session_id)
+			session_id: get(session_id)
 		};
 
 		if (logged_in) {
-			post_time(time_json);
+			sync.post_time(time_json);
 		}
 
 		time = 0;
 	}
 
 	let time_popup: TimePopup;
+
+	async function openTimePopup(id: string) {
+		time_popup.openTimePopup(id);
+	}
+
 	onMount(async () => {
 		await new_scramble();
 		if (logged_in) {
-      if (get(session_id) == '') {
-        let sessions = await get_sessions();
-        session_id.set(sessions[0]._id);
-      }
-			const res = await fetch('/api/times');
-			const json = await res.json();
-			times.set(json);
+			// if (get(session_id) == '') {
+			//   let sessions = await get_sessions();
+			//   session_id.set(sessions[0]._id);
+			// }
+			// const res = await fetch('/api/times');
+			// const json = await res.json();
+			// times.set(json);
+			sync.sync_all();
 		}
 	});
 
 	$: logged_in = data.user !== null;
-
-	$: if (logged_in) {
-		const interval = setInterval(function () {
-			console.log('syncing times');
-			sync_times_of_current_session();
-		}, 5000);
-	}
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -140,18 +142,20 @@
 			<!-- UI -->
 			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
 				<!-- Left -->
-				<div class="flex w-full flex-col pl-2 relative">
-          <div class="absolute top-0 right-2 flex items-center">
-            <SessionSelector />
-          </div>
-          <div class="flex items-center justify-center w-full h-8 mb-2">
-            <h1 class="font-semibold text-xl">Times</h1>
-          </div>
+				<div class="relative flex w-full flex-col pl-2">
+					{#if $fetching}
+						<div class="absolute right-2 top-0 flex items-center">
+							<RefreshCw class="animate-spin" />
+						</div>
+					{/if}
+					<div class="mb-2 flex h-8 w-full items-center justify-center">
+						<h1 class="text-xl font-semibold">Times</h1>
+					</div>
 					<ScrollArea class="!w-full grow overflow-y-auto  ">
 						{#if $times.length > 0}
 							{#each $times as time}
 								{#if time_popup != undefined}
-									<TimeItem {time} openTimePopup={time_popup.openTimePopup} />
+									<TimeItem {time} {openTimePopup} />
 								{/if}
 							{/each}
 						{/if}
@@ -162,16 +166,21 @@
 
 				<!-- Middle -->
 
-				<div class="hidden w-full grow flex-col items-center md:flex">
+				<div class="hidden w-full grow flex-col md:flex">
 					<!-- Stats -->
-					<div class="w-full grow">
+					<div class="w-full grow px-2">
 						{#if !logged_in}
-							<div class="mx-2 rounded-lg bg-slate-800 p-2">
+							<div class="rounded-lg bg-slate-800 p-2">
 								<p>
 									<a class="underline" href="/login">Log in</a> to save your times in the cloud!
 								</p>
 							</div>
 						{/if}
+						<div class=" flex items-center">
+							<p class="mr-2">Session</p>
+							<SessionSelector />
+						</div>
+            <p class="mt-2 rounded-lg bg-slate-800 p-1 text-balance">Note: This app currently needs internet access! Offline mode is in development.</p>
 					</div>
 
 					<!-- Logo -->
@@ -198,15 +207,20 @@
 					<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:h-full" />
 
 					<!-- Stats -->
-					<div class="flex w-full grow md:hidden">
-            {#if !logged_in}
+					<div class="flex flex-col w-full grow items-start p-2 md:hidden">
+						{#if !logged_in}
 							<div class="mx-2 rounded-lg bg-slate-800 p-2">
 								<p>
 									<a class="underline" href="/login">Log in</a> to save your times in the cloud!
 								</p>
 							</div>
 						{/if}
-          </div>
+						<div class=" flex items-center">
+							<p class="mr-2">Session</p>
+							<SessionSelector />
+						</div>
+            <p class="mt-2 rounded-lg bg-slate-800 p-1 text-balance">Note: This app currently needs internet access! Offline mode is in development.</p>
+					</div>
 				</div>
 			</div>
 		</div>

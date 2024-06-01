@@ -8,6 +8,16 @@
 	import { page } from '$app/stores';
 	import { persisted } from 'svelte-persisted-store';
 	import TimePopup from '$lib/components/time-popup.svelte';
+  import { browser } from '$app/environment'
+  import { QueryClientProvider, QueryClient } from '@tanstack/svelte-query'
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        enabled: browser,
+      },
+    },
+  })
 
 	page.subscribe((value) => {
 		//console.log(value);
@@ -44,9 +54,12 @@
 />
 
 <title>scramblr</title>
-<div class="h-full overflow-hidden">
-	<slot />
-</div>
+<QueryClientProvider client={queryClient} >
+  <div class="h-full overflow-hidden">
+    <slot />
+  </div>
+</QueryClientProvider>
+
 
 <style>
 	:global(:fullscreen, ::backdrop) {
