@@ -8,20 +8,7 @@
 	import { page } from '$app/stores';
 	import { persisted } from 'svelte-persisted-store';
 	import TimePopup from '$lib/components/time-popup.svelte';
-  import { browser } from '$app/environment'
-  import { QueryClientProvider, QueryClient } from '@tanstack/svelte-query'
-
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        enabled: browser,
-      },
-    },
-  })
-
-	page.subscribe((value) => {
-		//console.log(value);
-	});
+	import { browser } from '$app/environment';
 
 	async function detectSWUpdate() {
 		const registration = await navigator.serviceWorker.ready;
@@ -46,7 +33,6 @@
 	});
 </script>
 
-
 <svelte:window
 	on:resize={() => {
 		//resize_to_fit(document);
@@ -54,12 +40,9 @@
 />
 
 <title>scramblr</title>
-<QueryClientProvider client={queryClient} >
-  <div class="h-full overflow-hidden">
-    <slot />
-  </div>
-</QueryClientProvider>
-
+<div class="h-full overflow-hidden">
+	<slot />
+</div>
 
 <style>
 	:global(:fullscreen, ::backdrop) {

@@ -9,14 +9,13 @@
 	import Menu from '$lib/components/menu.svelte';
 	import type { TimeJson } from '$lib/types';
 	import { get } from 'svelte/store';
-	import { timeToFormattedString } from '$lib/utils';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import TimeItem from '$lib/components/time-item.svelte';
 	import TimePopup from '$lib/components/time-popup.svelte';
 	import SessionSelector from '$lib/components/session-selector.svelte';
-	import { useQueryClient, createQuery, createMutation } from '@tanstack/svelte-query';
 	import { sync, session_id, times, fetching } from '$lib/sync';
 	import { RefreshCw } from 'lucide-svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
 
 	export let data: PageData;
 
@@ -104,18 +103,7 @@
 			{/if}
 		</div>
 
-		<!-- <div
-		id="scrambleContainer"
-		class="absolute top-20 !-z-10 block h-[32%] max-h-[32%] justify-center text-balance text-center text-3xl !leading-[125%] md:top-4 md:mx-36"
-	>
-		<div  class="flex h-full items-center">
-			<p class="w-full cursor-default select-none px-4" id="scramble">
-				{$scramble}
-			</p>
-		</div>
-	</div> -->
-
-		<h1
+    <h1
 			class=" absolute left-4 top-4 flex cursor-pointer select-none flex-col items-start text-3xl md:hidden md:text-4xl lg:text-5xl"
 		>
 			<p class=" font-semibold opacity-90">scramblr</p>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { new_scramble } from '$lib/scramble';
-	import { timeToFormattedString } from '$lib/utils';
+	import { disable_key_tracking, timeToFormattedString } from '$lib/utils';
 
 	const SPACEBAR_KEYCODE = 32;
 	const READY_DELAY = 300;
@@ -36,6 +36,7 @@
 	}
 
 	async function onKeyDown(e: KeyboardEvent) {
+    if ($disable_key_tracking) return;
 		if (e.keyCode == SPACEBAR_KEYCODE) {
 			await onMouseDown();
 		}
@@ -87,7 +88,7 @@
 	}
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup|preventDefault={onKeyUp} />
+<svelte:window on:keydown={onKeyDown} on:keyup={onKeyUp} />
 
 <div on:touchstart={onMouseDown} on:touchend={onMouseUp} class="absolute z-10 h-full w-full" />
 

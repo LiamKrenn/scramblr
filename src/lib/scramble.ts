@@ -9,6 +9,10 @@ import type { SessionJson, TimeJson } from './types';
 export const scramble = writable('loading...');
 export const type = persisted('type', '333');
 
+type.subscribe((value) => {
+  // TODO: 
+})
+
 
 export const types: { [group: string]: string[] } = {
 	WCA: [

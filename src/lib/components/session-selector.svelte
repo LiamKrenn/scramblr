@@ -8,6 +8,8 @@
 	import { get } from 'svelte/store';
 	import { Plus, Settings } from 'lucide-svelte';
 	import { user_data, session_id, sync } from '$lib/sync';
+	import CreateSessionContent from './create-session-content.svelte';
+	import CreateSession from './create-session.svelte';
 
 	let selected_session: SessionJson;
 
@@ -24,7 +26,11 @@
 		selected_session = await get_session(value);
 		type.set(selected_session.scramble_type);
 	});
+
+  let create_session: CreateSession;
 </script>
+
+<CreateSession bind:this={create_session} />
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger asChild let:builder class="">
@@ -46,9 +52,9 @@
 			{/each}
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
-				<Button variant="ghost" class="m-0 h-6 p-0 font-normal">
-					<Plus class="-ml-1 mr-1 h-4" /> Add Session
-				</Button>
+				  <Button on:click={create_session.openCreateDialog} variant="ghost" class="m-0 h-6 p-0 font-normal">
+            <Plus class="-ml-1 mr-1 h-4" /> Add Session
+          </Button>
 			</DropdownMenu.Item>
 			<DropdownMenu.Item>
 				<Button variant="ghost" class="m-0 h-6 p-0 font-normal">

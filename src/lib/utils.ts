@@ -3,7 +3,9 @@ import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import type { SessionJson, TimeJson } from './types';
-import { get } from 'svelte/store';
+import { get, writable } from 'svelte/store';
+
+export let disable_key_tracking = writable(false);
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

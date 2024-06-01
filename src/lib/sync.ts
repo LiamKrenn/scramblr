@@ -21,6 +21,7 @@ export const fetching = writable<boolean>(false);
 
 class UserDataSync {
 	last_sync: number = 0;
+  unsynced_data: boolean = false;
 
 	constructor() {
 		this.sync_all();
@@ -43,7 +44,7 @@ class UserDataSync {
 		}
 
 		user_data.set(session_times);
-		this.last_sync = Date.now();
+		this.unsynced_data = false;
     fetching.set(false);
 	}
 
@@ -72,10 +73,26 @@ class UserDataSync {
   async post_time(time: TimeJson) {
     fetching.set(true);
     times.set([time, ...get(times)]);
-    await post_time(time);
-    await this.sync_all()
+    try {
+      await post_time(time);
+      await this.sync_all()
+    } catch (e) {
+      this.unsynced_data = true;
+    }
     await this.sync_times();
     fetching.set(false);  
+  }
+
+  async post_session(session: any) {
+    fetching.set(true);
+    user_data.update((data) => {
+      data.push(session);
+      return data;
+    });
+    delete session.times;
+    await post_session(session);
+    await this.sync_all();
+    fetching.set(false);
   }
 
   async delete_time(time_id: string) {
@@ -131,4 +148,14 @@ async function get_sessions(): Promise<SessionJson[]> {
 async function get_session(session_id: string): Promise<SessionJson> {
 	let response = await fetch(`/api/sessions/${session_id}`, { method: 'GET' });
 	return await response.json();
+}
+
+async function post_session(session: SessionJson) {
+  await fetch('/api/sessions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(session)
+  });
 }
