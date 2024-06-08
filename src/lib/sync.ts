@@ -63,7 +63,7 @@ class UserDataSync {
 
 	async createSession(session: Session): Promise<string> {
 		let order = (await this.db.sessions.orderBy('order').last())?.order;
-		order = order ? order + 1 : 0;
+		order = order != undefined ? order + 1 : 0;
 		let new_session: Session = {
 			id: getUUID(),
 			name: session.name,
