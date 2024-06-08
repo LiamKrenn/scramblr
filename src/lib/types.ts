@@ -27,7 +27,7 @@ export type Time = {
 	penalty: number;
 	scramble?: string;
 	comment?: string;
-	timestamp?: number;
+	timestamp: number;
 	updated?: number;
 	archived?: boolean;
 };
