@@ -2,7 +2,6 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
-import type { SessionJson, TimeJson } from './types';
 import { get, writable } from 'svelte/store';
 
 export let disable_key_tracking = writable(false);
@@ -97,4 +96,8 @@ export function timeToFormattedString(time: number, decimals: number) {
   if (minutes == 0) return seconds;
   if (parseFloat(seconds) < 10) seconds = '0' + seconds;
   return `${minutes}:${seconds}`;
+}
+
+export function getUUID() {
+  return crypto.randomUUID();
 }

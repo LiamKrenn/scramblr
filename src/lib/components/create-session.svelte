@@ -2,15 +2,11 @@
 	import { mediaQuery } from 'svelte-legos';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
-	import Button from './ui/button/button.svelte';
-	import type { SessionJson, TimeJson } from '$lib/types';
-	import { get, writable } from 'svelte/store';
-	import { sync } from '$lib/sync';
+	import type { Session } from '$lib/types';
+	import { writable } from 'svelte/store';
 	import CreateSessionContent from './create-session-content.svelte';
-	import { onMount } from 'svelte';
-	import { type } from '$lib/scramble';
 	import { disable_key_tracking } from '$lib/utils';
-	import { func } from 'joi';
+	import { type } from '$lib/scramble';
 
 	let open = writable(false);
 	const isDesktop = mediaQuery('(min-width: 768px)');
@@ -26,12 +22,10 @@
     }
   });
 
-	let session: SessionJson = {
-    _id: '',
+	let session: Session = {
+    id: "",
     name: '',
-    scramble_type: get(type),
-    times: [],
-    user_id: '',
+    scramble_type: "333",
     order: 0
   };
 </script>

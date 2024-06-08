@@ -3,23 +3,24 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import Button from './ui/button/button.svelte';
-	import type { TimeJson } from '$lib/types';
+	import type { Time } from '$lib/types';
 	import { get } from 'svelte/store';
 	import TimePopupContent from './time-popup-content.svelte';
-	import { sync } from '$lib/sync';
+	import { session_id, sync, times } from '$lib/sync';
 
 	let open = false;
 	const isDesktop = mediaQuery('(min-width: 768px)');
 
-	let time: TimeJson | undefined;
+	let time: Time | undefined;
 
 	export async function openTimePopup(id: string) {
-		time = await sync.get_time(id);
+		time = await sync.getTime(id);
 		open = true;
 	}
 
 	async function deleteTime(id: string) {
-		sync.delete_time(id);
+		sync.deleteTime(id);
+    times.set(await sync.getTimesOfSession($session_id));
 		open = false;
 	}
 

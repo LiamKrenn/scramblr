@@ -1,75 +1,33 @@
+import { check_auth, prisma } from '$lib/server/db.server';
+import type { Time } from '$lib/types';
 import type { RequestHandler } from './$types';
-import { MongoClient, ServerApiVersion } from 'mongodb';
-import { CLIENT_SECRET, MONGODB_URI } from '$env/static/private';
-import Joi from 'joi';
-import type { TimeJson, WCAUser } from '$lib/types';
-import jwt from 'jsonwebtoken';
-import type { Cookies } from '@sveltejs/kit';
-import { session_id } from '$lib/scramble';
 
-const time_schema = Joi.object({
-  time: Joi.object({
-    penalty: Joi.number().required(),
-    time: Joi.number().required()
-  }),
-  scramble: Joi.string().required(),
-  comment: Joi.string().allow(''),
-  timestamp: Joi.number().required(),
-  session_id: Joi.string().required()
-});
-
-const client = new MongoClient(MONGODB_URI, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-await client.connect()
-
-
-async function check_auth(cookies: Cookies): Promise<WCAUser | null> {
-  const token = cookies.get('token');
-  let decoded: WCAUser | null = null;
-  if (token) {
-    decoded = jwt.verify(token, CLIENT_SECRET) as WCAUser;
-  }
-  return decoded;
-}
-
-export const GET: RequestHandler = async ({request, cookies}) => {
-  const decoded = await check_auth(cookies);
-  if (!decoded) { return new Response("Unauthorized", { status: 401 }); }
-
-  const user_id = decoded.id;
-
-  let times = await client.db('times').collection('times').find({ "user_id": user_id }).sort({ timestamp: -1 }).toArray();
-  
-  return new Response(JSON.stringify(times), { status: 200, headers: { 'Content-Type': 'application/json' } });
+export const GET: RequestHandler = async () => {
+	const times = await prisma.times.findMany();
+	return new Response(JSON.stringify(times), {
+		headers: { 'content-type': 'application/json' }
+	});
 };
 
-export const POST: RequestHandler = async ({request, cookies}) => {
-  const decoded = await check_auth(cookies);
-  if (!decoded) { return new Response("Unauthorized", { status: 401 }); }
+export const POST: RequestHandler = async ({ request, cookies }) => {
+  // check if authenticated
+	const decoded = await check_auth(cookies);
+	if (!decoded) {
+		return new Response('Not logged in', { status: 401 });
+	}
 
-  const user_id = decoded.id;
+	const user_id = decoded.id;
 
-  let time = await request.json();
+	let time = await request.json();
 
-  delete time._id;
-  delete time.user_id;
+  // check if session exists and belongs to user
+	const session = await prisma.sessions.findFirst({ where: { id: time.session_id, user_id } });
+	if (!session) {
+		return new Response('Unauthorized', { status: 401 });
+	}
 
-  const { error, value } = time_schema.validate(time);
+	delete time.id;
 
-  if (error) {
-    console.log(error.details);
-    
-    return new Response("Bad Request", { status: 400 });
-  }
-
-  time = value;
-  time.user_id = user_id;
-
-  await client.db('times').collection('times').insertOne(time);
-  return new Response(null, { status: 201 });
-}
+	await prisma.times.create({ data: { ...time } });
+	return new Response(null, { status: 201 });
+};

@@ -4,7 +4,6 @@ import { get, writable } from 'svelte/store';
 import { resize_to_fit } from './utils';
 import { browser } from '$app/environment';
 import { persisted } from 'svelte-persisted-store';
-import type { SessionJson, TimeJson } from './types';
 
 export const scramble = writable('loading...');
 export const type = persisted('type', '333');

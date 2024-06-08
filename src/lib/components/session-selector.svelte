@@ -1,60 +1,63 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { type } from '$lib/scramble';
-	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
-	import type { SessionJson } from '$lib/types';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 	import { Plus, Settings } from 'lucide-svelte';
-	import { user_data, session_id, sync } from '$lib/sync';
-	import CreateSessionContent from './create-session-content.svelte';
+	import { session_id, sessions, sync } from '$lib/sync';
 	import CreateSession from './create-session.svelte';
+	import type { Session } from '$lib/types';
 
-	let selected_session: SessionJson;
+	let create_session: CreateSession;
+	let display_name: string = 'Select Session';
 
-	async function get_session(id: string): Promise<SessionJson> {
-		return new Promise((resolve) => {
-			const session = get(user_data).find((s) => s._id === id);
-			if (session) {
-				resolve(session);
-			}
-		});
+	async function setToSession(id: string) {
+		let res: Session | undefined = await sync.getSession(id);
+		if (res) {
+			session_id.set(id);
+			display_name = res.name;
+		} else {
+			let first_session = (await sync.getSessions())[0];
+			session_id.set(first_session.id);
+			display_name = first_session.name;
+		}
 	}
 
 	session_id.subscribe(async (value) => {
-		selected_session = await get_session(value);
-		type.set(selected_session.scramble_type);
+		setToSession(value);
 	});
 
-  let create_session: CreateSession;
+	
+	onMount(async () => {
+		sessions.set(await sync.getSessions());
+		setToSession($session_id);
+	});
 </script>
 
 <CreateSession bind:this={create_session} />
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger asChild let:builder class="">
-		<Button variant="outline" builders={[builder]} class=" z-20 h-8 select-none px-2 text-base "
-			>{#if selected_session == null}
-				No Session
-			{:else}
-				{selected_session.name}
-			{/if}
+		<Button variant="outline" builders={[builder]} class=" z-20 h-8 select-none px-2 text-base ">
+			{display_name}
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="lg:w-40">
 		<DropdownMenu.Label>Sessions</DropdownMenu.Label>
 		<DropdownMenu.RadioGroup bind:value={$session_id}>
-			{#each $user_data as session}
-				<DropdownMenu.RadioItem value={session._id} class="cursor-pointer select-none ">
+			{#each $sessions as session}
+				<DropdownMenu.RadioItem value={session.id.toString()} class="cursor-pointer select-none ">
 					{session.name}
 				</DropdownMenu.RadioItem>
 			{/each}
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
-				  <Button on:click={create_session.openCreateDialog} variant="ghost" class="m-0 h-6 p-0 font-normal">
-            <Plus class="-ml-1 mr-1 h-4" /> Add Session
-          </Button>
+				<Button
+					on:click={create_session.openCreateDialog}
+					variant="ghost"
+					class="m-0 h-6 p-0 font-normal"
+				>
+					<Plus class="-ml-1 mr-1 h-4" /> Add Session
+				</Button>
 			</DropdownMenu.Item>
 			<DropdownMenu.Item>
 				<Button variant="ghost" class="m-0 h-6 p-0 font-normal">

@@ -7,15 +7,14 @@
 	import { onMount } from 'svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Menu from '$lib/components/menu.svelte';
-	import type { TimeJson } from '$lib/types';
 	import { get } from 'svelte/store';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import TimeItem from '$lib/components/time-item.svelte';
 	import TimePopup from '$lib/components/time-popup.svelte';
 	import SessionSelector from '$lib/components/session-selector.svelte';
-	import { sync, session_id, times, fetching } from '$lib/sync';
+	import { session_id, fetching, sync, times } from '$lib/sync';
 	import { RefreshCw } from 'lucide-svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
+	import type { Time } from '$lib/types';
 
 	export let data: PageData;
 
@@ -23,22 +22,22 @@
 	let in_solve = false;
 
 	$: if (time) {
-		let time_json: TimeJson = {
-			_id: '0',
-			user_id: '0',
-			time: {
-				penalty: 0,
-				time: time
-			},
-			scramble: $scramble,
-			comment: '',
-			timestamp: Date.now(),
-			session_id: get(session_id)
+		let time_json: Time = {
+			id: "",
+      time: time,
+      scramble: $scramble,
+      session_id: get(session_id),
+      penalty: 0,
+      timestamp: Date.now(),
 		};
+    
+    sync.createTime(time_json);
 
 		if (logged_in) {
-			sync.post_time(time_json);
+      
 		}
+
+    syncTimes();
 
 		time = 0;
 	}
@@ -48,6 +47,10 @@
 	async function openTimePopup(id: string) {
 		time_popup.openTimePopup(id);
 	}
+
+  async function syncTimes() {
+    times.set(await sync.getTimesOfSession($session_id))
+  }
 
 	onMount(async () => {
 		await new_scramble();
@@ -59,8 +62,9 @@
 			// const res = await fetch('/api/times');
 			// const json = await res.json();
 			// times.set(json);
-			sync.sync_all();
 		}
+
+    await syncTimes();
 	});
 
 	$: logged_in = data.user !== null;
@@ -141,9 +145,9 @@
 					</div>
 					<ScrollArea class="!w-full grow overflow-y-auto  ">
 						{#if $times.length > 0}
-							{#each $times as time}
+							{#each $times as time, i}
 								{#if time_popup != undefined}
-									<TimeItem {time} {openTimePopup} />
+									<TimeItem {time} {openTimePopup} index={$times.length - i} />
 								{/if}
 							{/each}
 						{/if}

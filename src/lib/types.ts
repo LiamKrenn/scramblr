@@ -1,6 +1,5 @@
-
 export type WCAUser = {
-	id: string;
+	id: number;
 	name: string;
 	email: string;
 	avatar: {
@@ -12,25 +11,23 @@ export type WCAUser = {
 	iat: number;
 };
 
-export type TimeJson = {
-  _id: string;
-  user_id: string;
-  time: {
-    penalty: number;
-    time: number;
-  },
-  scramble: string;
-  comment: string;
-  timestamp: number;
-  session_id?: string;
-}
+export type Session = {
+	id: string;
+	user_id?: number;
+	name: string;
+	order: number;
+	scramble_type: string;
+	updated?: number;
+};
 
-export type SessionJson = {
-  _id: string;
-  user_id: string;
-  name: string;
-  order: number;
-  scramble_type: string;
-  times: TimeJson[];
-}
-
+export type Time = {
+	id: string;
+	session_id: string;
+	time: number;
+	penalty: number;
+	scramble?: string;
+	comment?: string;
+	timestamp?: number;
+	updated?: number;
+	archived?: boolean;
+};

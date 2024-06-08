@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model sessions {
+  id            BigInt   @id(map: "sessions_pk") @default(autoincrement())
+  user_id       Int
+  name          String   @default(dbgenerated("now()")) @db.VarChar(32)
+  order         Int      @default(0) @db.SmallInt
+  scramble_type String   @default("333") @db.VarChar(16)
+  updated       DateTime @default(now()) @db.Timestamp(6)
+  times         times[]
+}
+
+model times {
+  id         BigInt    @id(map: "times_pk") @default(autoincrement())
+  session_id BigInt    @default(autoincrement())
+  time       Int
+  penalty    Int       @default(0) @db.SmallInt
+  scramble   String?
+  comment    String?   @db.VarChar(512)
+  timestamp  DateTime? @default(now()) @db.Timestamp(6)
+  updated    DateTime  @default(now()) @db.Timestamp(6)
+  archived   Boolean   @default(false)
+  sessions   sessions  @relation(fields: [session_id], references: [id], onDelete: Cascade, map: "times_sessions_fk")
+}
