@@ -6,7 +6,7 @@
 	export let time: Time;
   export let index: number;
 
-	export let openTimePopup: (id: string) => Promise<void>;
+	export let openTimePopup: (id: string, i: number) => Promise<void>;
 </script>
 
 <p class="flex justify-center w-full ">
@@ -14,7 +14,7 @@
 		class="ml-1 h-min p-0 px-1 text-lg font-normal duration-150"
 		variant="ghost"
 		on:click={async () => {
-			await openTimePopup(time.id);
+			await openTimePopup(time.id, index);
 		}}
 	>
 		{index}. {timeToFormattedString(time.time, 3)}

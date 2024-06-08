@@ -12,9 +12,11 @@
 	const isDesktop = mediaQuery('(min-width: 768px)');
 
 	let time: Time | undefined;
+  let index: number = 0;
 
-	export async function openTimePopup(id: string) {
+	export async function openTimePopup(id: string, i: number) {
 		time = await sync.getTime(id);
+    index = i;
 		open = true;
 	}
 
@@ -34,7 +36,7 @@
 		<Dialog.Trigger asChild let:builder></Dialog.Trigger>
 		<Dialog.Content class="p-0 sm:max-w-[425px]">
 			{#if time != undefined}
-				<TimePopupContent {time} {deleteTime} {close} />
+				<TimePopupContent {time} {deleteTime} {close} {index} />
 			{/if}
 		</Dialog.Content>
 	</Dialog.Root>
@@ -43,7 +45,7 @@
 		<Drawer.Trigger asChild let:builder class="absolute"></Drawer.Trigger>
 		<Drawer.Content class="">
 			{#if time != undefined}
-				<TimePopupContent {time} {deleteTime} {close} />
+				<TimePopupContent {time} {deleteTime} {close} {index} />
 			{/if}
 		</Drawer.Content>
 	</Drawer.Root>

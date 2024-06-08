@@ -44,8 +44,8 @@
 
 	let time_popup: TimePopup;
 
-	async function openTimePopup(id: string) {
-		time_popup.openTimePopup(id);
+	async function openTimePopup(id: string, index: number) {
+		time_popup.openTimePopup(id, index);
 	}
 
   async function syncTimes() {
