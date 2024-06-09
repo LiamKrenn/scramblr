@@ -90,7 +90,7 @@
 						session_id: session_id_map[session_id],
 						scramble: time[1],
 						comment: time[2],
-						timestamp: time[3],
+						timestamp: time[3] * 1000,
 						penalty: time[0][0],
 						archived: false
 					};
