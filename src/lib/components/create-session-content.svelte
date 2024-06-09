@@ -3,12 +3,15 @@
 	import type { Writable } from 'svelte/store';
 	import Button from './ui/button/button.svelte';
 	import Input from './ui/input/input.svelte';
+	import { type } from '$lib/scramble';
 	import { session_id, sessions, sync } from '$lib/sync';
 
 	export let session: Session;
 	export let open: Writable<boolean>;
 
 	async function createSessionClick() {
+		session.scramble_type = $type;
+		session.order = (await sync.getSessionCount()) + 1;
 		let id = await sync.createSession(session);
 		sessions.set(await sync.getSessions());
 		session_id.set(id);

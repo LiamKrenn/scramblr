@@ -38,9 +38,11 @@
 				let cs_session_id = key.split('session')[1];
 				let cs_session_props = cstimer_sessionData[cs_session_id];
 				let cs_opt = cs_session_props.opt;
+
 				let srcType = '333';
-				if (Object.keys(cs_opt).includes('srcType')) {
-					let cs_srcType: string = cs_opt.srcType;
+				if (Object.keys(cs_opt).includes('scrType')) {
+					let cs_srcType: string = cs_opt.scrType;
+
 					if (cs_srcType.includes('222')) {
 						srcType = '222';
 					} else if (cs_srcType.includes('333')) {
@@ -81,8 +83,8 @@
 				let session = cstimer_json[key];
 				let session_id = key.split('session')[1];
 				for (let time of session) {
-					// reduce to handle multi phase times
-					let c_time = time[0].slice(1).reduce((sum: number, value: number) => sum + value, 0);
+					// TODO: Multi-Phase Timer
+					let c_time = time[0][1];
 
 					let new_time: Time = {
 						id: '0',

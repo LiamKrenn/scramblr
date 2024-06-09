@@ -64,7 +64,7 @@ class UserDataSync {
 			id: getUUID(),
 			name: session.name,
 			order: session.order,
-			scramble_type: get(type),
+			scramble_type: session.scramble_type,
 			updated: Date.now() - 1
 		};
 
@@ -98,6 +98,10 @@ class UserDataSync {
 	async deleteAllSessions() {
 		return this.db.sessions.clear();
 	}
+
+  async getSessionCount() {
+    return this.db.sessions.count();
+  }
 }
 
 export const sync = new UserDataSync();
@@ -105,6 +109,7 @@ export const sync = new UserDataSync();
 session_id.subscribe(async (id) => {
 	fetching.set(true);
 	times.set([]);
+  type.set((await sync.getSession(id))?.scramble_type || '333');
 	times.set(await sync.getTimesOfSession(id));
 	fetching.set(false);
 });
