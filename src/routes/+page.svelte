@@ -139,7 +139,7 @@
 							<RefreshCw class="animate-spin" />
 						</div>
 					{/if}
-					<div class="mb-2 flex h-8 w-full items-center justify-center">
+					<div class="mb-2 flex h-8 w-full shrink-0 items-center justify-center">
 						<h1 class="text-xl font-semibold">Times</h1>
 					</div>
 					<ScrollArea class="!w-full grow overflow-y-auto  ">
