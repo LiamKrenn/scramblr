@@ -15,19 +15,19 @@
 	let timerInterval: NodeJS.Timeout;
 
 	export let time = 0;
-  export let in_solve = false;
+	export let in_solve = false;
 
 	$: if (start_time != 0) {
-    in_solve = true;
+		in_solve = true;
 		startTimerUpdate();
 	} else {
 		stopTimerUpdate();
-    in_solve = false;
+		in_solve = false;
 	}
 
 	function startTimerUpdate() {
 		timerInterval = setInterval(() => {
-			display_time = timeToFormattedString((Date.now() - start_time), TIMER_UPDATE_DECIMALS);
+			display_time = timeToFormattedString(Date.now() - start_time, TIMER_UPDATE_DECIMALS);
 		}, TIMER_UPDATE_INTERVAL);
 	}
 
@@ -36,7 +36,7 @@
 	}
 
 	async function onKeyDown(e: KeyboardEvent) {
-    if ($disable_key_tracking) return;
+		if ($disable_key_tracking) return;
 		if (e.keyCode == SPACEBAR_KEYCODE) {
 			await onMouseDown();
 		}
@@ -57,11 +57,11 @@
 			key_down = Date.now();
 		} else if (key_down != 0 && start_time == 0 && Date.now() - key_down > READY_DELAY) {
 			ready = true;
-      in_solve = true;
+			in_solve = true;
 			display_time = '0.0';
 			time = 0;
 		} else if (start_time != 0) {
-      let msecs = Date.now() - start_time;
+			let msecs = Date.now() - start_time;
 			display_time = timeToFormattedString(msecs, TIMER_DECIMALS);
 			time = msecs;
 			start_time = 0;
@@ -92,7 +92,7 @@
 
 <div on:touchstart={onMouseDown} on:touchend={onMouseUp} class="absolute z-10 h-full w-full" />
 
-<div class="z-0 my-4 flex relative h-full w-full grow cursor-default items-center justify-center">
+<div class="relative z-0 my-4 flex h-full w-full grow cursor-default items-center justify-center">
 	{#if ready}
 		<p class="text-6xl text-green-500 lg:text-8xl">{display_time}</p>
 	{:else if key_down != 0 && !ready}

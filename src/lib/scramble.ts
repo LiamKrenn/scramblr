@@ -9,9 +9,8 @@ export const scramble = writable('loading...');
 export const type = persisted('type', '333');
 
 type.subscribe((value) => {
-  // TODO: 
-})
-
+	// TODO:
+});
 
 export const types: { [group: string]: string[] } = {
 	WCA: [

@@ -12,17 +12,17 @@
 	const isDesktop = mediaQuery('(min-width: 768px)');
 
 	let time: Time | undefined;
-  let index: number = 0;
+	let index: number = 0;
 
 	export async function openTimePopup(id: string, i: number) {
 		time = await sync.getTime(id);
-    index = i;
+		index = i;
 		open = true;
 	}
 
 	async function deleteTime(id: string) {
 		sync.deleteTime(id);
-    times.set(await sync.getTimesOfSession($session_id));
+		times.set(await sync.getTimesOfSession($session_id));
 		open = false;
 	}
 

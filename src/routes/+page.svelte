@@ -23,21 +23,20 @@
 
 	$: if (time) {
 		let time_json: Time = {
-			id: "",
-      time: time,
-      scramble: $scramble,
-      session_id: get(session_id),
-      penalty: 0,
-      timestamp: Date.now(),
+			id: '',
+			time: time,
+			scramble: $scramble,
+			session_id: get(session_id),
+			penalty: 0,
+			timestamp: Date.now()
 		};
-    
-    sync.createTime(time_json);
+
+		sync.createTime(time_json);
 
 		if (logged_in) {
-      
 		}
 
-    syncTimes();
+		syncTimes();
 
 		time = 0;
 	}
@@ -48,9 +47,9 @@
 		time_popup.openTimePopup(id, index);
 	}
 
-  async function syncTimes() {
-    times.set(await sync.getTimesOfSession($session_id))
-  }
+	async function syncTimes() {
+		times.set(await sync.getTimesOfSession($session_id));
+	}
 
 	onMount(async () => {
 		await new_scramble();
@@ -64,7 +63,7 @@
 			// times.set(json);
 		}
 
-    await syncTimes();
+		await syncTimes();
 	});
 
 	$: logged_in = data.user !== null;
@@ -107,7 +106,7 @@
 			{/if}
 		</div>
 
-    <h1
+		<h1
 			class=" absolute left-4 top-4 flex cursor-pointer select-none flex-col items-start text-3xl md:hidden md:text-4xl lg:text-5xl"
 		>
 			<p class=" font-semibold opacity-90">scramblr</p>
@@ -162,7 +161,7 @@
 					<!-- Stats -->
 					<div class="w-full grow px-2">
 						{#if !logged_in}
-							<div class="rounded-lg bg-slate-800 p-2">
+							<div class="mb-2 rounded-lg bg-slate-800 p-2">
 								<p>
 									<a class="underline" href="/login">Log in</a> to save your times in the cloud!
 								</p>
@@ -172,7 +171,9 @@
 							<p class="mr-2">Session</p>
 							<SessionSelector />
 						</div>
-            <p class="mt-2 rounded-lg bg-slate-800 p-1 text-balance">Note: This app currently needs internet access! Offline mode is in development.</p>
+						<p class="mt-2 text-balance rounded-lg bg-slate-800 p-1">
+							Note: This app currently only stores data locally! Cloud storage is in development.
+						</p>
 					</div>
 
 					<!-- Logo -->
@@ -199,7 +200,7 @@
 					<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:h-full" />
 
 					<!-- Stats -->
-					<div class="flex flex-col w-full grow items-start p-2 md:hidden">
+					<div class="flex w-full grow flex-col items-start p-2 md:hidden">
 						{#if !logged_in}
 							<div class="mx-2 rounded-lg bg-slate-800 p-2">
 								<p>
@@ -211,7 +212,9 @@
 							<p class="mr-2">Session</p>
 							<SessionSelector />
 						</div>
-            <p class="mt-2 rounded-lg bg-slate-800 p-1 text-balance">Note: This app currently needs internet access! Offline mode is in development.</p>
+						<p class="mt-2 text-balance rounded-lg bg-slate-800 p-1">
+							Note: This app currently needs internet access! Offline mode is in development.
+						</p>
 					</div>
 				</div>
 			</div>

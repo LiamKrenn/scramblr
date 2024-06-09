@@ -10,9 +10,6 @@ export const session_id = persisted<string>('session_id', '');
 
 export const sessions = writable<Session[]>([]);
 export const times = writable<Time[]>([]);
-session_id.subscribe(async (id) => {
-	times.set(await sync.getTimesOfSession(id));
-});
 export const fetching = writable<boolean>(false);
 
 class UserDataSync {
@@ -49,25 +46,24 @@ class UserDataSync {
 	async createTime(time: Time): Promise<string> {
 		let new_time: Time = {
 			id: getUUID(),
-			session_id: get(session_id),
+			session_id: time.session_id,
 			time: time.time,
 			penalty: time.penalty,
 			scramble: time.scramble,
 			comment: time.comment,
-			timestamp: Date.now(),
-			updated: Date.now() - 1
+			timestamp: time.timestamp,
+			updated: Date.now() - 1,
+			archived: time?.archived || false
 		};
 
 		return this.db.times.add(new_time);
 	}
 
 	async createSession(session: Session): Promise<string> {
-		let order = (await this.db.sessions.orderBy('order').last())?.order;
-		order = order != undefined ? order + 1 : 0;
 		let new_session: Session = {
 			id: getUUID(),
 			name: session.name,
-			order: order,
+			order: session.order,
 			scramble_type: get(type),
 			updated: Date.now() - 1
 		};
@@ -94,6 +90,21 @@ class UserDataSync {
 	async getSession(id: string) {
 		return this.db.sessions.get(id);
 	}
+
+	async deleteAllTimes() {
+		return this.db.times.clear();
+	}
+
+	async deleteAllSessions() {
+		return this.db.sessions.clear();
+	}
 }
 
 export const sync = new UserDataSync();
+
+session_id.subscribe(async (id) => {
+	fetching.set(true);
+	times.set([]);
+	times.set(await sync.getTimesOfSession(id));
+	fetching.set(false);
+});

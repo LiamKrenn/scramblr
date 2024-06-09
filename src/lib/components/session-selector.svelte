@@ -4,11 +4,13 @@
 	import { onMount } from 'svelte';
 	import { Plus, Settings } from 'lucide-svelte';
 	import { session_id, sessions, sync } from '$lib/sync';
+	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 	import CreateSession from './create-session.svelte';
 	import type { Session } from '$lib/types';
 
 	let create_session: CreateSession;
 	let display_name: string = 'Select Session';
+	let open: boolean;
 
 	async function setToSession(id: string) {
 		let res: Session | undefined = await sync.getSession(id);
@@ -23,10 +25,9 @@
 	}
 
 	session_id.subscribe(async (value) => {
-		setToSession(value);
+		await setToSession(value);
 	});
 
-	
 	onMount(async () => {
 		sessions.set(await sync.getSessions());
 		setToSession($session_id);
@@ -35,7 +36,7 @@
 
 <CreateSession bind:this={create_session} />
 
-<DropdownMenu.Root>
+<DropdownMenu.Root bind:open>
 	<DropdownMenu.Trigger asChild let:builder class="">
 		<Button variant="outline" builders={[builder]} class=" z-20 h-8 select-none px-2 text-base ">
 			{display_name}
@@ -44,11 +45,19 @@
 	<DropdownMenu.Content class="lg:w-40">
 		<DropdownMenu.Label>Sessions</DropdownMenu.Label>
 		<DropdownMenu.RadioGroup bind:value={$session_id}>
-			{#each $sessions as session}
-				<DropdownMenu.RadioItem value={session.id.toString()} class="cursor-pointer select-none ">
-					{session.name}
-				</DropdownMenu.RadioItem>
-			{/each}
+			<ScrollArea class="max-h-[40svh] !overflow-y-auto">
+				{#each $sessions as session}
+					<DropdownMenu.RadioItem
+						on:click={() => {
+							open = !open;
+						}}
+						value={session.id.toString()}
+						class="cursor-pointer select-none "
+					>
+						{session.name}
+					</DropdownMenu.RadioItem>
+				{/each}
+			</ScrollArea>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
 				<Button

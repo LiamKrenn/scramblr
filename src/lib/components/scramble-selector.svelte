@@ -26,14 +26,13 @@
 						{group}
 					</DropdownMenu.SubTrigger>
 					<DropdownMenu.SubContent class="w-auto ">
-            <ScrollArea class="!overflow-y-auto max-h-[90svh]">
-              {#each types[group] as cube}
-							<DropdownMenu.RadioItem class="cursor-pointer pr-4 lg:py-2 lg:text-xl" value={cube}
-								>{typemap[cube].display}</DropdownMenu.RadioItem
-							>
-						{/each}
-            </ScrollArea>
-						
+						<ScrollArea class="max-h-[90svh] !overflow-y-auto">
+							{#each types[group] as cube}
+								<DropdownMenu.RadioItem class="cursor-pointer pr-4 lg:py-2 lg:text-xl" value={cube}
+									>{typemap[cube].display}</DropdownMenu.RadioItem
+								>
+							{/each}
+						</ScrollArea>
 					</DropdownMenu.SubContent>
 				</DropdownMenu.Sub>
 			{/each}

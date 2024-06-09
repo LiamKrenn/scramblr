@@ -11,23 +11,23 @@
 	let open = writable(false);
 	const isDesktop = mediaQuery('(min-width: 768px)');
 
-  export function openCreateDialog() {
-    disable_key_tracking.set(true);
-    open.set(true);
-  }
+	export function openCreateDialog() {
+		disable_key_tracking.set(true);
+		open.set(true);
+	}
 
-  open.subscribe((value) => {
-    if (!value) {
-      disable_key_tracking.set(false);
-    }
-  });
+	open.subscribe((value) => {
+		if (!value) {
+			disable_key_tracking.set(false);
+		}
+	});
 
 	let session: Session = {
-    id: "",
-    name: '',
-    scramble_type: "333",
-    order: 0
-  };
+		id: '',
+		name: '',
+		scramble_type: '333',
+		order: 0
+	};
 </script>
 
 {#if $isDesktop}

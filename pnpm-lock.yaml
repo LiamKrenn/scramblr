@@ -41,6 +41,9 @@ dependencies:
   prisma:
     specifier: ^5.15.0
     version: 5.15.0
+  svelte-droplet:
+    specifier: ^1.0.1
+    version: 1.0.1(svelte@4.2.12)
   svelte-legos:
     specifier: ^0.2.2
     version: 0.2.3(svelte@4.2.12)
@@ -5080,6 +5083,14 @@ packages:
       - stylus
       - sugarss
     dev: true
+
+  /svelte-droplet@1.0.1(svelte@4.2.12):
+    resolution: {integrity: sha512-HQ48nvm6Cxd8ZN3RAUtcXP+rGHVhPtqqcjjIeysbkx6RJov5O0EoPWrZk9jKnk+cA4Y7jfc9Qt+qvDvdnAfiPw==}
+    peerDependencies:
+      svelte: ^3.0.0 || ^4.0.0
+    dependencies:
+      svelte: 4.2.12
+    dev: false
 
   /svelte-eslint-parser@0.33.1(svelte@4.2.12):
     resolution: {integrity: sha512-vo7xPGTlKBGdLH8T5L64FipvTrqv3OQRx9d2z5X05KKZDlF4rQk8KViZO4flKERY+5BiVdOh7zZ7JGJWo5P0uA==}

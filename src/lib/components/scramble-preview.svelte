@@ -27,9 +27,8 @@
 		twisty_player.puzzle = typemap[$type].puzzle;
 	}
 
-  
-	let className: string = "";
+	let className: string = '';
 	export { className as class };
 </script>
 
-<twisty-player class={cn(className, "hidden" )} />
+<twisty-player class={cn(className, 'hidden')} />

@@ -31,21 +31,25 @@
 			<p>Scrambler</p>
 		</MenuItem>
 		<DropdownMenu.Separator />
-		<DropdownMenu.Item class="cursor-pointer text-lg lg:py-2 lg:text-xl">
+		<MenuItem path="/settings">
 			<Settings class="mr-2" />
 			<p>Settings</p>
-		</DropdownMenu.Item>
+		</MenuItem>
+		<!-- <DropdownMenu.Item class="cursor-pointer text-lg lg:py-2 lg:text-xl">
+			<Settings class="mr-2" />
+			<p>Settings</p>
+		</DropdownMenu.Item> -->
 		{#if user == null}
 			<MenuItem path="/login">
 				<LogIn class="mr-2" />
 				<p>Login</p>
 			</MenuItem>
 		{:else}
-    <MenuItem path="/user">
-      <!-- svelte-ignore a11y-missing-attribute -->
-      <img class="h-6 w-6 mr-2 rounded-full bg-slate-800" src="{user.avatar.url}" />
-      <p>{user.name}</p>
-    </MenuItem>
+			<MenuItem path="/user">
+				<!-- svelte-ignore a11y-missing-attribute -->
+				<img class="mr-2 h-6 w-6 rounded-full bg-slate-800" src={user.avatar.url} />
+				<p>{user.name}</p>
+			</MenuItem>
 		{/if}
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
