@@ -108,7 +108,7 @@
             
 						if (global_time_count % 1000 == 0) {
 							setTimeout(async () => {
-								const cache = 23200;
+								const cache = 3000;
 								let total = (await navigator.storage.estimate()).usage || 0;
 								let idb_size = total - cache;
 								idb_size_map[global_time_count] = idb_size;
