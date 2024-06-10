@@ -38,6 +38,9 @@ dependencies:
   mongodb:
     specifier: ^6.6.2
     version: 6.6.2
+  nanoid:
+    specifier: ^5.0.7
+    version: 5.0.7
   prisma:
     specifier: ^5.15.0
     version: 5.15.0
@@ -56,6 +59,9 @@ dependencies:
   tailwind-variants:
     specifier: ^0.2.1
     version: 0.2.1(tailwindcss@3.4.3)
+  ulid:
+    specifier: ^2.3.0
+    version: 2.3.0
   vaul-svelte:
     specifier: ^0.3.1
     version: 0.3.1(svelte@4.2.12)
@@ -1679,7 +1685,7 @@ packages:
       '@internationalized/date': 3.5.2
       dequal: 2.0.3
       focus-trap: 7.5.4
-      nanoid: 5.0.6
+      nanoid: 5.0.7
       svelte: 4.2.12
     dev: false
 
@@ -2561,7 +2567,7 @@ packages:
     dependencies:
       '@internationalized/date': 3.5.2
       '@melt-ui/svelte': 0.76.2(svelte@4.2.12)
-      nanoid: 5.0.6
+      nanoid: 5.0.7
       svelte: 4.2.12
     dev: false
 
@@ -2572,7 +2578,7 @@ packages:
     dependencies:
       '@internationalized/date': 3.5.2
       '@melt-ui/svelte': 0.76.2(svelte@4.2.12)
-      nanoid: 5.0.6
+      nanoid: 5.0.7
       svelte: 4.2.12
     dev: false
 
@@ -4188,8 +4194,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /nanoid@5.0.6:
-    resolution: {integrity: sha512-rRq0eMHoGZxlvaFOUdK1Ev83Bd1IgzzR+WJ3IbDJ7QOSdAxYjlurSPqFs9s4lJg29RT6nPwizFtJhQS6V5xgiA==}
+  /nanoid@5.0.7:
+    resolution: {integrity: sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==}
     engines: {node: ^18 || >=20}
     hasBin: true
     dev: false
@@ -5432,6 +5438,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
+
+  /ulid@2.3.0:
+    resolution: {integrity: sha512-keqHubrlpvT6G2wH0OEfSW4mquYRcbe/J8NMmveoQOjUqmo+hXtO+ORCpWhdbZ7k72UtY61BL7haGxW6enBnjw==}
+    hasBin: true
+    dev: false
 
   /unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

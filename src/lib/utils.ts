@@ -3,6 +3,10 @@ import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import { get, writable } from 'svelte/store';
+import { nanoid } from 'nanoid'
+import { monotonicFactory } from 'ulid'
+
+const ulid = monotonicFactory()
 
 export let disable_key_tracking = writable(false);
 
@@ -99,5 +103,8 @@ export function timeToFormattedString(time: number, decimals: number) {
 }
 
 export function getUUID() {
-	return crypto.randomUUID();
+  // return ulid(); // 6.7mb
+	//return nanoid() // 8.5mb
+  return crypto.randomUUID(); // 9.8mb
+  //return new TextEncoder().encode(crypto.randomUUID()); // 7.7mb
 }

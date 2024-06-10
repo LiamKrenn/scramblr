@@ -20,10 +20,12 @@ class UserDataSync {
 	};
 
 	constructor() {
-		this.db.version(6).stores({
-			times: 'id,session_id,updated,timestamp',
+    
+		this.db.version(8).stores({
+			times: 'id,session_id,updated',
 			sessions: 'id,updated,order'
 		});
+
 
 		this.init();
 	}
@@ -56,6 +58,7 @@ class UserDataSync {
 			archived: time?.archived || false
 		};
 
+
 		return this.db.times.add(new_time);
 	}
 
@@ -86,6 +89,10 @@ class UserDataSync {
 	async getSessions() {
 		return this.db.sessions.orderBy('order').toArray();
 	}
+
+  async getTimes() {
+    return this.db.times.toArray();
+  }
 
 	async getSession(id: string) {
 		return this.db.sessions.get(id);

@@ -12,6 +12,7 @@
 	}
 
 	export let data: PageData;
+
 </script>
 
 <div class="relative flex h-full w-full flex-col items-center p-8">

@@ -9,101 +9,136 @@
 
 	let done = false;
 
+	let idb_size_map: { [key: number]: number } = {};
+	let global_time_count = 0;
 	async function handleFiles(files: File[]) {
 		for (const file of files) {
-			uploaded_file = file;
-			let cstimer_json = await JSON.parse(await uploaded_file.text());
-			let cstimer_keys = Object.keys(cstimer_json);
-			let cstimer_sessionData = await JSON.parse(cstimer_json.properties.sessionData);
+			for (let i = 0; i < 20; i++) {
+        
+				uploaded_file = file;
+				let cstimer_json = await JSON.parse(await uploaded_file.text());
+				let cstimer_keys = Object.keys(cstimer_json);
+				let cstimer_sessionData = await JSON.parse(cstimer_json.properties.sessionData);
 
-			let session_keys = [];
-			for (let key of cstimer_keys) {
-				if (key.startsWith('session')) {
-					session_keys.push(key);
-					let session = cstimer_json[key];
-					time_count += session.length;
-				}
-			}
-			time_count += session_keys.length;
-			time_count -= 100;
-
-			// resed idb
-			sync.deleteAllSessions();
-			sync.deleteAllTimes();
-
-			let session_id_map: { [cs_id: string]: string } = {};
-
-			// create sessions
-			for (let key of session_keys) {
-				let cs_session_id = key.split('session')[1];
-				let cs_session_props = cstimer_sessionData[cs_session_id];
-				let cs_opt = cs_session_props.opt;
-
-				let srcType = '333';
-				if (Object.keys(cs_opt).includes('scrType')) {
-					let cs_srcType: string = cs_opt.scrType;
-
-					if (cs_srcType.includes('222')) {
-						srcType = '222';
-					} else if (cs_srcType.includes('333')) {
-						srcType = '333';
-					} else if (cs_srcType.includes('444')) {
-						srcType = '444';
-					} else if (cs_srcType.includes('555')) {
-						srcType = '555';
-					} else if (cs_srcType.includes('666')) {
-						srcType = '666';
-					} else if (cs_srcType.includes('777')) {
-						srcType = '777';
-					} else if (cs_srcType == 'skbso') {
-						srcType = 'skewb';
-					} else if (cs_srcType == 'll') {
-						srcType = 'oll';
-					} else if (cs_srcType == 'pyrso') {
-						srcType = 'pyraminx';
-					} else if (cs_srcType == 'mgmp') {
-						srcType = 'megaminx';
+				let session_keys = [];
+				for (let key of cstimer_keys) {
+					if (key.startsWith('session')) {
+						session_keys.push(key);
+						let session = cstimer_json[key];
+						time_count += session.length;
 					}
 				}
+				time_count += session_keys.length;
+				time_count -= 100;
 
-				let new_session: Session = {
-					id: '0',
-					name: cs_session_props.name,
-					order: cs_session_props.rank,
-					scramble_type: srcType
-				};
+				// resed idb
+				sync.deleteAllSessions();
+				sync.deleteAllTimes();
 
-				let session_uuid = await sync.createSession(new_session);
-				session_id_map[cs_session_id] = session_uuid;
-				times_processed++;
-			}
+				let session_id_map: { [cs_id: string]: string } = {};
 
-			// create times
-			for (let key of session_keys) {
-				let session = cstimer_json[key];
-				let session_id = key.split('session')[1];
-				for (let time of session) {
-					// TODO: Multi-Phase Timer
-					let c_time = time[0][1];
+				// create sessions
+				for (let key of session_keys) {
+					let cs_session_id = key.split('session')[1];
+					let cs_session_props = cstimer_sessionData[cs_session_id];
+					let cs_opt = cs_session_props.opt;
 
-					let new_time: Time = {
+					let srcType = '333';
+					if (Object.keys(cs_opt).includes('scrType')) {
+						let cs_srcType: string = cs_opt.scrType;
+
+						if (cs_srcType.includes('222')) {
+							srcType = '222';
+						} else if (cs_srcType.includes('333')) {
+							srcType = '333';
+						} else if (cs_srcType.includes('444')) {
+							srcType = '444';
+						} else if (cs_srcType.includes('555')) {
+							srcType = '555';
+						} else if (cs_srcType.includes('666')) {
+							srcType = '666';
+						} else if (cs_srcType.includes('777')) {
+							srcType = '777';
+						} else if (cs_srcType == 'skbso') {
+							srcType = 'skewb';
+						} else if (cs_srcType == 'll') {
+							srcType = 'oll';
+						} else if (cs_srcType == 'pyrso') {
+							srcType = 'pyraminx';
+						} else if (cs_srcType == 'mgmp') {
+							srcType = 'megaminx';
+						}
+					}
+
+					let new_session: Session = {
 						id: '0',
-						time: c_time,
-						session_id: session_id_map[session_id],
-						scramble: time[1],
-						comment: time[2],
-						timestamp: time[3] * 1000,
-						penalty: time[0][0],
-						archived: false
+						name: cs_session_props.name,
+						order: cs_session_props.rank,
+						scramble_type: srcType
 					};
 
-					await sync.createTime(new_time);
-
+					let session_uuid = await sync.createSession(new_session);
+					session_id_map[cs_session_id] = session_uuid;
 					times_processed++;
+				}
+
+				// create times
+				for (let key of session_keys) {
+					let session = cstimer_json[key];
+					let session_id = key.split('session')[1];
+					for (let time of session) {
+						// TODO: Multi-Phase Timer
+						let c_time = time[0][1];
+
+						let new_time: Time = {
+							id: '0',
+							time: c_time,
+							session_id: session_id_map[session_id],
+							scramble: time[1],
+							comment: time[2],
+							timestamp: time[3] * 1000,
+							penalty: time[0][0],
+							archived: false
+						};
+
+						await sync.createTime(new_time);
+
+						times_processed++;
+						global_time_count++;
+
+						if (global_time_count % 1000 == 0) {
+							setTimeout(async () => {
+								const cache = 23200;
+								let total = (await navigator.storage.estimate()).usage || 0;
+								let idb_size = total - cache;
+								idb_size_map[global_time_count] = idb_size;
+							}, 2000);
+						}
+					}
 				}
 			}
 
 			done = true;
+
+			// let times = await sync.getTimes();
+			// let sessions = await sync.getSessions();
+
+			// // Download JSON files
+			// downloadJSON(times, 'times.json');
+			// downloadJSON(sessions, 'sessions.json');
+
+			function downloadJSON(data: any, filename: any) {
+				const json = JSON.stringify(data);
+				const blob = new Blob([json], { type: 'application/json' });
+				const url = URL.createObjectURL(blob);
+				const link = document.createElement('a');
+				link.href = url;
+				link.download = filename;
+				link.click();
+				URL.revokeObjectURL(url);
+			}
+
+			downloadJSON(idb_size_map, 'idb_size_map.json');
 		}
 	}
 
