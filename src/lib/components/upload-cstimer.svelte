@@ -8,9 +8,6 @@
 	import { getUUID } from '$lib/utils';
 
 	let done = false;
-
-	let idb_size_map: { [key: number]: number } = {};
-	let global_time_count = 0;
 	async function handleFiles(files: File[]) {
 		for (const file of files) {
 			for (let i = 0; i < 20; i++) {
@@ -32,8 +29,8 @@
 				time_count -= 100;
 
 				// resed idb
-				// sync.deleteAllSessions();
-				// sync.deleteAllTimes();
+				sync.deleteAllSessions();
+				sync.deleteAllTimes();
 
 				let session_id_map: { [cs_id: string]: string } = {};
 
@@ -104,18 +101,6 @@
 						await sync.createTime(new_time);
 
 						times_processed++;
-						global_time_count++;
-            
-						if (global_time_count % 1000 == 0) {
-							setTimeout(async () => {
-								const cache = 3000;
-								let total = (await navigator.storage.estimate()).usage || 0;
-								let idb_size = total - cache;
-								idb_size_map[global_time_count] = idb_size;
-                console.log(global_time_count, idb_size);
-                
-							}, 2000);
-						}
 					}
 				}
 			}
@@ -129,18 +114,18 @@
 			// downloadJSON(times, 'times.json');
 			// downloadJSON(sessions, 'sessions.json');
 
-			function downloadJSON(data: any, filename: any) {
-				const json = JSON.stringify(data);
-				const blob = new Blob([json], { type: 'application/json' });
-				const url = URL.createObjectURL(blob);
-				const link = document.createElement('a');
-				link.href = url;
-				link.download = filename;
-				link.click();
-				URL.revokeObjectURL(url);
-			}
+			// function downloadJSON(data: any, filename: any) {
+			// 	const json = JSON.stringify(data);
+			// 	const blob = new Blob([json], { type: 'application/json' });
+			// 	const url = URL.createObjectURL(blob);
+			// 	const link = document.createElement('a');
+			// 	link.href = url;
+			// 	link.download = filename;
+			// 	link.click();
+			// 	URL.revokeObjectURL(url);
+			// }
 
-			downloadJSON(idb_size_map, 'idb_size_map.json');
+			// downloadJSON(idb_size_map, 'idb_size_map.json');
 		}
 	}
 
