@@ -32,8 +32,8 @@
 				time_count -= 100;
 
 				// resed idb
-				sync.deleteAllSessions();
-				sync.deleteAllTimes();
+				// sync.deleteAllSessions();
+				// sync.deleteAllTimes();
 
 				let session_id_map: { [cs_id: string]: string } = {};
 
@@ -105,13 +105,15 @@
 
 						times_processed++;
 						global_time_count++;
-
+            
 						if (global_time_count % 1000 == 0) {
 							setTimeout(async () => {
 								const cache = 23200;
 								let total = (await navigator.storage.estimate()).usage || 0;
 								let idb_size = total - cache;
 								idb_size_map[global_time_count] = idb_size;
+                console.log(global_time_count, idb_size);
+                
 							}, 2000);
 						}
 					}
