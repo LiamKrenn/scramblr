@@ -4,7 +4,7 @@ import { get, writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import Dexie, { liveQuery, type EntityTable } from 'dexie';
 import { type } from './scramble';
-import { getUUID } from './utils';
+import { compressGzip, getUUID } from './utils';
 
 export const session_id = persisted<string>('session_id', '');
 
@@ -25,7 +25,6 @@ class UserDataSync {
 			times: 'id,session_id,updated',
 			sessions: 'id,updated,order'
 		});
-
 
 		this.init();
 	}
@@ -51,7 +50,7 @@ class UserDataSync {
 			session_id: time.session_id,
 			time: time.time,
 			penalty: time.penalty,
-			scramble: time.scramble,
+			scramble: compressGzip(time.scramble),
 			comment: time.comment,
 			timestamp: time.timestamp,
 			updated: Date.now() - 1,

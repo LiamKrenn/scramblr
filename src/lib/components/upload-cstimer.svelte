@@ -8,9 +8,12 @@
 	import { getUUID } from '$lib/utils';
 
 	let done = false;
+
+	let idb_size_map: { [key: number]: number } = {};
+	let global_time_count = 0;
 	async function handleFiles(files: File[]) {
 		for (const file of files) {
-			for (let i = 0; i < 20; i++) {
+			//for (let i = 0; i < 20; i++) {
         
 				uploaded_file = file;
 				let cstimer_json = await JSON.parse(await uploaded_file.text());
@@ -29,8 +32,8 @@
 				time_count -= 100;
 
 				// resed idb
-				sync.deleteAllSessions();
-				sync.deleteAllTimes();
+				// sync.deleteAllSessions();
+				// sync.deleteAllTimes();
 
 				let session_id_map: { [cs_id: string]: string } = {};
 
@@ -101,7 +104,19 @@
 						await sync.createTime(new_time);
 
 						times_processed++;
-					}
+						// global_time_count++;
+            
+						// if (global_time_count % 1000 == 0) {
+						// 	setTimeout(async () => {
+						// 		const cache = 3000;
+						// 		let total = (await navigator.storage.estimate()).usage || 0;
+						// 		let idb_size = total - cache;
+						// 		idb_size_map[global_time_count] = idb_size;
+            //     console.log(global_time_count, idb_size);
+                
+						// 	}, 2000);
+						// }
+					//}
 				}
 			}
 
