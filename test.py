@@ -3,7 +3,7 @@ import json
 import matplotlib.pyplot as plt
 
 # Load JSON data from a file
-with open('idb_size_map.json') as f:
+with open('idb_size_map_compress.json') as f:
   data = json.load(f)
 
 

@@ -109,31 +109,3 @@ export function getUUID() {
   //return new TextEncoder().encode(crypto.randomUUID()); // 7.7mb
 }
 
-export async function compressGzip(str: string) {
-  const stream = new Blob([str]).stream();
-  const compressedStream = stream.pipeThrough(new CompressionStream('gzip'));
-  const compressedBytes = await concatUint8Arrays(compressedStream);
-  return compressedBytes;
-}
-
-export async function decompressGzip(compressedBytes: Uint8Array) {
-  const stream = new Blob([compressedBytes]).stream();
-  const decompressedStream = stream.pipeThrough(new DecompressionStream('gzip'));
-  const decompressedBytes = await concatUint8Arrays(decompressedStream);
-  return new TextDecoder().decode(decompressedBytes);
-}
-
-async function concatUint8Arrays(stream: any) {
-  let result = new Uint8Array();
-  for await (const chunk of stream) {
-    result = concatTypedArrays(result, chunk);
-  }
-  return result;
-}
-
-function concatTypedArrays(a: any, b: any) {
-  const c = new Uint8Array(a.length + b.length);
-  c.set(a, 0);
-  c.set(b, a.length);
-  return c;
-}

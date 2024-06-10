@@ -32,8 +32,8 @@
 				time_count -= 100;
 
 				// resed idb
-				// sync.deleteAllSessions();
-				// sync.deleteAllTimes();
+				sync.deleteAllSessions();
+				sync.deleteAllTimes();
 
 				let session_id_map: { [cs_id: string]: string } = {};
 
