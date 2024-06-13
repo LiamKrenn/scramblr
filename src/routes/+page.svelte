@@ -76,7 +76,6 @@
 			// const json = await res.json();
 			// times.set(json);
 		}
-    syncTimes(true);
 	});
 
 	$: logged_in = data.user !== null;
