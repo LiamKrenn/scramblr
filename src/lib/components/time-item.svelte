@@ -9,12 +9,14 @@
 	export let openTimePopup: (id: string, i: number) => Promise<void>;
 </script>
 
-<Button
-	class="block h-min p-0 px-1 text-lg font-normal duration-150"
-	variant="ghost"
-	on:click={async () => {
-		await openTimePopup(time.id, index);
-	}}
->
-	{index}. {timeToFormattedString(time.time, 3)}
-</Button>
+<p class="flex w-full justify-center">
+	<Button
+		class="ml-1 h-min p-0 px-1 text-lg font-normal duration-150"
+		variant="ghost"
+		on:click={async () => {
+			await openTimePopup(time.id, index);
+		}}
+	>
+		{index}. {timeToFormattedString(time.time, 3)}
+	</Button>
+</p>
