@@ -7,6 +7,8 @@
 	export let index: number;
 
 	export let openTimePopup: (id: string, i: number) => Promise<void>;
+
+    
 </script>
 
 <p class="flex w-full justify-center">

@@ -19,7 +19,7 @@
 	export let data: PageData;
 
 	let time = 0;
-	let time_count = 0;
+	$: time_count = $times.length;
 	let in_solve = false;
 
 	$: if (time) {
@@ -54,10 +54,15 @@
 	}
 
 	async function syncTimes(fetching_set: boolean = false) {
-		fetching.set(true);
+    if (fetching_set) {
+      fetching.set(true);
+    }
+
 		times.set(await sync.getTimesOfSession($session_id, 0));
-		time_count = await sync.getTimeCountOfSession($session_id);
-		fetching.set(false);
+    //time_count = $times.length;
+    if (fetching_set) {
+      fetching.set(false);
+    }
 	}
 
 	onMount(async () => {
