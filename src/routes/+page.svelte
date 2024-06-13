@@ -22,7 +22,12 @@
 	let in_solve = false;
 
 	$: if (time) {
-		let time_json: Time = {
+		
+    solve_done();
+	}
+
+  async function solve_done() {
+    let time_json: Time = {
 			id: '',
 			time: time,
 			scramble: $scramble,
@@ -31,15 +36,16 @@
 			timestamp: Date.now()
 		};
 
+    fetching.set(true);
 		sync.createTime(time_json);
+		time = 0;
 
 		if (logged_in) {
 		}
 
-		//syncTimes();
-
-		time = 0;
-	}
+		await syncTimes();
+    fetching.set(false);
+  }
 
 	let time_popup: TimePopup;
 
@@ -63,7 +69,7 @@
 			// times.set(json);
 		}
 
-		//await syncTimes();
+		await syncTimes();
 	});
 
 	$: logged_in = data.user !== null;
@@ -125,7 +131,7 @@
 
 	<Timer bind:time bind:in_solve />
 
-    <div class="absolute bottom-0 h-[25%] w-full text-center sm:h-[33%] {in_solve ? "invisible" : ""}">
+    <div class="absolute bottom-0 h-[25%] w-full text-center sm:h-[33%] {in_solve ? "opacity-0 -z-20" : ""}">
 			<div class="w-full px-4">
 				<Separator class="my-1 h-0.5 rounded xl:h-1" />
 			</div>
@@ -141,21 +147,21 @@
 					<div class="mb-2 flex h-8 w-full shrink-0 items-center justify-center">
 						<h1 class="text-xl font-semibold">Times</h1>
 					</div>
-					<!-- <ScrollArea class="!w-full grow overflow-y-auto flex items-center   "> -->
+					<ScrollArea class="!w-full grow overflow-y-auto flex items-center   ">
 						{#if $times.length > 0}
-              <table>
+              <!-- <table> -->
                 {#each $times as time, i (time.id)}
-								<!-- {#if time_popup != undefined}
-									<TimeItem {time} {openTimePopup} index={$times.length - i} />
-								{/if} -->
-                <tr>
+                {#if time_popup != undefined}
+                  <TimeItem {time} {openTimePopup} index={$times.length - i} />
+                {/if}
+                <!-- <tr>
                   <td>{$times.length - i}</td>
                   <td>{time.time}</td>
-                </tr>
-							{/each}
-              </table>
+                </tr> -->
+              {/each}
+              <!-- </table> -->
 						{/if}
-					<!-- </ScrollArea> -->
+					</ScrollArea>
 				</div>
 
 				<Separator class="mx-1 grow-0 rounded" orientation="vertical" />
