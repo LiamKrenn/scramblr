@@ -21,8 +21,8 @@ class UserDataSync {
 
 	constructor() {
     
-		this.db.version(8).stores({
-			times: 'id,session_id,updated',
+		this.db.version(9).stores({
+			times: 'id,session_id,updated,timestamp',
 			sessions: 'id,updated,order'
 		});
 
@@ -73,8 +73,12 @@ class UserDataSync {
 		return this.db.sessions.add(new_session);
 	}
 
-	async getTimesOfSession(session_id: string) {
-		return this.db.times.where('session_id').equals(session_id).reverse().sortBy('timestamp');
+	async getTimesOfSession(session_id: string, limit: number = 0) {
+    if (limit) {
+      return this.db.times.orderBy('timestamp').reverse().filter((time) => time.session_id == session_id).limit(limit).toArray();
+    } else {
+      return this.db.times.where('session_id').equals(session_id).reverse().sortBy('timestamp');
+    }
 	}
 
 	async getTime(id: string) {
@@ -108,6 +112,14 @@ class UserDataSync {
   async getSessionCount() {
     return this.db.sessions.count();
   }
+
+  async getTimeCountOfSession(session_id: string) {
+    return this.db.times.where('session_id').equals(session_id).count();
+  }
+
+  async getTimeCount() {
+    return this.db.times.count();
+  }
 }
 
 export const sync = new UserDataSync();
@@ -116,6 +128,6 @@ session_id.subscribe(async (id) => {
 	fetching.set(true);
 	times.set([]);
   type.set((await sync.getSession(id))?.scramble_type || '333');
-	times.set(await sync.getTimesOfSession(id));
+	// times.set(await sync.getTimesOfSession(id));
 	fetching.set(false);
 });

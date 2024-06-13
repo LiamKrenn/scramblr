@@ -19,15 +19,15 @@
 	export let data: PageData;
 
 	let time = 0;
+	let time_count = 0;
 	let in_solve = false;
 
 	$: if (time) {
-		
-    solve_done();
+		solve_done();
 	}
 
-  async function solve_done() {
-    let time_json: Time = {
+	async function solve_done() {
+		let time_json: Time = {
 			id: '',
 			time: time,
 			scramble: $scramble,
@@ -36,7 +36,7 @@
 			timestamp: Date.now()
 		};
 
-    fetching.set(true);
+		fetching.set(true);
 		sync.createTime(time_json);
 		time = 0;
 
@@ -44,8 +44,8 @@
 		}
 
 		await syncTimes();
-    fetching.set(false);
-  }
+		fetching.set(false);
+	}
 
 	let time_popup: TimePopup;
 
@@ -53,8 +53,11 @@
 		time_popup.openTimePopup(id, index);
 	}
 
-	async function syncTimes() {
-		times.set(await sync.getTimesOfSession($session_id));
+	async function syncTimes(fetching_set: boolean = false) {
+		fetching.set(true);
+		times.set(await sync.getTimesOfSession($session_id, 0));
+		time_count = await sync.getTimeCountOfSession($session_id);
+		fetching.set(false);
 	}
 
 	onMount(async () => {
@@ -68,8 +71,6 @@
 			// const json = await res.json();
 			// times.set(json);
 		}
-
-		await syncTimes();
 	});
 
 	$: logged_in = data.user !== null;
@@ -131,106 +132,110 @@
 
 	<Timer bind:time bind:in_solve />
 
-    <div class="absolute bottom-0 h-[25%] w-full text-center sm:h-[33%] {in_solve ? "opacity-0 -z-20" : ""}">
-			<div class="w-full px-4">
-				<Separator class="my-1 h-0.5 rounded xl:h-1" />
+	<div
+		class="absolute bottom-0 h-[25%] w-full text-center sm:h-[33%] {in_solve
+			? '-z-20 opacity-0'
+			: ''}"
+	>
+		<div class="w-full px-4">
+			<Separator class="my-1 h-0.5 rounded xl:h-1" />
+		</div>
+		<!-- UI -->
+		<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
+			<!-- Left -->
+			<div class="relative flex w-full flex-col pl-2">
+				{#if $fetching}
+					<div class="absolute right-2 top-0 flex items-center">
+						<RefreshCw class="animate-spin" />
+					</div>
+				{/if}
+				<div class="mb-2 flex h-8 w-full shrink-0 items-center justify-center">
+					<h1 class="text-xl font-semibold">Times</h1>
+				</div>
+				<ScrollArea class="flex !w-full grow items-center overflow-y-auto">
+          <!-- TODO: https://svelte-tiny-virtual-list.jonasgeiler.com/ -->
+					<div class="mb-2">
+						{#await syncTimes()}
+							loading...
+						{:then value}
+							{#if $times.length > 0}
+								{#each $times as time, i (time.id)}
+									{#if time_popup != undefined}
+										<TimeItem {time} {openTimePopup} index={time_count - i} />
+									{/if}
+								{/each}
+							{/if}
+						{/await}
+					</div>
+				</ScrollArea>
 			</div>
-			<!-- UI -->
-			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
-				<!-- Left -->
-				<div class="relative flex w-full flex-col pl-2">
-					{#if $fetching}
-						<div class="absolute right-2 top-0 flex items-center">
-							<RefreshCw class="animate-spin" />
+
+			<Separator class="mx-1 grow-0 rounded" orientation="vertical" />
+
+			<!-- Middle -->
+
+			<div class="hidden w-full grow flex-col md:flex">
+				<!-- Stats -->
+				<div class="w-full grow px-2">
+					{#if !logged_in}
+						<div class="mb-2 rounded-lg bg-slate-800 p-2">
+							<p>
+								<a class="underline" href="/login">Log in</a> to save your times in the cloud!
+							</p>
 						</div>
 					{/if}
-					<div class="mb-2 flex h-8 w-full shrink-0 items-center justify-center">
-						<h1 class="text-xl font-semibold">Times</h1>
+					<div class=" flex items-center">
+						<p class="mr-2">Session</p>
+						<SessionSelector />
 					</div>
-					<ScrollArea class="!w-full grow overflow-y-auto flex items-center   ">
-						{#if $times.length > 0}
-              <!-- <table> -->
-                {#each $times as time, i (time.id)}
-                {#if time_popup != undefined}
-                  <TimeItem {time} {openTimePopup} index={$times.length - i} />
-                {/if}
-                <!-- <tr>
-                  <td>{$times.length - i}</td>
-                  <td>{time.time}</td>
-                </tr> -->
-              {/each}
-              <!-- </table> -->
-						{/if}
-					</ScrollArea>
+					<p class="mt-2 text-balance rounded-lg bg-slate-800 p-1">
+						Note: This app currently only stores data locally! Cloud storage is in development.
+					</p>
 				</div>
 
-				<Separator class="mx-1 grow-0 rounded" orientation="vertical" />
+				<!-- Logo -->
+				<h1
+					class="lslogos mb-1 flex w-full grow-0 cursor-pointer select-none items-end justify-center"
+				>
+					<p class=" font-semibold opacity-90">scramblr</p>
 
-				<!-- Middle -->
-
-				<div class="hidden w-full grow flex-col md:flex">
-					<!-- Stats -->
-					<div class="w-full grow px-2">
-						{#if !logged_in}
-							<div class="mb-2 rounded-lg bg-slate-800 p-2">
-								<p>
-									<a class="underline" href="/login">Log in</a> to save your times in the cloud!
-								</p>
-							</div>
-						{/if}
-						<div class=" flex items-center">
-							<p class="mr-2">Session</p>
-							<SessionSelector />
-						</div>
-						<p class="mt-2 text-balance rounded-lg bg-slate-800 p-1">
-							Note: This app currently only stores data locally! Cloud storage is in development.
-						</p>
-					</div>
-
-					<!-- Logo -->
-					<h1
-						class="lslogos mb-1 flex w-full grow-0 cursor-pointer select-none items-end justify-center"
+					<a
+						class="lslogob !z-20 mb-[0.5cqb] ml-2 opacity-75"
+						href="https://github.com/LiamKrenn"
+						target="_blank"
 					>
-						<p class=" font-semibold opacity-90">scramblr</p>
+						by
+						<span class="underline"> Liam Krenn </span>
+					</a>
+				</h1>
+			</div>
+			<Separator class="mx-1 hidden grow-0 rounded md:flex" orientation="vertical" />
 
-						<a
-							class="lslogob !z-20 mb-[0.5cqb] ml-2 opacity-75"
-							href="https://github.com/LiamKrenn"
-							target="_blank"
-						>
-							by
-							<span class="underline"> Liam Krenn </span>
-						</a>
-					</h1>
-				</div>
-				<Separator class="mx-1 hidden grow-0 rounded md:flex" orientation="vertical" />
+			<!-- Right -->
+			<div class="flex w-full grow flex-col">
+				<!-- Preview -->
+				<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:mb-2 md:h-full" />
 
-				<!-- Right -->
-				<div class="flex w-full grow flex-col">
-					<!-- Preview -->
-					<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:h-full" />
-
-					<!-- Stats -->
-					<div class="flex w-full grow flex-col items-start p-2 md:hidden">
-						{#if !logged_in}
-							<div class="mx-2 rounded-lg bg-slate-800 p-2">
-								<p>
-									<a class="underline" href="/login">Log in</a> to save your times in the cloud!
-								</p>
-							</div>
-						{/if}
-						<div class=" flex items-center">
-							<p class="mr-2">Session</p>
-							<SessionSelector />
+				<!-- Stats -->
+				<div class="flex w-full grow flex-col items-start p-2 md:hidden">
+					{#if !logged_in}
+						<div class="mx-2 rounded-lg bg-slate-800 p-2">
+							<p>
+								<a class="underline" href="/login">Log in</a> to save your times in the cloud!
+							</p>
 						</div>
-						<p class="mt-2 text-balance rounded-lg bg-slate-800 p-1">
-							Note: This app currently needs internet access! Offline mode is in development.
-						</p>
+					{/if}
+					<div class=" flex items-center">
+						<p class="mr-2">Session</p>
+						<SessionSelector />
 					</div>
+					<p class="mt-2 text-balance rounded-lg bg-slate-800 p-1">
+						Note: This app currently needs internet access! Offline mode is in development.
+					</p>
 				</div>
 			</div>
 		</div>
-
+	</div>
 </button>
 
 <style>
