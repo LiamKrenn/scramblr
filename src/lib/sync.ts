@@ -128,6 +128,6 @@ session_id.subscribe(async (id) => {
 	fetching.set(true);
 	times.set([]);
   type.set((await sync.getSession(id))?.scramble_type || '333');
-	// times.set(await sync.getTimesOfSession(id));
+	times.set(await sync.getTimesOfSession(id));
 	fetching.set(false);
 });
