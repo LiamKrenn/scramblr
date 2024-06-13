@@ -133,7 +133,7 @@
 			<!-- UI -->
 			<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
 				<!-- Left -->
-				<div class="relative flex w-full flex-col pl-2">
+				<div class="relative flex w-full flex-col items-center pl-2">
 					{#if $fetching}
 						<div class="absolute right-2 top-0 flex items-center">
 							<RefreshCw class="animate-spin" />
@@ -142,9 +142,9 @@
 					<div class="mb-2 flex h-8 w-full shrink-0 items-center justify-center">
 						<h1 class="text-xl font-semibold">Times</h1>
 					</div>
-					<ScrollArea class="!w-full grow overflow-y-auto  ">
+					<ScrollArea class="flex w-min grow items-center overflow-y-auto  ">
 						{#if $times.length > 0}
-							{#each $times as time, i}
+							{#each $times as time, i (time.id)}
 								{#if time_popup != undefined}
 									<TimeItem {time} {openTimePopup} index={$times.length - i} />
 								{/if}
