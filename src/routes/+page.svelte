@@ -154,19 +154,33 @@
 
 	<Timer bind:time bind:in_solve />
 
-  
+	<div
+		class="absolute mt-2 flex h-[49%] w-full max-w-[90%] flex-col items-center justify-end sm:h-[33%]"
+	>
+		<!-- {#if !logged_in}
+      <div class="relative w-max rounded-lg bg-slate-800 py-1 px-2">
+        <p>
+          <a class="underline" href="/login">Log in</a> to save your times in the cloud!
+        </p>
+      </div>
+    {/if} -->
+		<p class="relative flex text-balance rounded-lg bg-slate-800 px-2 py-1">
+			Note: This app currently only stores data locally! Cloud storage is in development.
+		</p>
+	</div>
+
 	<div
 		class="absolute bottom-0 h-[25%] w-full text-center sm:h-[33%] {in_solve
 			? '-z-20 opacity-0'
-			: ''}"
+			: 'z-10'}"
 	>
-    <div class="w-full px-4 absolute">
-      <Separator class="my-1 h-0.5 rounded xl:h-1" />
-    </div>
+		<div class="absolute flex w-full flex-col items-center px-4">
+			<Separator class="my-1 h-0.5 rounded xl:h-1" />
+		</div>
 		<!-- UI -->
-		<div class="absolute z-20 flex h-full w-full grow flex-row p-2 mt-2">
+		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row p-2">
 			<!-- Left -->
-			<div class="relative flex w-full flex-col pl-2 ">
+			<div class="relative flex w-full flex-col pl-2">
 				{#if $fetching}
 					<div class="absolute left-2 top-0 flex items-center">
 						<RefreshCw class="animate-spin" />
@@ -191,20 +205,10 @@
 			<div class="hidden w-full grow flex-col md:flex">
 				<!-- Stats -->
 				<div class="w-full grow px-2">
-					{#if !logged_in}
-						<div class="mb-2 rounded-lg bg-slate-800 p-2">
-							<p>
-								<a class="underline" href="/login">Log in</a> to save your times in the cloud!
-							</p>
-						</div>
-					{/if}
 					<div class=" flex items-center">
 						<p class="mr-2">Session</p>
 						<SessionSelector />
 					</div>
-					<p class="mt-2 text-balance rounded-lg bg-slate-800 p-1">
-						Note: This app currently only stores data locally! Cloud storage is in development.
-					</p>
 				</div>
 
 				<!-- Logo -->
@@ -232,20 +236,10 @@
 
 				<!-- Stats -->
 				<div class="flex w-full grow flex-col items-start p-2 md:hidden">
-					{#if !logged_in}
-						<div class="mx-2 rounded-lg bg-slate-800 p-2">
-							<p>
-								<a class="underline" href="/login">Log in</a> to save your times in the cloud!
-							</p>
-						</div>
-					{/if}
 					<div class=" flex items-center">
 						<p class="mr-2">Session</p>
 						<SessionSelector />
 					</div>
-					<p class="mt-2 text-balance rounded-lg bg-slate-800 p-1">
-						Note: This app currently needs internet access! Offline mode is in development.
-					</p>
 				</div>
 			</div>
 		</div>
