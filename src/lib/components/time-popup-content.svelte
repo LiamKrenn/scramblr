@@ -11,7 +11,7 @@
 </script>
 
 <div class="p-4">
-	<h2 class="text-2xl">Time #{index}</h2>
+	<h2 class="text-2xl">Time #{index} {time.id}</h2>
 	<p class="my-2 text-4xl">{timeToFormattedString(time.time, 3)}</p>
 	<Button
 		on:click={() => {

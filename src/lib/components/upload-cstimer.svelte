@@ -12,6 +12,7 @@
 	let idb_size_map: { [key: number]: number } = {};
 	let global_time_count = 0;
 	async function handleFiles(files: File[]) {
+    // TODO: efficiency - load & convert first and then insert
 		for (const file of files) {
 			//for (let i = 0; i < 20; i++) {
         

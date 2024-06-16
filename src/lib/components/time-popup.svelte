@@ -2,11 +2,9 @@
 	import { mediaQuery } from 'svelte-legos';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
-	import Button from './ui/button/button.svelte';
 	import type { Time } from '$lib/types';
-	import { get } from 'svelte/store';
 	import TimePopupContent from './time-popup-content.svelte';
-	import { session_id, sync, times } from '$lib/sync';
+	import { sync } from '$lib/sync';
 
 	let open = false;
 	const isDesktop = mediaQuery('(min-width: 768px)');
@@ -22,7 +20,6 @@
 
 	async function deleteTime(id: string) {
 		sync.deleteTime(id);
-		times.set(await sync.getTimesOfSession($session_id));
 		open = false;
 	}
 

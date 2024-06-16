@@ -18,7 +18,7 @@
 			session_id.set(id);
 			display_name = res.name;
 		} else {
-			let first_session = (await sync.getSessions())[0];
+			let first_session = $sessions[0];
 			session_id.set(first_session.id);
 			display_name = first_session.name;
 		}
@@ -29,7 +29,6 @@
 	});
 
 	onMount(async () => {
-		sessions.set(await sync.getSessions());
 		setToSession($session_id);
 	});
 </script>
@@ -37,8 +36,12 @@
 <CreateSession bind:this={create_session} />
 
 <DropdownMenu.Root bind:open>
-	<DropdownMenu.Trigger asChild let:builder class="">
-		<Button variant="outline" builders={[builder]} class=" z-20 h-8 select-none px-2 text-base ">
+	<DropdownMenu.Trigger asChild let:builder>
+		<Button
+			variant="outline"
+			builders={[builder]}
+			class=" z-20 h-8 select-none px-2 text-base focus:border-slate-50 "
+		>
 			{display_name}
 		</Button>
 	</DropdownMenu.Trigger>

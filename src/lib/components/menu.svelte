@@ -17,8 +17,10 @@
 		<Button
 			variant="outline"
 			builders={[builder]}
-			class={cn(className, 'absolute right-4  top-4 z-20 h-14 w-14 p-3 lg:h-16 lg:w-16')}
-			><Menu class="h-full w-full" /></Button
+			class={cn(
+				className,
+				'absolute right-4  top-4 z-20 h-14 w-14 p-3 focus:border-slate-50 lg:h-16 lg:w-16'
+			)}><Menu class="h-full w-full" /></Button
 		>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="z-20 ">

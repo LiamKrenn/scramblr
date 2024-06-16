@@ -46,18 +46,15 @@
     "clsx": "^2.1.0",
     "cubing": "^0.48.2",
     "dexie": "^4.0.7",
-    "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-svelte": "^0.363.0",
-    "mongodb": "^6.6.2",
-    "nanoid": "^5.0.7",
     "prisma": "^5.15.0",
     "svelte-droplet": "^1.0.1",
     "svelte-legos": "^0.2.2",
     "svelte-persisted-store": "^0.9.2",
+    "svelte-tiny-virtual-list": "^2.1.2",
     "tailwind-merge": "^2.2.2",
     "tailwind-variants": "^0.2.1",
-    "ulid": "^2.3.0",
     "vaul-svelte": "^0.3.1"
   }
 }

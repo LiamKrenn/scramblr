@@ -2,14 +2,12 @@ import { persisted } from 'svelte-persisted-store';
 import type { Session, Time } from './types';
 import { get, writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import Dexie, { liveQuery, type EntityTable } from 'dexie';
+import Dexie, { liveQuery, type EntityTable, type Observable } from 'dexie';
 import { type } from './scramble';
 import { getUUID } from './utils';
 
 export const session_id = persisted<string>('session_id', '');
 
-export const sessions = writable<Session[]>([]);
-export const times = writable<Time[]>([]);
 export const fetching = writable<boolean>(false);
 
 class UserDataSync {
@@ -20,7 +18,6 @@ class UserDataSync {
 	};
 
 	constructor() {
-    
 		this.db.version(9).stores({
 			times: 'id,session_id,updated,timestamp',
 			sessions: 'id,updated,order'
@@ -40,8 +37,12 @@ class UserDataSync {
 				user_id: 0
 			});
 		}
+	}
 
-		sessions.set(await this.getSessions());
+	async sync() {}
+
+	async getNewTimes() {
+		return this.db.times.where('updated').aboveOrEqual(this.last_sync).toArray();
 	}
 
 	async createTime(time: Time): Promise<string> {
@@ -54,9 +55,8 @@ class UserDataSync {
 			comment: time.comment,
 			timestamp: time.timestamp,
 			updated: Date.now() - 1,
-			archived: time?.archived || false
+			archived: time?.archived
 		};
-
 
 		return this.db.times.add(new_time);
 	}
@@ -73,14 +73,6 @@ class UserDataSync {
 		return this.db.sessions.add(new_session);
 	}
 
-	async getTimesOfSession(session_id: string, limit: number = 0) {
-    if (limit) {
-      return this.db.times.orderBy('timestamp').reverse().filter((time) => time.session_id == session_id).limit(limit).toArray();
-    } else {
-      return this.db.times.where('session_id').equals(session_id).reverse().sortBy('timestamp');
-    }
-	}
-
 	async getTime(id: string) {
 		return this.db.times.get(id);
 	}
@@ -88,14 +80,6 @@ class UserDataSync {
 	async deleteTime(id: string) {
 		return this.db.times.delete(id);
 	}
-
-	async getSessions() {
-		return this.db.sessions.orderBy('order').toArray();
-	}
-
-  async getTimes() {
-    return this.db.times.toArray();
-  }
 
 	async getSession(id: string) {
 		return this.db.sessions.get(id);
@@ -109,25 +93,39 @@ class UserDataSync {
 		return this.db.sessions.clear();
 	}
 
-  async getSessionCount() {
-    return this.db.sessions.count();
-  }
+	async getSessionCount() {
+		return this.db.sessions.count();
+	}
 
-  async getTimeCountOfSession(session_id: string) {
-    return this.db.times.where('session_id').equals(session_id).count();
-  }
+	async getTimeCountOfSession(session_id: string) {
+		return this.db.times.where('session_id').equals(session_id).count();
+	}
 
-  async getTimeCount() {
-    return this.db.times.count();
-  }
+	async getTimeCount() {
+		return this.db.times.count();
+	}
+
+	async setSessionDefaultType(session_id: string, type: string) {
+		let session = await this.getSession(session_id);
+		if (!session) return;
+		session.scramble_type = type;
+		session.updated = Date.now();
+		await this.db.sessions.put(session);
+	}
 }
 
 export const sync = new UserDataSync();
 
+export let sessions = liveQuery(() => {
+	return sync.db.sessions.orderBy('order').toArray();
+});
+
+
 session_id.subscribe(async (id) => {
-	fetching.set(true);
-	times.set([]);
-  type.set((await sync.getSession(id))?.scramble_type || '333');
-	times.set(await sync.getTimesOfSession(id));
-	fetching.set(false);
+	type.set((await sync.getSession(id))?.scramble_type || '333');
+
+});
+
+type.subscribe(async (value) => {
+	sync.setSessionDefaultType(get(session_id), value);
 });

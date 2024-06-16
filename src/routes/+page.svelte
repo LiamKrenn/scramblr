@@ -12,15 +12,32 @@
 	import TimeItem from '$lib/components/time-item.svelte';
 	import TimePopup from '$lib/components/time-popup.svelte';
 	import SessionSelector from '$lib/components/session-selector.svelte';
-	import { session_id, fetching, sync, times } from '$lib/sync';
+	import { session_id, fetching, sync } from '$lib/sync';
 	import { RefreshCw } from 'lucide-svelte';
 	import type { Time } from '$lib/types';
+	import { liveQuery } from 'dexie';
+	import VirtualList from 'svelte-tiny-virtual-list';
 
 	export let data: PageData;
 
 	let time = 0;
-	$: time_count = $times.length;
+	let time_count = 0;
 	let in_solve = false;
+
+	$: times = liveQuery(async () => {
+		fetching.set(true);
+		const res = await sync.db.times
+			.where('session_id')
+			.equals($session_id)
+			.and((time) => time.archived != true)
+			.reverse()
+			//.limit(100)
+			.sortBy('timestamp');
+		time_count = await sync.getTimeCountOfSession($session_id);
+		fetching.set(false);
+
+		return res;
+	});
 
 	$: if (time) {
 		solve_done();
@@ -54,15 +71,14 @@
 	}
 
 	async function syncTimes(fetching_set: boolean = false) {
-    if (fetching_set) {
-      fetching.set(true);
-    }
-
-		times.set(await sync.getTimesOfSession($session_id, 0));
-    //time_count = $times.length;
-    if (fetching_set) {
-      fetching.set(false);
-    }
+		// if (fetching_set) {
+		// 	fetching.set(true);
+		// }
+		//times.set(await sync.getTimesOfSession($session_id, 0));
+		//time_count = $times.length;
+		// if (fetching_set) {
+		// 	fetching.set(false);
+		// }
 	}
 
 	onMount(async () => {
@@ -79,6 +95,7 @@
 	});
 
 	$: logged_in = data.user !== null;
+	let listHeight = 100;
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -137,42 +154,34 @@
 
 	<Timer bind:time bind:in_solve />
 
+  
 	<div
 		class="absolute bottom-0 h-[25%] w-full text-center sm:h-[33%] {in_solve
 			? '-z-20 opacity-0'
 			: ''}"
 	>
-		<div class="w-full px-4">
-			<Separator class="my-1 h-0.5 rounded xl:h-1" />
-		</div>
+    <div class="w-full px-4 absolute">
+      <Separator class="my-1 h-0.5 rounded xl:h-1" />
+    </div>
 		<!-- UI -->
-		<div class="absolute z-20 flex h-full w-full grow flex-row p-2">
+		<div class="absolute z-20 flex h-full w-full grow flex-row p-2 mt-2">
 			<!-- Left -->
-			<div class="relative flex w-full flex-col pl-2">
+			<div class="relative flex w-full flex-col pl-2 ">
 				{#if $fetching}
-					<div class="absolute right-2 top-0 flex items-center">
+					<div class="absolute left-2 top-0 flex items-center">
 						<RefreshCw class="animate-spin" />
 					</div>
 				{/if}
-				<div class="mb-2 flex h-8 w-full shrink-0 items-center justify-center">
-					<h1 class="text-xl font-semibold">Times</h1>
-				</div>
-				<ScrollArea class="flex !w-full grow items-center overflow-y-auto">
-          <!-- TODO: https://svelte-tiny-virtual-list.jonasgeiler.com/ -->
-					<div class="mb-2">
-						{#await syncTimes()}
-							loading...
-						{:then value}
-							{#if $times.length > 0}
-								{#each $times as time, i (time.id)}
-									{#if time_popup != undefined}
-										<TimeItem {time} {openTimePopup} index={time_count - i} />
-									{/if}
-								{/each}
-							{/if}
-						{/await}
+				{#if $times?.length > 0}
+					<div class="h-full" bind:clientHeight={listHeight}>
+						<VirtualList height={listHeight} itemCount={$times.length} itemSize={28}>
+							<h1 slot="header" class="mb-1 text-xl font-semibold">Times</h1>
+							<div slot="item" let:index let:style {style}>
+								<TimeItem time={$times[index]} {openTimePopup} index={time_count - index} />
+							</div>
+						</VirtualList>
 					</div>
-				</ScrollArea>
+				{/if}
 			</div>
 
 			<Separator class="mx-1 grow-0 rounded" orientation="vertical" />
@@ -200,7 +209,7 @@
 
 				<!-- Logo -->
 				<h1
-					class="lslogos mb-1 flex w-full grow-0 cursor-pointer select-none items-end justify-center"
+					class="lslogos mb-0 flex w-full grow-0 cursor-pointer select-none items-end justify-center"
 				>
 					<p class=" font-semibold opacity-90">scramblr</p>
 
@@ -250,4 +259,19 @@
 	.lslogob {
 		font-size: clamp(0.7rem, 1.5cqmin, 2rem);
 	}
+
+	:global(.virtual-list-wrapper) {
+		@apply pb-2;
+	}
+
+	:global(.virtual-list-wrapper::-webkit-scrollbar) {
+		@apply w-2;
+	}
+	:global(.virtual-list-wrapper::-webkit-scrollbar-thumb) {
+		@apply h-8 rounded-full bg-slate-700;
+	}
+
+	/* .list :global(.virtual-list-inner) {
+        background-color: #f00;
+    } */
 </style>
