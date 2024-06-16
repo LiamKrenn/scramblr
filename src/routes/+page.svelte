@@ -159,7 +159,7 @@
 	<div
 		class="absolute mt-2 flex h-[49%] w-full max-w-[90%] flex-col items-center justify-end sm:h-[33%] {in_solve
 			? '-z-20 opacity-0'
-			: 'z-10'}"
+			: 'z-0'}"
 	>
 		<!-- {#if !logged_in}
       <div class="relative w-max rounded-lg bg-slate-800 py-1 px-2">
@@ -178,18 +178,18 @@
 			? '-z-20 opacity-0'
 			: 'z-10'}"
 	>
-		<div class="absolute flex w-full flex-col items-center px-2 md:px-4">
+		<div class="absolute flex w-full flex-col items-center px-2 md:px-3">
 			<Separator class="my-1 h-0.5 rounded xl:h-1" />
 		</div>
 		<!-- UI -->
-		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row px-0 py-2 md:p-2">
-			<!-- Left -->
-			<div class="relative flex w-full flex-1 grow flex-col pl-2">
-				{#if $fetching}
-					<div class="absolute left-2 top-0 flex items-center">
-						<RefreshCw class="animate-spin" />
+		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row px-0 py-1 md:px-1">
+			<!-- Left (Times) -->
+			<div class="relative ml-2 flex w-full flex-1 grow flex-col">
+				<!-- {#if $fetching}
+					<div class="absolute inline-block w-full">
+						<span class="loader"></span>
 					</div>
-				{/if}
+				{/if} -->
 				{#if $times?.length > 0}
 					<div class="h-full" bind:clientHeight={listHeight}>
 						<VirtualList
@@ -197,39 +197,36 @@
 							itemCount={$times.length}
 							itemSize={$isDesktopTimes ? 32 : 20}
 						>
-							<div slot="header">
+							<div
+								slot="header"
+								class="text-[10px] font-normal xs:text-xs 2xl:h-[32px] 2xl:text-lg"
+							>
 								<Separator />
 								<div
-									class="flex h-[20px] w-full basis-2 items-center justify-start rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
+									class="flex h-[20px] w-full items-center justify-start rounded-none p-0 2xl:h-[32px]"
 								>
 									<Separator orientation="vertical" />
-									<p
-										class="flex h-[20px] w-12 items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:w-20 2xl:text-lg"
-									>
-										#
+									<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">
+										{#if $fetching}
+											<RefreshCw class="animate-spin p-1.5" />
+										{:else}
+											#
+										{/if}
 									</p>
 									<Separator orientation="vertical" />
-									<p
-										class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
-									>
+									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
 										Time
 									</p>
 									<Separator orientation="vertical" />
-									<p
-										class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
-									>
+									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
 										ao5
 									</p>
 									<Separator orientation="vertical" />
-									<p
-										class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
-									>
+									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
 										ao12
 									</p>
 									<Separator orientation="vertical" />
-									<p
-										class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
-									>
+									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
 										ao100
 									</p>
 									<Separator orientation="vertical" />
@@ -241,6 +238,40 @@
 								<Separator />
 							</div>
 						</VirtualList>
+					</div>
+				{:else}
+					<div class="mr-1.5 text-[10px] font-normal xs:text-xs 2xl:h-[32px] 2xl:text-lg">
+						<Separator />
+						<div
+							class="flex h-[20px] w-full items-center justify-start rounded-none p-0 2xl:h-[32px]"
+						>
+							<Separator orientation="vertical" />
+							<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">
+								{#if $fetching}
+									<RefreshCw class="animate-spin p-1.5" />
+								{:else}
+									#
+								{/if}
+							</p>
+							<Separator orientation="vertical" />
+							<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
+								Time
+							</p>
+							<Separator orientation="vertical" />
+							<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
+								ao5
+							</p>
+							<Separator orientation="vertical" />
+							<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
+								ao12
+							</p>
+							<Separator orientation="vertical" />
+							<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
+								ao100
+							</p>
+							<Separator orientation="vertical" />
+						</div>
+						<Separator class="h-0.5" />
 					</div>
 				{/if}
 			</div>
@@ -313,7 +344,31 @@
 		@apply h-8 rounded-full bg-slate-700;
 	}
 
-	/* .list :global(.virtual-list-inner) {
-        background-color: #f00;
-    } */
+	.loader {
+		@apply !z-30  h-1;
+		width: 100%;
+		display: inline-block;
+		overflow: hidden;
+	}
+	.loader::after {
+		@apply !z-30 h-[1px] rounded-full bg-slate-500;
+		content: '';
+		width: 42px;
+		position: absolute;
+		top: 0px;
+		left: 0;
+		box-sizing: border-box;
+		animation: hitZak 0.6s ease-in-out infinite alternate;
+	}
+
+	@keyframes hitZak {
+		0% {
+			left: 1px;
+			transform: translateX(0%);
+		}
+		100% {
+			left: calc(100% - 7px);
+			transform: translateX(-100%);
+		}
+	}
 </style>
