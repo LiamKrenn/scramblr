@@ -1,17 +1,9 @@
 import { WCA_ORIGIN, APPLICATION_ID, CLIENT_SECRET, APP_ROUTE, MONGODB_URI } from '$env/static/private';
-import type { SessionJson, WCAUser } from '$lib/types.js';
+import type { Session, WCAUser } from '$lib/types.js';
 import jwt from 'jsonwebtoken';
-import { MongoClient, ServerApiVersion } from 'mongodb';
 const { sign } = jwt;
 
-const client = new MongoClient(MONGODB_URI, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-await client.connect()
+
 
 export async function GET(req) {
 	const code = req.url.searchParams.get('code');
