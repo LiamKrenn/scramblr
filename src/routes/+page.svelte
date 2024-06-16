@@ -17,6 +17,7 @@
 	import type { Time } from '$lib/types';
 	import { liveQuery } from 'dexie';
 	import VirtualList from 'svelte-tiny-virtual-list';
+	import { mediaQuery } from 'svelte-legos';
 
 	export let data: PageData;
 
@@ -96,6 +97,7 @@
 
 	$: logged_in = data.user !== null;
 	let listHeight = 100;
+  const isDesktop = mediaQuery('(min-width: 768px)');
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -188,10 +190,11 @@
 				{/if}
 				{#if $times?.length > 0}
 					<div class="h-full" bind:clientHeight={listHeight}>
-						<VirtualList height={listHeight} itemCount={$times.length} itemSize={28}>
-							<h1 slot="header" class="mb-1 text-xl font-semibold">Times</h1>
+						<VirtualList height={listHeight} itemCount={$times.length} itemSize={$isDesktop ? 32 : 20}>
+							<h1 slot="header" class="mb-1 md:text-xl text-base font-semibold">Times</h1>
 							<div slot="item" let:index let:style {style}>
-								<TimeItem time={$times[index]} {openTimePopup} index={time_count - index} />
+								<TimeItem time={$times[index]} {openTimePopup} index={time_count - index} {times}/>
+                <Separator />
 							</div>
 						</VirtualList>
 					</div>

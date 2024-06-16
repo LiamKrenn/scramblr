@@ -3,22 +3,66 @@
 	import { timeToFormattedString } from '$lib/utils';
 
 	import Button from '$lib/components/ui/button/button.svelte';
+	import type { Observable } from 'dexie';
+	import Separator from './ui/separator/separator.svelte';
 	export let time: Time;
 	export let index: number;
+	export let times: Observable<Time[]>;
 
 	export let openTimePopup: (id: string, i: number) => Promise<void>;
-
-    
 </script>
 
-<p class="flex w-full justify-center">
+<!-- <Button
+  class="h-[32px] p-0 md:text-lg text-xs font-normal duration-150 w-full rounded-none flex items-center justify-start"
+  variant="ghost"
+  on:click={async () => {
+    await openTimePopup(time.id, index);
+  }}
+> -->
+<div
+	class="flex h-[20px] w-full basis-2 items-center justify-start rounded-none p-0 text-xs font-normal duration-150 md:h-[32px] md:text-lg"
+>
+	<Separator orientation="vertical" />
 	<Button
-		class="ml-1 h-min p-0 px-1 text-lg font-normal duration-150"
+		class="flex h-[20px] w-12 items-center justify-center rounded-none p-0 text-xs font-normal duration-150 md:h-[32px] md:w-20 md:text-lg"
 		variant="ghost"
 		on:click={async () => {
 			await openTimePopup(time.id, index);
-		}}
+		}}>{index}.</Button
 	>
-		{index}. {timeToFormattedString(time.time, 3)}
-	</Button>
-</p>
+	<Separator orientation="vertical" />
+	<Button
+		class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 md:h-[32px] md:text-lg"
+		variant="ghost"
+		on:click={async () => {
+			await openTimePopup(time.id, index);
+		}}>{timeToFormattedString(time.time, 3)}</Button
+	>
+	<Separator orientation="vertical" />
+	<Button
+		class="flex  h-[20px] flex-1 grow items-center  justify-center rounded-none p-0 text-xs font-normal duration-150 md:h-[32px] md:text-lg"
+		variant="ghost"
+		on:click={async () => {
+			await openTimePopup(time.id, index);
+		}}>ao5</Button
+	>
+	<Separator orientation="vertical" />
+	<Button
+		class="flex  h-[20px] flex-1 grow items-center  justify-center rounded-none p-0 text-xs font-normal duration-150 md:h-[32px] md:text-lg"
+		variant="ghost"
+		on:click={async () => {
+			await openTimePopup(time.id, index);
+		}}>ao12</Button
+	>
+	<Separator orientation="vertical" />
+	<Button
+		class="flex  h-[20px] flex-1 grow items-center  justify-center rounded-none p-0 text-xs font-normal duration-150 md:h-[32px] md:text-lg"
+		variant="ghost"
+		on:click={async () => {
+			await openTimePopup(time.id, index);
+		}}>ao100</Button
+	>
+	<Separator orientation="vertical" />
+</div>
+
+<!-- </Button> -->

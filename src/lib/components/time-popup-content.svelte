@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Time } from '$lib/types';
 	import { timeToFormattedString } from '$lib/utils';
-	import { Trash } from 'lucide-svelte';
+	import { CopyIcon, Trash } from 'lucide-svelte';
 	import Button from './ui/button/button.svelte';
 
 	export let time: Time;
