@@ -178,11 +178,11 @@
 			? '-z-20 opacity-0'
 			: 'z-10'}"
 	>
-		<div class="absolute flex w-full flex-col items-center px-4">
+		<div class="absolute flex w-full flex-col items-center md:px-4 px-2">
 			<Separator class="my-1 h-0.5 rounded xl:h-1" />
 		</div>
 		<!-- UI -->
-		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row p-2">
+		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row md:p-2 py-2 px-0">
 			<!-- Left -->
 			<div class="relative flex w-full flex-col pl-2">
 				{#if $fetching}
