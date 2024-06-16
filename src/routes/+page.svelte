@@ -97,7 +97,7 @@
 
 	$: logged_in = data.user !== null;
 	let listHeight = 100;
-	const isDesktop = mediaQuery('(min-width: 768px)');
+	const isDesktopTimes = mediaQuery('(min-width: 1280px)');
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -184,7 +184,7 @@
 		<!-- UI -->
 		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row px-0 py-2 md:p-2">
 			<!-- Left -->
-			<div class="relative flex w-full flex-col grow flex-1 pl-2">
+			<div class="relative flex w-full flex-1 grow flex-col pl-2">
 				{#if $fetching}
 					<div class="absolute left-2 top-0 flex items-center">
 						<RefreshCw class="animate-spin" />
@@ -195,9 +195,28 @@
 						<VirtualList
 							height={listHeight}
 							itemCount={$times.length}
-							itemSize={$isDesktop ? 32 : 20}
+							itemSize={$isDesktopTimes ? 32 : 20}
 						>
-							<h1 slot="header" class="mb-1 text-base font-semibold md:text-xl">Times</h1>
+							<div slot="header">
+								<h1 class="mb-1 text-base font-semibold md:text-xl">Times</h1>
+                <Separator/>
+								<div
+									class="flex h-[20px] w-full basis-2 items-center justify-start rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg"
+								>
+									<Separator orientation="vertical" />
+									<p class="flex h-[20px] w-12 items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:w-20 xl:text-lg">#</p>
+									<Separator orientation="vertical" />
+									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg">Time</p>
+									<Separator orientation="vertical" />
+									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg">ao5</p>
+									<Separator orientation="vertical" />
+									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg">ao12</p>
+									<Separator orientation="vertical" />
+									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg">ao100</p>
+									<Separator orientation="vertical" />
+								</div>
+                <Separator class="h-0.5"/>
+							</div>
 							<div slot="item" let:index let:style {style}>
 								<TimeItem time={$times[index]} {openTimePopup} index={time_count - index} {times} />
 								<Separator />
@@ -211,7 +230,7 @@
 
 			<!-- Middle -->
 
-			<div class="hidden w-full grow flex-1 flex-col md:flex">
+			<div class="hidden w-full flex-1 grow flex-col md:flex">
 				<!-- Stats -->
 				<div class="w-full grow px-2">
 					<div class=" flex items-center">
@@ -239,9 +258,9 @@
 			<Separator class="mx-1 hidden grow-0 rounded md:flex" orientation="vertical" />
 
 			<!-- Right -->
-			<div class="flex w-full md:grow grow-[0.5] flex-1 flex-col">
+			<div class="flex w-full flex-1 grow-[0.5] flex-col md:grow">
 				<!-- Preview -->
-         <!-- TODO: on click enlarge -->
+				<!-- TODO: on click enlarge -->
 				<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:mb-2 md:h-full" />
 
 				<!-- Stats -->
