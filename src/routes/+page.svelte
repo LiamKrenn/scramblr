@@ -97,7 +97,7 @@
 
 	$: logged_in = data.user !== null;
 	let listHeight = 100;
-	const isDesktopTimes = mediaQuery('(min-width: 1280px)');
+	const isDesktopTimes = mediaQuery('(min-width: 1436px)');
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -198,24 +198,43 @@
 							itemSize={$isDesktopTimes ? 32 : 20}
 						>
 							<div slot="header">
-								<h1 class="mb-1 text-base font-semibold md:text-xl">Times</h1>
-                <Separator/>
+								<Separator />
 								<div
-									class="flex h-[20px] w-full basis-2 items-center justify-start rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg"
+									class="flex h-[20px] w-full basis-2 items-center justify-start rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
 								>
 									<Separator orientation="vertical" />
-									<p class="flex h-[20px] w-12 items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:w-20 xl:text-lg">#</p>
+									<p
+										class="flex h-[20px] w-12 items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:w-20 2xl:text-lg"
+									>
+										#
+									</p>
 									<Separator orientation="vertical" />
-									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg">Time</p>
+									<p
+										class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
+									>
+										Time
+									</p>
 									<Separator orientation="vertical" />
-									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg">ao5</p>
+									<p
+										class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
+									>
+										ao5
+									</p>
 									<Separator orientation="vertical" />
-									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg">ao12</p>
+									<p
+										class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
+									>
+										ao12
+									</p>
 									<Separator orientation="vertical" />
-									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 xl:h-[32px] xl:text-lg">ao100</p>
+									<p
+										class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-xs font-normal duration-150 2xl:h-[32px] 2xl:text-lg"
+									>
+										ao100
+									</p>
 									<Separator orientation="vertical" />
 								</div>
-                <Separator class="h-0.5"/>
+								<Separator class="h-0.5" />
 							</div>
 							<div slot="item" let:index let:style {style}>
 								<TimeItem time={$times[index]} {openTimePopup} index={time_count - index} {times} />
@@ -258,7 +277,7 @@
 			<Separator class="mx-1 hidden grow-0 rounded md:flex" orientation="vertical" />
 
 			<!-- Right -->
-			<div class="flex w-full flex-1 grow-[0.5] flex-col md:grow">
+			<div class="flex w-full flex-1 grow-[0.5] flex-col sm:grow-[0.8] md:grow">
 				<!-- Preview -->
 				<!-- TODO: on click enlarge -->
 				<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:mb-2 md:h-full" />
@@ -284,11 +303,11 @@
 	}
 
 	:global(.virtual-list-wrapper) {
-		@apply pb-2;
+		@apply pb-2 pr-1;
 	}
 
 	:global(.virtual-list-wrapper::-webkit-scrollbar) {
-		@apply w-2;
+		@apply w-[2px];
 	}
 	:global(.virtual-list-wrapper::-webkit-scrollbar-thumb) {
 		@apply h-8 rounded-full bg-slate-700;
