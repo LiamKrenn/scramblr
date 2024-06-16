@@ -157,7 +157,9 @@
 	<Timer bind:time bind:in_solve />
 
 	<div
-		class="absolute mt-2 flex h-[49%] w-full max-w-[90%] flex-col items-center justify-end sm:h-[33%]"
+		class="absolute mt-2 flex h-[49%] w-full max-w-[90%] flex-col items-center justify-end sm:h-[33%] {in_solve
+			? '-z-20 opacity-0'
+			: 'z-10'}"
 	>
 		<!-- {#if !logged_in}
       <div class="relative w-max rounded-lg bg-slate-800 py-1 px-2">
