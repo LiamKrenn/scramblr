@@ -179,7 +179,7 @@
 			: 'z-10'}"
 	>
 		<div class="absolute flex w-full flex-col items-center px-2 md:px-3">
-			<Separator class="my-1 h-0.5 rounded xl:h-1" />
+			<Separator class="my-1 h-0.5 rounded" />
 		</div>
 		<!-- UI -->
 		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row px-0 py-1 md:px-1">
@@ -190,6 +190,13 @@
 						<span class="loader"></span>
 					</div>
 				{/if} -->
+        <div class="flex mb-1.5 items-center justify-start ">
+          <p class="ml-1 mr-2 2xl:text-base text-sm xs:flex hidden">Session</p>
+          <SessionSelector />
+        </div>
+        {#if $fetching}
+           <RefreshCw class="absolute top-0 right-1 animate-spin p-0.5" />
+        {/if}
 				{#if $times?.length > 0}
 					<div class="h-full" bind:clientHeight={listHeight}>
 						<VirtualList
@@ -207,11 +214,7 @@
 								>
 									<Separator orientation="vertical" />
 									<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">
-										{#if $fetching}
-											<RefreshCw class="animate-spin p-1.5" />
-										{:else}
 											#
-										{/if}
 									</p>
 									<Separator orientation="vertical" />
 									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
@@ -247,11 +250,7 @@
 						>
 							<Separator orientation="vertical" />
 							<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">
-								{#if $fetching}
-									<RefreshCw class="animate-spin p-1.5" />
-								{:else}
 									#
-								{/if}
 							</p>
 							<Separator orientation="vertical" />
 							<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
@@ -283,10 +282,7 @@
 			<div class="hidden w-full flex-1 grow flex-col md:flex">
 				<!-- Stats -->
 				<div class="w-full grow px-2">
-					<div class="flex items-center justify-start ">
-						<p class="mr-2">Session</p>
-						<SessionSelector />
-					</div>
+					
 				</div>
 
 				<!-- Logo -->
@@ -315,10 +311,7 @@
 
 				<!-- Stats -->
 				<div class="flex w-full grow  items-start p-2 md:hidden">
-					<div class="text-start shrink flex sm:flex-row flex-col sm:items-center items-start">
-						<p class="sm:mr-2 mr-0 mb-0.5 sm:mb-0">Session:</p>
-						<SessionSelector />
-					</div>
+
 				</div>
 			</div>
 		</div>
@@ -340,7 +333,13 @@
 	:global(.virtual-list-wrapper::-webkit-scrollbar) {
 		@apply w-[2px];
 	}
+  :global(.cscroll::-webkit-scrollbar) {
+		@apply w-[2px];
+	}
 	:global(.virtual-list-wrapper::-webkit-scrollbar-thumb) {
+		@apply h-8 rounded-full bg-slate-700;
+	}
+  :global(.cscroll::-webkit-scrollbar-thumb) {
 		@apply h-8 rounded-full bg-slate-700;
 	}
 
