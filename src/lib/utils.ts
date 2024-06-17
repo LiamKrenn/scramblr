@@ -89,7 +89,8 @@ export function resize_to_fit(document: Document, first = true) {
 	}
 }
 
-export function timeToFormattedString(time: number, decimals: number) {
+export function timeToFormattedString(time: number, decimals: number = 3) {
+  if (time < 0) return "";
 	time = time / 1000;
 	let minutes = Math.floor(time / 60);
 	let seconds = (time % 60).toFixed(decimals);
