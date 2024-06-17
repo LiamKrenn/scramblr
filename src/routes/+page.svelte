@@ -363,7 +363,17 @@
 				<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:mb-2 md:h-full" />
 
 				<!-- Stats -->
-				<div class="flex w-full grow items-start p-2 md:hidden"></div>
+				<div class="flex flex-col text-sm w-full grow items-start p-2 md:hidden">
+          {#if lowest_ao5 != -1}
+						<p>best ao5: {timeToFormattedString(lowest_ao5)}</p>
+					{/if}
+					{#if lowest_ao12 != -1}
+						<p>best ao12: {timeToFormattedString(lowest_ao12)}</p>
+					{/if}
+					{#if lowest_ao100 != -1}
+						<p>best ao100: {timeToFormattedString(lowest_ao100)}</p>
+					{/if}
+        </div>
 			</div>
 		</div>
 	</div>
