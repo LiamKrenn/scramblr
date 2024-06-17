@@ -184,7 +184,7 @@
 		<!-- UI -->
 		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row px-0 py-1 md:px-1">
 			<!-- Left (Times) -->
-			<div class="relative ml-2 flex w-full flex-1 grow flex-col">
+			<div class="relative ml-2 flex shrink-0 w-full flex-1 grow flex-col">
 				<!-- {#if $fetching}
 					<div class="absolute inline-block w-full">
 						<span class="loader"></span>
@@ -283,7 +283,7 @@
 			<div class="hidden w-full flex-1 grow flex-col md:flex">
 				<!-- Stats -->
 				<div class="w-full grow px-2">
-					<div class=" flex items-center">
+					<div class="flex items-center justify-start ">
 						<p class="mr-2">Session</p>
 						<SessionSelector />
 					</div>
@@ -314,9 +314,9 @@
 				<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:mb-2 md:h-full" />
 
 				<!-- Stats -->
-				<div class="flex w-full grow flex-col items-start p-2 md:hidden">
-					<div class=" flex items-center">
-						<p class="mr-2">Session</p>
+				<div class="flex w-full grow  items-start p-2 md:hidden">
+					<div class="text-start shrink flex sm:flex-row flex-col sm:items-center items-start">
+						<p class="sm:mr-2 mr-0 mb-0.5 sm:mb-0">Session:</p>
 						<SessionSelector />
 					</div>
 				</div>

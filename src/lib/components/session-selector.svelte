@@ -40,9 +40,11 @@
 		<Button
 			variant="outline"
 			builders={[builder]}
-			class=" z-20 h-8 select-none px-2 text-base focus:border-slate-50 "
+			class=" z-20 h-8 select-none sm:px-2 p-1 md:text-base text-sm focus:border-slate-50 flex-shrink md:max-w-52 sm:max-w-32 max-w-20"
 		>
+    <div class="overflow-ellipsis overflow-hidden max-w-full font-normal">
 			{display_name}
+    </div>
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="lg:w-40">
