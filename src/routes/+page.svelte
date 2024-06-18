@@ -235,7 +235,7 @@
 					<SessionSelector />
 				</div>
 				{#if $fetching}
-					<RefreshCw class="absolute right-1 top-0 animate-spin p-0.5" />
+					<RefreshCw class="absolute right-1 top-0 animate-spin p-0.5 2xl:top-1 2xl:p-0" />
 				{/if}
 				{#if $times?.length > 0}
 					<div class="h-full" bind:clientHeight={listHeight}>
