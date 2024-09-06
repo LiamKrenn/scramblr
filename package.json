@@ -55,6 +55,7 @@
     "svelte-tiny-virtual-list": "^2.1.2",
     "tailwind-merge": "^2.2.2",
     "tailwind-variants": "^0.2.1",
+    "timer-db": "0.1.0-pre2",
     "vaul-svelte": "^0.3.1"
   }
 }

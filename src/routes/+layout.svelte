@@ -9,6 +9,7 @@
 	import { persisted } from 'svelte-persisted-store';
 	import TimePopup from '$lib/components/time-popup.svelte';
 	import { browser } from '$app/environment';
+	import { TimerDB } from 'timer-db';
 
 	async function detectSWUpdate() {
 		const registration = await navigator.serviceWorker.ready;
@@ -29,6 +30,8 @@
 	onMount(async () => {
 		await detectSWUpdate();
 		if (get(type) == '333') type.set('333');
+		
+		
 		//resize_to_fit(document);
 	});
 </script>

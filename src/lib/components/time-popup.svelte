@@ -5,15 +5,17 @@
 	import type { Time } from '$lib/types';
 	import TimePopupContent from './time-popup-content.svelte';
 	import { sync } from '$lib/sync';
+	import type { Session, StoredAttempt } from 'timer-db';
 
 	let open = false;
 	const isDesktop = mediaQuery('(min-width: 768px)');
 
-	let time: Time | undefined;
+	let time: StoredAttempt | null;
 	let index: number = 0;
 
-	export async function openTimePopup(id: string, i: number) {
-		time = await sync.getTime(id);
+
+	export async function openTimePopup(id: string, i: number, s: Session) {
+		time = await s.kthMostRecent(await s.numAttempts() - i)
 		index = i;
 		open = true;
 	}

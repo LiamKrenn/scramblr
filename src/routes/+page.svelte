@@ -13,13 +13,19 @@
 	import TimePopup from '$lib/components/time-popup.svelte';
 	import SessionSelector from '$lib/components/session-selector.svelte';
 	import { session_id, fetching, sync } from '$lib/sync';
-	import { RefreshCw } from 'lucide-svelte';
+	import { Heart, RefreshCw } from 'lucide-svelte';
 	import type { Time } from '$lib/types';
 	import { liveQuery } from 'dexie';
 	import VirtualList from 'svelte-tiny-virtual-list';
 	import { mediaQuery } from 'svelte-legos';
+	import { Session, TimerDB, type Attempt, type StoredAttempt } from 'timer-db';
 
 	export let data: PageData;
+
+  const timerDB = new TimerDB();
+  let timess: StoredAttempt[] = []
+  let s: Session
+  
 
 	let time = 0;
 	let time_count = 0;
@@ -55,7 +61,19 @@
 		};
 
 		fetching.set(true);
-		sync.createTime(time_json);
+    const sessions = await timerDB.getSessions();
+
+    // Use an existing session, or create a new one.
+    s = sessions[0] ?? (await timerDB.createSession('3x3', '3x3x3'));
+    let att: Attempt = {
+      unixDate: time_json.timestamp,
+      resultTotalMs: time_json.time,
+      scramble: time_json.scramble
+    }
+    s.addStatListener(console.log);
+    s.add(att)
+    timess = await s.nMostRecent(await s.numAttempts())
+		//sync.createTime(time_json);
 		time = 0;
 
 		if (logged_in) {
@@ -68,7 +86,7 @@
 	let time_popup: TimePopup;
 
 	async function openTimePopup(id: string, index: number) {
-		time_popup.openTimePopup(id, index);
+		time_popup.openTimePopup(id, index, s);
 	}
 
 	async function syncTimes(fetching_set: boolean = false) {
@@ -85,6 +103,7 @@
 	onMount(async () => {
 		await new_scramble();
 		if (logged_in) {
+      
 			// if (get(session_id) == '') {
 			//   let sessions = await get_sessions();
 			//   session_id.set(sessions[0]._id);
@@ -190,11 +209,11 @@
 						<span class="loader"></span>
 					</div>
 				{/if} -->
-				{#if $times?.length > 0}
+				{#if timess.length > 0}
 					<div class="h-full" bind:clientHeight={listHeight}>
 						<VirtualList
 							height={listHeight}
-							itemCount={$times.length}
+							itemCount={timess.length}
 							itemSize={$isDesktopTimes ? 32 : 20}
 						>
 							<div
@@ -234,7 +253,7 @@
 								<Separator class="h-0.5" />
 							</div>
 							<div slot="item" let:index let:style {style}>
-								<TimeItem time={$times[index]} {openTimePopup} index={time_count - index} {times} />
+								<TimeItem time={timess[index]} {openTimePopup} index={timess.length - index} times={timess} />
 								<Separator />
 							</div>
 						</VirtualList>
