@@ -18,6 +18,7 @@
 	import { liveQuery } from 'dexie';
 	import VirtualList from 'svelte-tiny-virtual-list';
 	import { mediaQuery } from 'svelte-legos';
+	import { timeToFormattedString } from '$lib/utils';
 
 	export let data: PageData;
 
@@ -32,13 +33,38 @@
 			.equals($session_id)
 			.and((time) => time.archived != true)
 			.reverse()
-			//.limit(100)
 			.sortBy('timestamp');
 		time_count = await sync.getTimeCountOfSession($session_id);
 		fetching.set(false);
-
 		return res;
 	});
+
+	let lowest_ao5 = -1;
+	let lowest_ao12 = -1;
+	let lowest_ao100 = -1;
+
+	$: if ($times && $session_id) {
+    
+    lowest_ao5 = -1;
+    lowest_ao12 = -1;
+    lowest_ao100 = -1;
+		let i = 0;
+		$times.forEach((time_el) => {
+			let temp5 = calc_ao5(i);
+			let temp12 = calc_ao12(i);
+			let temp100 = calc_ao100(i);
+			if (lowest_ao5 == -1 || (temp5 != -1 && temp5 < lowest_ao5)) {
+				lowest_ao5 = temp5;
+			}
+			if (lowest_ao12 == -1 || (temp12 != -1 && temp12 < lowest_ao12)) {
+				lowest_ao12 = temp12;
+			}
+			if (lowest_ao100 == -1 || (temp100 != -1 && temp100 < lowest_ao100)) {
+				lowest_ao100 = temp100;
+			}
+			i += 1;
+		});
+	}
 
 	$: if (time) {
 		solve_done();
@@ -61,7 +87,6 @@
 		if (logged_in) {
 		}
 
-		await syncTimes();
 		fetching.set(false);
 	}
 
@@ -69,17 +94,6 @@
 
 	async function openTimePopup(id: string, index: number) {
 		time_popup.openTimePopup(id, index);
-	}
-
-	async function syncTimes(fetching_set: boolean = false) {
-		// if (fetching_set) {
-		// 	fetching.set(true);
-		// }
-		//times.set(await sync.getTimesOfSession($session_id, 0));
-		//time_count = $times.length;
-		// if (fetching_set) {
-		// 	fetching.set(false);
-		// }
 	}
 
 	onMount(async () => {
@@ -98,6 +112,32 @@
 	$: logged_in = data.user !== null;
 	let listHeight = 100;
 	const isDesktopTimes = mediaQuery('(min-width: 1436px)');
+
+	function calc_aon(index: number, aon: number, remove_top_bottom_count: number) {
+		let ao_times = $times.slice(index, index + aon);
+		if (ao_times.length < aon) {
+			return -1;
+		}
+		ao_times.sort((a, b) => a.time - b.time);
+		for (let i = 0; i < remove_top_bottom_count; i++) {
+			ao_times.pop();
+			ao_times.shift();
+		}
+		const sum = ao_times.reduce((total, time) => total + time.time, 0);
+		return sum / ao_times.length;
+	}
+
+	function calc_ao5(index: number) {
+		return calc_aon(index, 5, 1);
+	}
+
+	function calc_ao12(index: number) {
+		return calc_aon(index, 12, 1);
+	}
+
+	function calc_ao100(index: number) {
+		return calc_aon(index, 100, 5);
+	}
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -179,17 +219,24 @@
 			: 'z-10'}"
 	>
 		<div class="absolute flex w-full flex-col items-center px-2 md:px-3">
-			<Separator class="my-1 h-0.5 rounded xl:h-1" />
+			<Separator class="my-1 h-0.5 rounded" />
 		</div>
 		<!-- UI -->
 		<div class="absolute z-20 mt-2 flex h-full w-full grow flex-row px-0 py-1 md:px-1">
 			<!-- Left (Times) -->
-			<div class="relative ml-2 flex w-full flex-1 grow flex-col">
+			<div class="relative ml-2 flex w-full flex-1 shrink-0 grow flex-col">
 				<!-- {#if $fetching}
 					<div class="absolute inline-block w-full">
 						<span class="loader"></span>
 					</div>
 				{/if} -->
+				<div class="mb-1.5 flex items-center justify-start">
+					<p class="ml-1 mr-2 hidden text-sm xs:flex 2xl:text-base">Session</p>
+					<SessionSelector />
+				</div>
+				{#if $fetching}
+					<RefreshCw class="absolute right-1 top-0 animate-spin p-0.5 2xl:top-1 2xl:p-0" />
+				{/if}
 				{#if $times?.length > 0}
 					<div class="h-full" bind:clientHeight={listHeight}>
 						<VirtualList
@@ -206,13 +253,7 @@
 									class="flex h-[20px] w-full items-center justify-start rounded-none p-0 2xl:h-[32px]"
 								>
 									<Separator orientation="vertical" />
-									<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">
-										{#if $fetching}
-											<RefreshCw class="animate-spin p-1.5" />
-										{:else}
-											#
-										{/if}
-									</p>
+									<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">#</p>
 									<Separator orientation="vertical" />
 									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
 										Time
@@ -234,7 +275,16 @@
 								<Separator class="h-0.5" />
 							</div>
 							<div slot="item" let:index let:style {style}>
-								<TimeItem time={$times[index]} {openTimePopup} index={time_count - index} {times} />
+								<TimeItem
+									time={$times[index]}
+									{openTimePopup}
+									{index}
+									{time_count}
+									{times}
+									ao5={calc_ao5(index)}
+									ao12={calc_ao12(index)}
+									ao100={calc_ao100(index)}
+								/>
 								<Separator />
 							</div>
 						</VirtualList>
@@ -246,13 +296,7 @@
 							class="flex h-[20px] w-full items-center justify-start rounded-none p-0 2xl:h-[32px]"
 						>
 							<Separator orientation="vertical" />
-							<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">
-								{#if $fetching}
-									<RefreshCw class="animate-spin p-1.5" />
-								{:else}
-									#
-								{/if}
-							</p>
+							<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">#</p>
 							<Separator orientation="vertical" />
 							<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
 								Time
@@ -283,10 +327,15 @@
 			<div class="hidden w-full flex-1 grow flex-col md:flex">
 				<!-- Stats -->
 				<div class="w-full grow px-2">
-					<div class=" flex items-center">
-						<p class="mr-2">Session</p>
-						<SessionSelector />
-					</div>
+					{#if lowest_ao5 != -1}
+						<p>best ao5: {timeToFormattedString(lowest_ao5)}</p>
+					{/if}
+					{#if lowest_ao12 != -1}
+						<p>best ao12: {timeToFormattedString(lowest_ao12)}</p>
+					{/if}
+					{#if lowest_ao100 != -1}
+						<p>best ao100: {timeToFormattedString(lowest_ao100)}</p>
+					{/if}
 				</div>
 
 				<!-- Logo -->
@@ -314,12 +363,17 @@
 				<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:mb-2 md:h-full" />
 
 				<!-- Stats -->
-				<div class="flex w-full grow flex-col items-start p-2 md:hidden">
-					<div class=" flex items-center">
-						<p class="mr-2">Session</p>
-						<SessionSelector />
-					</div>
-				</div>
+				<div class="flex flex-col text-sm w-full grow items-start p-2 md:hidden">
+          {#if lowest_ao5 != -1}
+						<p>best ao5: {timeToFormattedString(lowest_ao5)}</p>
+					{/if}
+					{#if lowest_ao12 != -1}
+						<p>best ao12: {timeToFormattedString(lowest_ao12)}</p>
+					{/if}
+					{#if lowest_ao100 != -1}
+						<p>best ao100: {timeToFormattedString(lowest_ao100)}</p>
+					{/if}
+        </div>
 			</div>
 		</div>
 	</div>
@@ -340,7 +394,13 @@
 	:global(.virtual-list-wrapper::-webkit-scrollbar) {
 		@apply w-[2px];
 	}
+	:global(.cscroll::-webkit-scrollbar) {
+		@apply w-[2px];
+	}
 	:global(.virtual-list-wrapper::-webkit-scrollbar-thumb) {
+		@apply h-8 rounded-full bg-slate-700;
+	}
+	:global(.cscroll::-webkit-scrollbar-thumb) {
 		@apply h-8 rounded-full bg-slate-700;
 	}
 
