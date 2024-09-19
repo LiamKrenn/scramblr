@@ -84,13 +84,7 @@
 		time = 0;
 
 		if (logged_in) {
-			const res = await fetch('/api/times', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(time_json)
-			});
+			// sync.sync();
 		}
 
 		fetching.set(false);
@@ -112,6 +106,9 @@
 			// const res = await fetch('/api/times');
 			// const json = await res.json();
 			// times.set(json);
+			setInterval(() => {
+				sync.sync();
+			}, 5000);
 		}
 	});
 
@@ -203,7 +200,7 @@
 	<Timer bind:time bind:in_solve />
 
 	<div
-		class="absolute mt-2 flex h-[49%] w-full max-w-[90%] flex-col items-center justify-end sm:h-[33%] {in_solve
+		class="absolute mt-2 flex h-[49%] w-full max-w-[90%] flex-col items-center justify-end space-y-2 sm:h-[33%] {in_solve
 			? '-z-20 opacity-0'
 			: 'z-0'}"
 	>
@@ -214,8 +211,11 @@
         </p>
       </div>
     {/if} -->
+		<p class="relative flex text-balance rounded-lg bg-orange-500/50 px-2 py-1">
+			Warning: Times could break at any time. Data could be lost.
+		</p>
 		<p class="relative flex text-balance rounded-lg bg-slate-800 px-2 py-1">
-			Note: This app currently only stores data locally! Cloud storage is in development.
+			Note: Primitive cloud sync is enabled. Your times are stored in the cloud and synced.
 		</p>
 	</div>
 

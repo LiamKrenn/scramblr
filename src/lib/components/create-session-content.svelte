@@ -13,8 +13,8 @@
 		session.scramble_type = $type;
 		session.order = (await sync.getSessionCount()) + 1;
 		let id = await sync.createSession(session);
-		sessions.set(await sync.getSessions());
 		session_id.set(id);
+		await sync.sync();
 		open.set(false);
 	}
 </script>

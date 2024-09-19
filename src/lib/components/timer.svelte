@@ -65,7 +65,6 @@
 			display_time = timeToFormattedString(msecs, TIMER_DECIMALS);
 			time = msecs;
 			start_time = 0;
-			await new_scramble();
 		}
 	}
 

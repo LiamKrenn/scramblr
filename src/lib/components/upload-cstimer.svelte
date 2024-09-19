@@ -12,111 +12,112 @@
 	let idb_size_map: { [key: number]: number } = {};
 	let global_time_count = 0;
 	async function handleFiles(files: File[]) {
-    // TODO: efficiency - load & convert first and then insert
+		return; // TODO: Fix upload sync
+		// TODO: efficiency - load & convert first and then insert
 		for (const file of files) {
 			//for (let i = 0; i < 20; i++) {
-        
-				uploaded_file = file;
-				let cstimer_json = await JSON.parse(await uploaded_file.text());
-				let cstimer_keys = Object.keys(cstimer_json);
-				let cstimer_sessionData = await JSON.parse(cstimer_json.properties.sessionData);
 
-				let session_keys = [];
-				for (let key of cstimer_keys) {
-					if (key.startsWith('session')) {
-						session_keys.push(key);
-						let session = cstimer_json[key];
-						time_count += session.length;
+			uploaded_file = file;
+			let cstimer_json = await JSON.parse(await uploaded_file.text());
+			let cstimer_keys = Object.keys(cstimer_json);
+			let cstimer_sessionData = await JSON.parse(cstimer_json.properties.sessionData);
+
+			let session_keys = [];
+			for (let key of cstimer_keys) {
+				if (key.startsWith('session')) {
+					session_keys.push(key);
+					let session = cstimer_json[key];
+					time_count += session.length;
+				}
+			}
+			time_count += session_keys.length;
+			time_count -= 100;
+
+			// resed idb
+			sync.deleteAllSessions();
+			sync.deleteAllTimes();
+
+			let session_id_map: { [cs_id: string]: string } = {};
+
+			// create sessions
+			for (let key of session_keys) {
+				let cs_session_id = key.split('session')[1];
+				let cs_session_props = cstimer_sessionData[cs_session_id];
+				let cs_opt = cs_session_props.opt;
+
+				let srcType = '333';
+				if (Object.keys(cs_opt).includes('scrType')) {
+					let cs_srcType: string = cs_opt.scrType;
+
+					if (cs_srcType.includes('222')) {
+						srcType = '222';
+					} else if (cs_srcType.includes('333')) {
+						srcType = '333';
+					} else if (cs_srcType.includes('444')) {
+						srcType = '444';
+					} else if (cs_srcType.includes('555')) {
+						srcType = '555';
+					} else if (cs_srcType.includes('666')) {
+						srcType = '666';
+					} else if (cs_srcType.includes('777')) {
+						srcType = '777';
+					} else if (cs_srcType == 'skbso') {
+						srcType = 'skewb';
+					} else if (cs_srcType == 'll') {
+						srcType = 'oll';
+					} else if (cs_srcType == 'pyrso') {
+						srcType = 'pyraminx';
+					} else if (cs_srcType == 'mgmp') {
+						srcType = 'megaminx';
 					}
 				}
-				time_count += session_keys.length;
-				time_count -= 100;
 
-				// resed idb
-				sync.deleteAllSessions();
-				sync.deleteAllTimes();
+				let new_session: Session = {
+					id: '0',
+					name: cs_session_props.name,
+					order: cs_session_props.rank,
+					scramble_type: srcType
+				};
 
-				let session_id_map: { [cs_id: string]: string } = {};
+				let session_uuid = await sync.createSession(new_session);
+				session_id_map[cs_session_id] = session_uuid;
+				times_processed++;
+			}
 
-				// create sessions
-				for (let key of session_keys) {
-					let cs_session_id = key.split('session')[1];
-					let cs_session_props = cstimer_sessionData[cs_session_id];
-					let cs_opt = cs_session_props.opt;
+			// create times
+			for (let key of session_keys) {
+				let session = cstimer_json[key];
+				let session_id = key.split('session')[1];
+				for (let time of session) {
+					// TODO: Multi-Phase Timer
+					let c_time = time[0][1];
 
-					let srcType = '333';
-					if (Object.keys(cs_opt).includes('scrType')) {
-						let cs_srcType: string = cs_opt.scrType;
-
-						if (cs_srcType.includes('222')) {
-							srcType = '222';
-						} else if (cs_srcType.includes('333')) {
-							srcType = '333';
-						} else if (cs_srcType.includes('444')) {
-							srcType = '444';
-						} else if (cs_srcType.includes('555')) {
-							srcType = '555';
-						} else if (cs_srcType.includes('666')) {
-							srcType = '666';
-						} else if (cs_srcType.includes('777')) {
-							srcType = '777';
-						} else if (cs_srcType == 'skbso') {
-							srcType = 'skewb';
-						} else if (cs_srcType == 'll') {
-							srcType = 'oll';
-						} else if (cs_srcType == 'pyrso') {
-							srcType = 'pyraminx';
-						} else if (cs_srcType == 'mgmp') {
-							srcType = 'megaminx';
-						}
-					}
-
-					let new_session: Session = {
+					let new_time: Time = {
 						id: '0',
-						name: cs_session_props.name,
-						order: cs_session_props.rank,
-						scramble_type: srcType
+						time: c_time,
+						session_id: session_id_map[session_id],
+						scramble: time[1],
+						comment: time[2],
+						timestamp: time[3] * 1000,
+						penalty: time[0][0],
+						archived: false
 					};
 
-					let session_uuid = await sync.createSession(new_session);
-					session_id_map[cs_session_id] = session_uuid;
+					await sync.createTime(new_time);
+
 					times_processed++;
-				}
+					// global_time_count++;
 
-				// create times
-				for (let key of session_keys) {
-					let session = cstimer_json[key];
-					let session_id = key.split('session')[1];
-					for (let time of session) {
-						// TODO: Multi-Phase Timer
-						let c_time = time[0][1];
+					// if (global_time_count % 1000 == 0) {
+					// 	setTimeout(async () => {
+					// 		const cache = 3000;
+					// 		let total = (await navigator.storage.estimate()).usage || 0;
+					// 		let idb_size = total - cache;
+					// 		idb_size_map[global_time_count] = idb_size;
+					//     console.log(global_time_count, idb_size);
 
-						let new_time: Time = {
-							id: '0',
-							time: c_time,
-							session_id: session_id_map[session_id],
-							scramble: time[1],
-							comment: time[2],
-							timestamp: time[3] * 1000,
-							penalty: time[0][0],
-							archived: false
-						};
-
-						await sync.createTime(new_time);
-
-						times_processed++;
-						// global_time_count++;
-            
-						// if (global_time_count % 1000 == 0) {
-						// 	setTimeout(async () => {
-						// 		const cache = 3000;
-						// 		let total = (await navigator.storage.estimate()).usage || 0;
-						// 		let idb_size = total - cache;
-						// 		idb_size_map[global_time_count] = idb_size;
-            //     console.log(global_time_count, idb_size);
-                
-						// 	}, 2000);
-						// }
+					// 	}, 2000);
+					// }
 					//}
 				}
 			}
@@ -150,6 +151,8 @@
 	let times_processed = 0;
 	let time_count = 100;
 </script>
+
+Currently the upload is disabled due to sync issues
 
 {#if done}
 	<div

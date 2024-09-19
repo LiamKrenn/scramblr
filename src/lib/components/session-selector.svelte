@@ -40,28 +40,28 @@
 		<Button
 			variant="outline"
 			builders={[builder]}
-			class=" z-20 2xl:h-8 h-6 select-none sm:px-2 p-1 2xl:text-base text-sm focus:border-slate-50 flex-shrink sm:max-w-52 max-w-32"
+			class=" z-20 h-6 max-w-32 flex-shrink select-none p-1 text-sm focus:border-slate-50 sm:max-w-52 sm:px-2 2xl:h-8 2xl:text-base"
 		>
-    <div class="overflow-ellipsis overflow-hidden max-w-full font-normal">
-			{display_name}
-    </div>
+			<div class="max-w-full overflow-hidden overflow-ellipsis font-normal">
+				{display_name}
+			</div>
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-52">
 		<DropdownMenu.Label>Sessions</DropdownMenu.Label>
 		<DropdownMenu.RadioGroup bind:value={$session_id}>
-			<ScrollArea class="max-h-[40svh] !overflow-y-auto cscroll">
+			<ScrollArea class="cscroll max-h-[40svh] !overflow-y-auto">
 				{#each $sessions as session}
 					<DropdownMenu.RadioItem
 						on:click={() => {
 							open = !open;
 						}}
 						value={session.id.toString()}
-						class="cursor-pointer select-none mr-1 w-48"
+						class="mr-1 w-48 cursor-pointer select-none"
 					>
-          <p class="overflow-hidden overflow-ellipsis ">
-            {session.name}
-          </p>
+						<p class="overflow-hidden overflow-ellipsis">
+							{session.name}
+						</p>
 					</DropdownMenu.RadioItem>
 				{/each}
 			</ScrollArea>

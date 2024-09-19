@@ -13,7 +13,7 @@ model sessions {
   name          String  @default(dbgenerated("now()")) @db.VarChar(32)
   order         Int     @default(0) @db.SmallInt
   scramble_type String  @default("333") @db.VarChar(16)
-  updated       BigInt  @default(dbgenerated("EXTRACT(EPOCH FROM NOW())::bigint")) @db.BigInt
+  updated       BigInt  @default(dbgenerated("EXTRACT(EPOCH FROM NOW()) * 1000::bigint")) @db.BigInt
   times         times[]
 }
 
@@ -24,8 +24,8 @@ model times {
   penalty    Int      @default(0) @db.SmallInt
   scramble   String?
   comment    String?  @db.VarChar(512)
-  timestamp  BigInt?  @default(dbgenerated("EXTRACT(EPOCH FROM NOW())::bigint")) @db.BigInt
-  updated    BigInt   @default(dbgenerated("EXTRACT(EPOCH FROM NOW())::bigint")) @db.BigInt
+  timestamp  BigInt?  @default(dbgenerated("EXTRACT(EPOCH FROM NOW()) * 1000::bigint")) @db.BigInt
+  updated    BigInt   @default(dbgenerated("EXTRACT(EPOCH FROM NOW()) * 1000::bigint")) @db.BigInt
   archived   Boolean  @default(false)
   sessions   sessions @relation(fields: [session_id], references: [id], onDelete: Cascade, map: "times_sessions_fk")
 }

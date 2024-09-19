@@ -6,18 +6,7 @@ import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ request, cookies }) => {
 	const decoded = await check_auth(cookies);
 	if (!decoded) {
-		return new Response(
-			JSON.stringify([
-				{
-					id: getUUID(),
-					name: 'Default',
-					order: 0,
-					scramble_type: '333',
-					updated: Date.now(),
-					user_id: 0
-				}
-			])
-		);
+		return new Response('Not logged in', { status: 401 });
 	}
 
 	const sessions = await prisma.sessions.findMany({ where: { user_id: decoded.id } });
@@ -26,7 +15,7 @@ export const GET: RequestHandler = async ({ request, cookies }) => {
 	});
 };
 
-export const POST: RequestHandler = async ({ request, cookies }) => {
+export const PUT: RequestHandler = async ({ request, cookies }) => {
 	const decoded = await check_auth(cookies);
 	if (!decoded) {
 		return new Response('Unauthorized', { status: 401 });
@@ -35,9 +24,8 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	const user_id = decoded.id;
 
 	let session = await request.json();
-	delete session.id;
 	session.user_id = user_id;
 
-	await prisma.sessions.create({ data: { ...session } });
+	await prisma.sessions.upsert({ where: { id: session.id }, update: { ...session }, create: { ...session } });
 	return new Response(null, { status: 201 });
 };
