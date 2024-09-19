@@ -6,16 +6,6 @@ import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ request, cookies }) => {
 	const decoded = await check_auth(cookies);
 	if (!decoded) {
-		// TODO:
-		const newDefaultSession = await prisma.sessions.create({
-			data: {
-				name: 'Default',
-				order: 0,
-				scramble_type: '333',
-				updated: Date.now(),
-				user_id: 0
-			}
-		});
 		return new Response(
 			JSON.stringify([
 				{

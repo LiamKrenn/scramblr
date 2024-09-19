@@ -12,6 +12,7 @@ export const GET: RequestHandler = async () => {
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	// check if authenticated
 	const decoded = await check_auth(cookies);
+  
 	if (!decoded) {
 		return new Response('Not logged in', { status: 401 });
 	}
