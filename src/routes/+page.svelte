@@ -44,10 +44,9 @@
 	let lowest_ao100 = -1;
 
 	$: if ($times && $session_id) {
-    
-    lowest_ao5 = -1;
-    lowest_ao12 = -1;
-    lowest_ao100 = -1;
+		lowest_ao5 = -1;
+		lowest_ao12 = -1;
+		lowest_ao100 = -1;
 		let i = 0;
 		$times.forEach((time_el) => {
 			let temp5 = calc_ao5(i);
@@ -85,6 +84,13 @@
 		time = 0;
 
 		if (logged_in) {
+			const res = await fetch('/api/times', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(time_json)
+			});
 		}
 
 		fetching.set(false);
@@ -363,8 +369,8 @@
 				<ScramblePreview class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:mb-2 md:h-full" />
 
 				<!-- Stats -->
-				<div class="flex flex-col text-sm w-full grow items-start p-2 md:hidden">
-          {#if lowest_ao5 != -1}
+				<div class="flex w-full grow flex-col items-start p-2 text-sm md:hidden">
+					{#if lowest_ao5 != -1}
 						<p>best ao5: {timeToFormattedString(lowest_ao5)}</p>
 					{/if}
 					{#if lowest_ao12 != -1}
@@ -373,7 +379,7 @@
 					{#if lowest_ao100 != -1}
 						<p>best ao100: {timeToFormattedString(lowest_ao100)}</p>
 					{/if}
-        </div>
+				</div>
 			</div>
 		</div>
 	</div>

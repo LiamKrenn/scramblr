@@ -1,9 +1,8 @@
-import { WCA_ORIGIN, APPLICATION_ID, CLIENT_SECRET, APP_ROUTE, MONGODB_URI } from '$env/static/private';
+import { WCA_ORIGIN, APPLICATION_ID, CLIENT_SECRET, APP_ROUTE } from '$env/static/private';
+import { prisma } from '$lib/server/db.server.js';
 import type { Session, WCAUser } from '$lib/types.js';
 import jwt from 'jsonwebtoken';
 const { sign } = jwt;
-
-
 
 export async function GET(req) {
 	const code = req.url.searchParams.get('code');
@@ -47,16 +46,25 @@ export async function GET(req) {
 		CLIENT_SECRET
 	);
 
-  let sessions = await client.db('times').collection('sessions').find({ "user_id": user.me.id }).toArray();
-  if (sessions.length === 0) {
-    let default_session = {
-      name: "Default",
-      order: 0,
-      scramble_type: "333",
-      user_id: user.me.id
-    }
-    await client.db('times').collection('sessions').insertOne(default_session);
-  }
+	let sessions = await prisma.sessions.findMany({
+		where: {
+			user_id: {
+				equals: user.me.id
+			}
+		}
+	});
+
+	if (sessions.length === 0) {
+		let default_session = {
+			name: 'Default',
+			order: 0,
+			scramble_type: '333',
+			user_id: user.me.id
+		};
+		await prisma.sessions.create({
+			data: default_session
+		});
+	}
 
 	let resp = new Response(null, {
 		status: 302,

@@ -27,16 +27,11 @@ class UserDataSync {
 	}
 
 	async init() {
-		if ((await this.db.sessions.count()) == 0) {
-			this.db.sessions.add({
-				id: getUUID(),
-				name: 'Default',
-				order: 0,
-				scramble_type: '333',
-				updated: Date.now(),
-				user_id: 0
-			});
-		}
+		const db_sessions: Session[] = await (await fetch('/api/sessions')).json();
+
+		db_sessions.forEach((session) => {
+			this.db.sessions.add(session, session.id);
+		});
 	}
 
 	async sync() {}
@@ -120,10 +115,8 @@ export let sessions = liveQuery(() => {
 	return sync.db.sessions.orderBy('order').toArray();
 });
 
-
 session_id.subscribe(async (id) => {
 	type.set((await sync.getSession(id))?.scramble_type || '333');
-
 });
 
 type.subscribe(async (value) => {

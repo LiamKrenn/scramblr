@@ -10,7 +10,7 @@ export const GET: RequestHandler = async () => {
 };
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-  // check if authenticated
+	// check if authenticated
 	const decoded = await check_auth(cookies);
 	if (!decoded) {
 		return new Response('Not logged in', { status: 401 });
@@ -20,7 +20,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
 	let time = await request.json();
 
-  // check if session exists and belongs to user
+	console.log(time.session_id, user_id);
+
+	// check if session exists and belongs to user
 	const session = await prisma.sessions.findFirst({ where: { id: time.session_id, user_id } });
 	if (!session) {
 		return new Response('Unauthorized', { status: 401 });
