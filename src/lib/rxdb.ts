@@ -3,7 +3,7 @@ import { addRxPlugin, createRxDatabase } from 'rxdb';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
-// import { replicateServer } from 'rxdb-server/plugins/replication-server';
+import { replicateServer } from 'rxdb-server/plugins/replication-server';
 import { browser } from '$app/environment';
 
 addRxPlugin(RxDBMigrationSchemaPlugin);
@@ -103,17 +103,15 @@ await ldb.addCollections({
 	}
 });
 
-if (browser) {
-	// const replicationState = replicateServer({
-	// 	replicationIdentifier: 'my-couchdb-replication',
-	// 	collection: ldb.collections.times,
-	// 	url: PUBLIC_SERVER_URL + '/times/0',
-	// 	live: true,
-	// 	pull: {
-	// 		batchSize: 60
-	// 	},
-	// 	push: {
-	// 		batchSize: 60
-	// 	}
-	// });
-}
+const replicationState = replicateServer({
+	replicationIdentifier: 'my-couchdb-replication',
+	collection: ldb.collections.times,
+	url: 'http://repl.krenn.tech/times/0',
+	live: true,
+	pull: {
+		batchSize: 60
+	},
+	push: {
+		batchSize: 60
+	}
+});
