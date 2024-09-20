@@ -1,0 +1,17 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${PASSWORD}
+  middleware:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+       - "MONGO_URL=${MONGO_URL}"
+    ports:
+        - 2443:2443
