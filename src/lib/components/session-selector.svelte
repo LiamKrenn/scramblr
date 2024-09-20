@@ -3,17 +3,18 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { onMount } from 'svelte';
 	import { Plus, Settings } from 'lucide-svelte';
-	import { session_id, sessions, sync } from '$lib/sync';
+	import { getSession, session_id, sessions } from '$lib/sync';
 	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 	import CreateSession from './create-session.svelte';
 	import type { Session } from '$lib/types';
+	import { ldb } from '$lib/rxdb';
 
 	let create_session: CreateSession;
 	let display_name: string = 'Select Session';
 	let open: boolean;
 
 	async function setToSession(id: string) {
-		let res: Session | undefined = await sync.getSession(id);
+		let res: Session | undefined = await getSession(id);
 		if (res) {
 			session_id.set(id);
 			display_name = res.name;

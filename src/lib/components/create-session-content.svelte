@@ -4,17 +4,19 @@
 	import Button from './ui/button/button.svelte';
 	import Input from './ui/input/input.svelte';
 	import { type } from '$lib/scramble';
-	import { session_id, sessions, sync } from '$lib/sync';
+	import { session_id, sessions } from '$lib/sync';
+	import { ldb } from '$lib/rxdb';
+	import { getUUID } from '$lib/utils';
 
 	export let session: Session;
 	export let open: Writable<boolean>;
 
 	async function createSessionClick() {
 		session.scramble_type = $type;
-		session.order = (await sync.getSessionCount()) + 1;
-		let id = await sync.createSession(session);
+		session.id = getUUID();
+		session.order = (await ldb.sessions.count().exec()) + 1;
+		let id = (await ldb.sessions.insert(session)).id;
 		session_id.set(id);
-		await sync.sync();
 		open.set(false);
 	}
 </script>

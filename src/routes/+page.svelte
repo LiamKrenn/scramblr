@@ -10,15 +10,16 @@
 	import { get } from 'svelte/store';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import TimeItem from '$lib/components/time-item.svelte';
-	import TimePopup from '$lib/components/time-popup.svelte';
+	// import TimePopup from '$lib/components/time-popup.svelte';
 	import SessionSelector from '$lib/components/session-selector.svelte';
-	import { session_id, fetching, sync } from '$lib/sync';
 	import { RefreshCw } from 'lucide-svelte';
 	import type { Time } from '$lib/types';
 	import { liveQuery } from 'dexie';
 	import VirtualList from 'svelte-tiny-virtual-list';
 	import { mediaQuery } from 'svelte-legos';
-	import { timeToFormattedString } from '$lib/utils';
+	import { getUUID, timeToFormattedString } from '$lib/utils';
+	import { ldb } from '$lib/rxdb';
+	import { session_id } from '$lib/sync';
 
 	export let data: PageData;
 
@@ -26,18 +27,12 @@
 	let time_count = 0;
 	let in_solve = false;
 
-	$: times = liveQuery(async () => {
-		fetching.set(true);
-		const res = await sync.db.times
-			.where('session_id')
-			.equals($session_id)
-			.and((time) => time.archived != true)
-			.reverse()
-			.sortBy('timestamp');
-		time_count = await sync.getTimeCountOfSession($session_id);
-		fetching.set(false);
-		return res;
-	});
+	$: times = ldb.times.find({
+		selector: {
+			session_id: $session_id,
+			archived: { $ne: true }
+		}
+	}).$;
 
 	let lowest_ao5 = -1;
 	let lowest_ao12 = -1;
@@ -71,7 +66,7 @@
 
 	async function solve_done() {
 		let time_json: Time = {
-			id: '',
+			id: getUUID(),
 			time: time,
 			scramble: $scramble,
 			session_id: get(session_id),
@@ -79,21 +74,18 @@
 			timestamp: Date.now()
 		};
 
-		fetching.set(true);
-		sync.createTime(time_json);
+		await ldb.times.insert(time_json);
 		time = 0;
 
 		if (logged_in) {
 			// sync.sync();
 		}
-
-		fetching.set(false);
 	}
 
-	let time_popup: TimePopup;
+	// let time_popup: TimePopup;
 
 	async function openTimePopup(id: string, index: number) {
-		time_popup.openTimePopup(id, index);
+		// time_popup.openTimePopup(id, index);
 	}
 
 	onMount(async () => {
@@ -106,9 +98,6 @@
 			// const res = await fetch('/api/times');
 			// const json = await res.json();
 			// times.set(json);
-			setInterval(() => {
-				sync.sync();
-			}, 5000);
 		}
 	});
 
@@ -143,7 +132,7 @@
 	}
 </script>
 
-<TimePopup bind:this={time_popup} />
+<!-- <TimePopup bind:this={time_popup} /> -->
 
 <button
 	class="relative flex h-full w-full cursor-default select-none flex-col items-center justify-center"
@@ -240,7 +229,8 @@
 					<p class="ml-1 mr-2 hidden text-sm xs:flex 2xl:text-base">Session</p>
 					<SessionSelector />
 				</div>
-				{#if $fetching}
+				<!-- TODO: -->
+				{#if false}
 					<RefreshCw class="absolute right-1 top-0 animate-spin p-0.5 2xl:top-1 2xl:p-0" />
 				{/if}
 				{#if $times?.length > 0}

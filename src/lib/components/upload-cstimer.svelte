@@ -3,7 +3,6 @@
 	import type { PageData } from '../../routes/settings/$types';
 	import { FileDrop } from 'svelte-droplet';
 	import Progress from './ui/progress/progress.svelte';
-	import { sync } from '$lib/sync';
 	import type { Session, Time } from '$lib/types';
 	import { getUUID } from '$lib/utils';
 

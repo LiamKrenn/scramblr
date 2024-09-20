@@ -40,6 +40,7 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "5.19.1",
+    "@sveltejs/adapter-node": "^5.2.3",
     "@sveltejs/adapter-vercel": "^5.4.4",
     "@types/jsonwebtoken": "^9.0.7",
     "bits-ui": "^0.21.14",
@@ -49,6 +50,9 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-svelte": "^0.363.0",
     "prisma": "^5.19.1",
+    "rxdb": "^15.33.0",
+    "rxdb-server": "^15.33.0",
+    "rxjs": "^7.8.1",
     "svelte-droplet": "^1.0.1",
     "svelte-legos": "^0.2.5",
     "svelte-persisted-store": "^0.9.4",

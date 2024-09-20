@@ -4,7 +4,6 @@
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import type { Time } from '$lib/types';
 	import TimePopupContent from './time-popup-content.svelte';
-	import { sync } from '$lib/sync';
 
 	let open = false;
 	const isDesktop = mediaQuery('(min-width: 768px)');
