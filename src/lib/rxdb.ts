@@ -103,10 +103,20 @@ await ldb.addCollections({
 	}
 });
 
+function getCookie(name: string) {
+	const value = `; ${document.cookie}`;
+	const parts = value.split(`; ${name}=`);
+	if (parts.length === 2) return parts.pop()?.split(';').shift() || '';
+	return '';
+}
+
 const replicationState = replicateServer({
 	replicationIdentifier: 'my-couchdb-replication',
 	collection: ldb.collections.times,
-	url: 'http://repl.krenn.tech/times/0',
+	url: 'https://repl.krenn.tech/times/0',
+	headers: {
+		token: browser ? getCookie('token') : ''
+	},
 	live: true,
 	pull: {
 		batchSize: 60
