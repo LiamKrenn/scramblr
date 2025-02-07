@@ -12,11 +12,13 @@
 	let time: Time | undefined;
 	let index: number = 0;
 
-	export async function openTimePopup(id: string, i: number) {
-		time = await sync.getTime(id);
-		index = i;
+	async function openPopup(time: Time, index: number) {
+		time = time;
+		index = index;
 		open = true;
 	}
+
+	let { openTimePopup = openPopup } = $props();
 
 	async function deleteTime(id: string) {
 		sync.deleteTime(id);
@@ -30,7 +32,7 @@
 
 {#if $isDesktop}
 	<Dialog.Root bind:open>
-		<Dialog.Trigger asChild let:builder></Dialog.Trigger>
+		<Dialog.Trigger></Dialog.Trigger>
 		<Dialog.Content class="p-0 sm:max-w-[425px]">
 			{#if time != undefined}
 				<TimePopupContent {time} {deleteTime} {close} {index} />
@@ -39,7 +41,7 @@
 	</Dialog.Root>
 {:else}
 	<Drawer.Root bind:open>
-		<Drawer.Trigger asChild let:builder class="absolute"></Drawer.Trigger>
+		<Drawer.Trigger class="absolute"></Drawer.Trigger>
 		<Drawer.Content class="">
 			{#if time != undefined}
 				<TimePopupContent {time} {deleteTime} {close} {index} />

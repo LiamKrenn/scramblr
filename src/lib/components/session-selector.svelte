@@ -8,9 +8,9 @@
 	import CreateSession from './create-session.svelte';
 	import type { Session } from '$lib/types';
 
-	let create_session: CreateSession;
-	let display_name: string = 'Select Session';
-	let open: boolean;
+	let create_session: CreateSession = $state();
+	let display_name: string = $state('Select Session');
+	let open: boolean = $state();
 
 	async function setToSession(id: string) {
 		let res: Session | undefined = await sync.getSession(id);
@@ -36,17 +36,19 @@
 <CreateSession bind:this={create_session} />
 
 <DropdownMenu.Root bind:open>
-	<DropdownMenu.Trigger asChild let:builder>
-		<Button
-			variant="outline"
-			builders={[builder]}
-			class=" z-20 2xl:h-8 h-6 select-none sm:px-2 p-1 2xl:text-base text-sm focus:border-slate-50 flex-shrink sm:max-w-52 max-w-32"
-		>
-    <div class="overflow-ellipsis overflow-hidden max-w-full font-normal">
-			{display_name}
-    </div>
-		</Button>
-	</DropdownMenu.Trigger>
+	<DropdownMenu.Trigger asChild >
+		{#snippet children({ builder })}
+				<Button
+				variant="outline"
+				builders={[builder]}
+				class=" z-20 2xl:h-8 h-6 select-none sm:px-2 p-1 2xl:text-base text-sm focus:border-slate-50 flex-shrink sm:max-w-52 max-w-32"
+			>
+	    <div class="overflow-ellipsis overflow-hidden max-w-full font-normal">
+				{display_name}
+	    </div>
+			</Button>
+					{/snippet}
+		</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-52">
 		<DropdownMenu.Label>Sessions</DropdownMenu.Label>
 		<DropdownMenu.RadioGroup bind:value={$session_id}>

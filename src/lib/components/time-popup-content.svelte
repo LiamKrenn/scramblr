@@ -4,10 +4,19 @@
 	import { CopyIcon, Trash } from 'lucide-svelte';
 	import Button from './ui/button/button.svelte';
 
-	export let time: Time;
-	export let index: number;
-	export let deleteTime: (id: string) => void;
-	export let close: () => void;
+	interface Props {
+		time: Time;
+		index: number;
+		deleteTime: (id: string) => void;
+		close: () => void;
+	}
+
+	let {
+		time,
+		index,
+		deleteTime,
+		close
+	}: Props = $props();
 </script>
 
 <div class="p-4">

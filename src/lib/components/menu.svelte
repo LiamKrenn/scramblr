@@ -6,23 +6,29 @@
 	import { cn } from '$lib/utils';
 	import type { WCAUser } from '$lib/types';
 
-	let className: string = '';
-	export { className as class };
+	
 
-	export let user: WCAUser | null = null;
+	interface Props {
+		class?: string;
+		user?: WCAUser | null;
+	}
+
+	let { class: className = '', user = null }: Props = $props();
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger asChild let:builder class="absolute right-4  top-4 z-20">
-		<Button
-			variant="outline"
-			builders={[builder]}
-			class={cn(
-				className,
-				'absolute right-4  top-4 z-20 h-14 w-14 p-3 focus:border-slate-50 lg:h-16 lg:w-16'
-			)}><Menu class="h-full w-full" /></Button
-		>
-	</DropdownMenu.Trigger>
+	<DropdownMenu.Trigger asChild  class="absolute right-4  top-4 z-20">
+		{#snippet children({ builder })}
+				<Button
+				variant="outline"
+				builders={[builder]}
+				class={cn(
+					className,
+					'absolute right-4  top-4 z-20 h-14 w-14 p-3 focus:border-slate-50 lg:h-16 lg:w-16'
+				)}><Menu class="h-full w-full" /></Button
+			>
+					{/snippet}
+		</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="z-20 ">
 		<MenuItem path="/">
 			<Timer class="mr-2" />
@@ -48,7 +54,7 @@
 			</MenuItem>
 		{:else}
 			<MenuItem path="/user">
-				<!-- svelte-ignore a11y-missing-attribute -->
+				<!-- svelte-ignore a11y_missing_attribute -->
 				<img class="mr-2 h-6 w-6 rounded-full bg-slate-800" src={user.avatar.url} />
 				<p>{user.name}</p>
 			</MenuItem>

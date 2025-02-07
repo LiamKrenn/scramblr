@@ -7,7 +7,7 @@
 	import type { Session, Time } from '$lib/types';
 	import { getUUID } from '$lib/utils';
 
-	let done = false;
+	let done = $state(false);
 
 	let idb_size_map: { [key: number]: number } = {};
 	let global_time_count = 0;
@@ -145,10 +145,10 @@
 		}
 	}
 
-	let uploaded_file: File | null = null;
+	let uploaded_file: File | null = $state(null);
 
-	let times_processed = 0;
-	let time_count = 100;
+	let times_processed = $state(0);
+	let time_count = $state(100);
 </script>
 
 {#if done}
@@ -165,15 +165,17 @@
 		</p>
 	</div>
 {:else if uploaded_file == null}
-	<FileDrop {handleFiles} acceptedMimes={['.txt']} max={1} let:droppable>
-		<div
-			class="flex h-fit min-h-32 w-[90vw] max-w-96 flex-col items-center justify-center rounded-xl border-2 border-dashed bg-slate-900"
-			class:droppable
-		>
-			<UploadIcon class="m-4 h-8 w-8" />
-			<p class="mx-2 text-balance text-center">Select or drop the csTimer file</p>
-		</div>
-	</FileDrop>
+	<FileDrop {handleFiles} acceptedMimes={['.txt']} max={1} >
+		{#snippet children({ droppable })}
+						<div
+				class="flex h-fit min-h-32 w-[90vw] max-w-96 flex-col items-center justify-center rounded-xl border-2 border-dashed bg-slate-900"
+				class:droppable
+			>
+				<UploadIcon class="m-4 h-8 w-8" />
+				<p class="mx-2 text-balance text-center">Select or drop the csTimer file</p>
+			</div>
+							{/snippet}
+				</FileDrop>
 {:else}
 	<div
 		class="relative flex h-fit min-h-32 w-[90vw] max-w-96 flex-col items-center justify-center rounded-xl border-2 border-double border-orange-400 bg-slate-900"

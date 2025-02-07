@@ -4,7 +4,11 @@
 import type { PageData } from './$types';
 	import Button from '$lib/components/ui/button/button.svelte';
     
-    export let data: PageData;
+  interface Props {
+    data: PageData;
+  }
+
+  let { data }: Props = $props();
 </script>
 
 
@@ -13,7 +17,7 @@ import type { PageData } from './$types';
   <Menu user={data.user} />
   {#if data.user != null}
   <h1 class="text-5xl font-semibold">{data.user.name}</h1>
-  <!-- svelte-ignore a11y-missing-attribute -->
+  <!-- svelte-ignore a11y_missing_attribute -->
   <img class="mt-8 h-[20%]  aspect-square" src="{data.user.avatar.url}" />
   <h2 class="text-3xl font-semibold mt-8">Statistics</h2>
   <p class="mt-4">This feature is being worked on</p>

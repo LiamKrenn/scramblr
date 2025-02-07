@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { onMount } from 'svelte';
 	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
 	import { new_scramble, scramble } from '$lib/scramble';
@@ -7,7 +9,11 @@
 	import Menu from '$lib/components/menu.svelte';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	onMount(async () => {
 		await click();
@@ -30,7 +36,7 @@
 	}
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+<svelte:window onkeydown={preventDefault(onKeyDown)} />
 
 <h1
 	class="absolute left-4 top-4 flex cursor-pointer select-none flex-col text-3xl md:bottom-4 md:top-auto lg:text-4xl xl:text-5xl"
@@ -52,13 +58,13 @@
 	<ScrambleSelector />
 	<ScramblePreview class="absolute bottom-4 right-0 max-h-[20%] max-w-full px-2" />
 	<button
-		on:click={click}
+		onclick={click}
 		class="absolute flex h-full w-full cursor-pointer flex-col items-center justify-center"
-	/>
+	></button>
 
 	<button
 		id="scrambleContainer"
-		on:click={textClick}
+		onclick={textClick}
 		class="absolute mx-[8%] block h-[40%] max-h-[40%] select-text text-balance text-center"
 	>
 		{#if $scramble.length > 270}

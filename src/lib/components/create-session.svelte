@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot read properties of undefined (reading 'end') -->
+<!-- @migration-task Error while migrating Svelte code: Cannot read properties of undefined (reading 'end') -->
 <script lang="ts">
 	import { mediaQuery } from 'svelte-legos';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';

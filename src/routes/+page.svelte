@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import ScramblePreview from '$lib/components/scramble-preview.svelte';
 	import ScrambleSelector from '$lib/components/scramble-selector.svelte';
 	import Timer from '$lib/components/timer.svelte';
@@ -20,55 +22,22 @@
 	import { mediaQuery } from 'svelte-legos';
 	import { timeToFormattedString } from '$lib/utils';
 
-	export let data: PageData;
-
-	let time = 0;
-	let time_count = 0;
-	let in_solve = false;
-
-	$: times = liveQuery(async () => {
-		fetching.set(true);
-		const res = await sync.db.times
-			.where('session_id')
-			.equals($session_id)
-			.and((time) => time.archived != true)
-			.reverse()
-			.sortBy('timestamp');
-		time_count = await sync.getTimeCountOfSession($session_id);
-		fetching.set(false);
-		return res;
-	});
-
-	let lowest_ao5 = -1;
-	let lowest_ao12 = -1;
-	let lowest_ao100 = -1;
-
-	$: if ($times && $session_id) {
-    
-    lowest_ao5 = -1;
-    lowest_ao12 = -1;
-    lowest_ao100 = -1;
-		let i = 0;
-		$times.forEach((time_el) => {
-			let temp5 = calc_ao5(i);
-			let temp12 = calc_ao12(i);
-			let temp100 = calc_ao100(i);
-			if (lowest_ao5 == -1 || (temp5 != -1 && temp5 < lowest_ao5)) {
-				lowest_ao5 = temp5;
-			}
-			if (lowest_ao12 == -1 || (temp12 != -1 && temp12 < lowest_ao12)) {
-				lowest_ao12 = temp12;
-			}
-			if (lowest_ao100 == -1 || (temp100 != -1 && temp100 < lowest_ao100)) {
-				lowest_ao100 = temp100;
-			}
-			i += 1;
-		});
+	interface Props {
+		data: PageData;
 	}
 
-	$: if (time) {
-		solve_done();
-	}
+	let { data }: Props = $props();
+
+	let time = $state(0);
+	let time_count = $state(0);
+	let in_solve = $state(false);
+
+
+	let lowest_ao5 = $state(-1);
+	let lowest_ao12 = $state(-1);
+	let lowest_ao100 = $state(-1);
+
+
 
 	async function solve_done() {
 		let time_json: Time = {
@@ -90,7 +59,7 @@
 		fetching.set(false);
 	}
 
-	let time_popup: TimePopup;
+	let time_popup: TimePopup = $state();
 
 	async function openTimePopup(id: string, index: number) {
 		time_popup.openTimePopup(id, index);
@@ -109,8 +78,7 @@
 		}
 	});
 
-	$: logged_in = data.user !== null;
-	let listHeight = 100;
+	let listHeight = $state(100);
 	const isDesktopTimes = mediaQuery('(min-width: 1436px)');
 
 	function calc_aon(index: number, aon: number, remove_top_bottom_count: number) {
@@ -138,6 +106,48 @@
 	function calc_ao100(index: number) {
 		return calc_aon(index, 100, 5);
 	}
+	let times = $derived(liveQuery(async () => {
+		fetching.set(true);
+		const res = await sync.db.times
+			.where('session_id')
+			.equals($session_id)
+			.and((time) => time.archived != true)
+			.reverse()
+			.sortBy('timestamp');
+		time_count = await sync.getTimeCountOfSession($session_id);
+		fetching.set(false);
+		return res;
+	}));
+	run(() => {
+		if ($times && $session_id) {
+	    
+	    lowest_ao5 = -1;
+	    lowest_ao12 = -1;
+	    lowest_ao100 = -1;
+			let i = 0;
+			$times.forEach((time_el) => {
+				let temp5 = calc_ao5(i);
+				let temp12 = calc_ao12(i);
+				let temp100 = calc_ao100(i);
+				if (lowest_ao5 == -1 || (temp5 != -1 && temp5 < lowest_ao5)) {
+					lowest_ao5 = temp5;
+				}
+				if (lowest_ao12 == -1 || (temp12 != -1 && temp12 < lowest_ao12)) {
+					lowest_ao12 = temp12;
+				}
+				if (lowest_ao100 == -1 || (temp100 != -1 && temp100 < lowest_ao100)) {
+					lowest_ao100 = temp100;
+				}
+				i += 1;
+			});
+		}
+	});
+	run(() => {
+		if (time) {
+			solve_done();
+		}
+	});
+	let logged_in = $derived(data.user !== null);
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -244,49 +254,53 @@
 							itemCount={$times.length}
 							itemSize={$isDesktopTimes ? 32 : 20}
 						>
-							<div
-								slot="header"
-								class="text-[10px] font-normal xs:text-xs 2xl:h-[32px] 2xl:text-lg"
-							>
-								<Separator />
-								<div
-									class="flex h-[20px] w-full items-center justify-start rounded-none p-0 2xl:h-[32px]"
+							{#snippet header()}
+														<div
+									
+									class="text-[10px] font-normal xs:text-xs 2xl:h-[32px] 2xl:text-lg"
 								>
-									<Separator orientation="vertical" />
-									<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">#</p>
-									<Separator orientation="vertical" />
-									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
-										Time
-									</p>
-									<Separator orientation="vertical" />
-									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
-										ao5
-									</p>
-									<Separator orientation="vertical" />
-									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
-										ao12
-									</p>
-									<Separator orientation="vertical" />
-									<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
-										ao100
-									</p>
-									<Separator orientation="vertical" />
+									<Separator />
+									<div
+										class="flex h-[20px] w-full items-center justify-start rounded-none p-0 2xl:h-[32px]"
+									>
+										<Separator orientation="vertical" />
+										<p class="flex w-12 items-center justify-center rounded-none p-0 2xl:w-20">#</p>
+										<Separator orientation="vertical" />
+										<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
+											Time
+										</p>
+										<Separator orientation="vertical" />
+										<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
+											ao5
+										</p>
+										<Separator orientation="vertical" />
+										<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
+											ao12
+										</p>
+										<Separator orientation="vertical" />
+										<p class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0">
+											ao100
+										</p>
+										<Separator orientation="vertical" />
+									</div>
+									<Separator class="h-0.5" />
 								</div>
-								<Separator class="h-0.5" />
-							</div>
-							<div slot="item" let:index let:style {style}>
-								<TimeItem
-									time={$times[index]}
-									{openTimePopup}
-									{index}
-									{time_count}
-									{times}
-									ao5={calc_ao5(index)}
-									ao12={calc_ao12(index)}
-									ao100={calc_ao100(index)}
-								/>
-								<Separator />
-							</div>
+													{/snippet}
+							{#snippet item({ index, style })}
+														<div    {style}>
+									<TimeItem
+										time={$times[index]}
+										{openTimePopup}
+										{index}
+										{time_count}
+										{times}
+										ao5={calc_ao5(index)}
+										ao12={calc_ao12(index)}
+										ao100={calc_ao100(index)}
+									/>
+									<Separator />
+								</div>
+													{/snippet}
 						</VirtualList>
 					</div>
 				{:else}

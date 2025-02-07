@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { new_scramble } from '$lib/scramble';
 	import { disable_key_tracking, timeToFormattedString } from '$lib/utils';
 
@@ -8,22 +10,19 @@
 	const TIMER_UPDATE_DECIMALS = 1;
 	const TIMER_DECIMALS = 3;
 
-	let start_time = 0;
-	let display_time = '0.0';
-	let key_down = 0;
-	let ready = false;
+	let start_time = $state(0);
+	let display_time = $state('0.0');
+	let key_down = $state(0);
+	let ready = $state(false);
 	let timerInterval: NodeJS.Timeout;
 
-	export let time = 0;
-	export let in_solve = false;
-
-	$: if (start_time != 0) {
-		in_solve = true;
-		startTimerUpdate();
-	} else {
-		stopTimerUpdate();
-		in_solve = false;
+	interface Props {
+		time?: number;
+		in_solve?: boolean;
 	}
+
+	let { time = $bindable(0), in_solve = $bindable(false) }: Props = $props();
+
 
 	function startTimerUpdate() {
 		timerInterval = setInterval(() => {
@@ -48,7 +47,7 @@
 		}
 	}
 
-	let mousedown = false;
+	let mousedown = $state(false);
 
 	async function onMouseDown() {
 		mousedown = true;
@@ -69,12 +68,7 @@
 		}
 	}
 
-	let intervalId: NodeJS.Timeout;
-	$: if (mousedown) {
-		intervalId = setInterval(onMouseDown, 50);
-	} else {
-		clearInterval(intervalId);
-	}
+	let intervalId: NodeJS.Timeout = $state();
 
 	async function onMouseUp() {
 		mousedown = false;
@@ -86,11 +80,27 @@
 			key_down = 0;
 		}
 	}
+	run(() => {
+		if (start_time != 0) {
+			in_solve = true;
+			startTimerUpdate();
+		} else {
+			stopTimerUpdate();
+			in_solve = false;
+		}
+	});
+	run(() => {
+		if (mousedown) {
+			intervalId = setInterval(onMouseDown, 50);
+		} else {
+			clearInterval(intervalId);
+		}
+	});
 </script>
 
-<svelte:window on:keydown={onKeyDown} on:keyup={onKeyUp} />
+<svelte:window onkeydown={onKeyDown} onkeyup={onKeyUp} />
 
-<div on:touchstart={onMouseDown} on:touchend={onMouseUp} class="absolute z-10 h-full w-full" />
+<div ontouchstart={onMouseDown} ontouchend={onMouseUp} class="absolute z-10 h-full w-full"></div>
 
 <div class="relative z-0 my-4 flex h-full w-full grow cursor-default items-center justify-center">
 	{#if ready}

@@ -9,6 +9,11 @@
 	import { persisted } from 'svelte-persisted-store';
 	import TimePopup from '$lib/components/time-popup.svelte';
 	import { browser } from '$app/environment';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	async function detectSWUpdate() {
 		const registration = await navigator.serviceWorker.ready;
@@ -34,14 +39,14 @@
 </script>
 
 <svelte:window
-	on:resize={() => {
+	onresize={() => {
 		//resize_to_fit(document);
 	}}
 />
 
 <title>scramblr</title>
 <div class="h-full overflow-hidden">
-	<slot />
+	{@render children?.()}
 </div>
 
 <style>

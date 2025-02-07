@@ -6,8 +6,12 @@
 	import { type } from '$lib/scramble';
 	import { session_id, sessions, sync } from '$lib/sync';
 
-	export let session: Session;
-	export let open: Writable<boolean>;
+	interface Props {
+		session: Session;
+		open: Writable<boolean>;
+	}
+
+	let { session = $bindable(), open }: Props = $props();
 
 	async function createSessionClick() {
 		session.scramble_type = $type;

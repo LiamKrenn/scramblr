@@ -5,15 +5,28 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { Observable } from 'dexie';
 	import Separator from './ui/separator/separator.svelte';
-	export let time: Time;
-	export let index: number;
-	export let times: Observable<Time[]>;
-  export let time_count: number;
-  export let ao5: number = 0
-  export let ao12: number = 0
-  export let ao100: number = 0
 
-	export let openTimePopup: (id: string, i: number) => Promise<void>;
+  interface Props {
+    time: Time;
+    index: number;
+    times: Observable<Time[]>;
+    time_count: number;
+    ao5?: number;
+    ao12?: number;
+    ao100?: number;
+    openTimePopup: (id: string, i: number) => Promise<void>;
+  }
+
+  let {
+    time,
+    index,
+    times,
+    time_count,
+    ao5 = 0,
+    ao12 = 0,
+    ao100 = 0,
+    openTimePopup
+  }: Props = $props();
 </script>
 
 <div
