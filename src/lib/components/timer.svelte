@@ -72,8 +72,6 @@
     }
   }
 
-  let intervalId: NodeJS.Timeout = $state(setInterval(() => {}, 0));
-
   async function onMouseUp() {
     mousedown = false;
     if (key_down != 0) {
@@ -84,6 +82,7 @@
       key_down = 0;
     }
   }
+
   $effect(() => {
     if (start_time != 0) {
       in_solve = true;
@@ -91,13 +90,6 @@
     } else {
       stopTimerUpdate();
       in_solve = false;
-    }
-  });
-  $effect(() => {
-    if (mousedown) {
-      intervalId = setInterval(onMouseDown, 50);
-    } else {
-      clearInterval(intervalId);
     }
   });
 </script>
