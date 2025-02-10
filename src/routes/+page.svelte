@@ -157,7 +157,7 @@
     <ScrambleSelector />
 
     <div
-      class="scrambleContainer absolute top-20 block h-[20%] w-full text-balance px-4 text-center md:top-4 md:px-28"
+      class="scrambleContainer absolute top-20 block h-[20%] w-full text-balance px-4 text-center lg:top-4 lg:px-28"
     >
       {#if $scramble.length > 270}
         <p class="scramble text-balance text-[clamp(1rem,2.8cqmin,3.9rem)]">
@@ -183,12 +183,12 @@
     </div>
 
     <h1
-      class=" absolute left-4 top-4 flex cursor-pointer select-none flex-col items-start text-3xl md:hidden md:text-4xl lg:text-5xl"
+      class=" absolute left-4 top-4 flex cursor-pointer select-none flex-col items-start text-3xl lg:hidden lg:text-4xl lg:text-5xl"
     >
       <p class=" font-semibold opacity-90">scramblr</p>
 
       <a
-        class="!z-20 text-sm opacity-75 md:text-base lg:mt-1"
+        class="!z-20 text-sm opacity-75 lg:text-base lg:mt-1"
         href="https://github.com/LiamKrenn"
         target="_blank"
       >
@@ -230,12 +230,12 @@
       ? '-z-20 opacity-0'
       : 'z-10'}"
   >
-    <div class="absolute flex w-full flex-col items-center px-2 md:px-3">
+    <div class="absolute flex w-full flex-col items-center px-2 lg:px-3">
       <Separator class="my-1 h-0.5 rounded" />
     </div>
     <!-- UI -->
     <div
-      class="absolute z-20 mt-2 flex h-full w-full grow flex-row px-0 py-1 md:px-1"
+      class="absolute z-20 mt-2 flex h-full w-full grow flex-row px-0 py-1 lg:px-1"
     >
       <!-- Left (Times) -->
       <div class="relative ml-2 flex w-full flex-1 shrink-0 grow flex-col">
@@ -370,7 +370,7 @@
 
       <!-- Middle -->
 
-      <div class="hidden w-full flex-1 grow flex-col md:flex">
+      <div class="hidden w-full flex-1 grow flex-col lg:flex">
         <!-- Stats -->
         <div class="w-full grow px-2">
           {#if lowest_ao5 != -1}
@@ -401,21 +401,21 @@
         </h1>
       </div>
       <Separator
-        class="mx-1 hidden grow-0 rounded md:flex"
+        class="mx-1 hidden grow-0 rounded lg:flex"
         orientation="vertical"
       />
 
       <!-- Right -->
-      <div class="flex w-full flex-1 grow-[0.5] flex-col sm:grow-[0.8] md:grow">
+      <div class="flex w-full flex-1 grow-[0.5] flex-col sm:grow-[0.8] lg:grow">
         <!-- Preview -->
         <!-- TODO: on click enlarge -->
         <ScramblePreview
-          class="h-[30%] min-h-[30%] w-full grow-0 p-0 md:mb-2 md:h-full"
+          class="h-[30%] min-h-[30%] w-full grow-0 p-0 lg:mb-2 lg:h-full"
         />
 
         <!-- Stats -->
         <div
-          class="flex flex-col text-sm w-full grow items-start p-2 md:hidden"
+          class="flex flex-col text-sm w-full grow items-start p-2 lg:hidden"
         >
           {#if lowest_ao5 != -1}
             <p>best ao5: {timeToFormattedString(lowest_ao5)}</p>

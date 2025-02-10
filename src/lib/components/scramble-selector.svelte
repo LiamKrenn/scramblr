@@ -13,7 +13,7 @@
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger
-    class="absolute right-[5.5rem] top-4 z-20 md:left-4 md:right-auto"
+    class="absolute right-[5.5rem] top-4 z-20 lg:left-4 lg:right-auto"
   >
     <Button
       variant="outline"

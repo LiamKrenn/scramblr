@@ -20,22 +20,22 @@
       variant="outline"
       class={cn(
         className,
-        "z-20 h-14 w-14 lg:p-4 p-3 focus:border-slate-50 lg:h-16 lg:w-16",
+        "z-20 h-14 w-14 p-3 focus:border-slate-50 lg:h-16 lg:w-16",
       )}><Menu class="!h-full !w-full" /></Button
     >
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content class="z-20 ">
+  <DropdownMenu.Content class="z-20">
     <MenuItem path="/">
-      <Timer class="mr-2" />
+      <Timer class="!h-full !w-auto" />
       <p>Timer</p>
     </MenuItem>
     <MenuItem path="/scrambler">
-      <Box class="mr-2 " />
+      <Box class="!h-full !w-auto" />
       <p>Scrambler</p>
     </MenuItem>
     <DropdownMenu.Separator />
     <MenuItem path="/settings">
-      <Settings class="mr-2" />
+      <Settings class="!h-full !w-auto" />
       <p>Settings</p>
     </MenuItem>
     <!-- <DropdownMenu.Item class="cursor-pointer text-lg lg:py-2 lg:text-xl">
@@ -44,7 +44,7 @@
 		</DropdownMenu.Item> -->
     {#if user == null}
       <MenuItem path="/login">
-        <LogIn class="mr-2" />
+        <LogIn class="!h-full !w-auto" />
         <p>Login</p>
       </MenuItem>
     {:else}

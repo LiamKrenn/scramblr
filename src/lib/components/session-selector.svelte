@@ -55,7 +55,7 @@
       <ScrollArea class="max-h-[40svh] !overflow-y-auto cscroll">
         {#each sessions as session}
           <DropdownMenu.RadioItem
-            on:click={() => {
+            onclick={() => {
               open = !open;
             }}
             value={session.id.toString()}
@@ -68,19 +68,14 @@
         {/each}
       </ScrollArea>
       <DropdownMenu.Separator />
-      <DropdownMenu.Item>
-        <Button
-          on:click={create_session.openCreateDialog}
-          variant="ghost"
-          class="m-0 h-6 p-0 font-normal"
-        >
-          <Plus class="-ml-1 mr-1 h-4" /> Add Session
-        </Button>
+      <DropdownMenu.Item
+        class="cursor-pointer"
+        onclick={create_session.openCreateDialog}
+      >
+        <Plus class="-ml-1 mr-1 h-4" /> Add Session
       </DropdownMenu.Item>
       <DropdownMenu.Item>
-        <Button variant="ghost" class="m-0 h-6 p-0 font-normal">
-          <Settings class="-ml-1 mr-1 h-4" /> Manage Session
-        </Button>
+        <Settings class="-ml-1 mr-1 h-4" /> Manage Session
       </DropdownMenu.Item>
     </DropdownMenu.RadioGroup>
   </DropdownMenu.Content>
