@@ -20,8 +20,8 @@
       variant="outline"
       class={cn(
         className,
-        "z-20 h-14 w-14 p-3 focus:border-slate-50 lg:h-16 lg:w-16",
-      )}><Menu class="h-full w-full" /></Button
+        "z-20 h-14 w-14 lg:p-4 p-3 focus:border-slate-50 lg:h-16 lg:w-16",
+      )}><Menu class="!h-full !w-full" /></Button
     >
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="z-20 ">
