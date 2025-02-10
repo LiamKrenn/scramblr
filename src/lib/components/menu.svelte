@@ -15,12 +15,12 @@
 </script>
 
 <DropdownMenu.Root>
-  <DropdownMenu.Trigger class="absolute right-4  top-4 z-20">
+  <DropdownMenu.Trigger class="absolute right-4 top-4 z-20">
     <Button
       variant="outline"
       class={cn(
         className,
-        "absolute right-4  top-4 z-20 h-14 w-14 p-3 focus:border-slate-50 lg:h-16 lg:w-16",
+        "z-20 h-14 w-14 p-3 focus:border-slate-50 lg:h-16 lg:w-16",
       )}><Menu class="h-full w-full" /></Button
     >
   </DropdownMenu.Trigger>

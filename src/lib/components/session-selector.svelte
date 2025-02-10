@@ -9,7 +9,7 @@
 
   let create_session: CreateSession | undefined = $state();
   let display_name: string = $state("Select Session");
-  let open: boolean | undefined = $state();
+  let open: boolean = $state(false);
 
   // rework
   let sessions: any[] = [];
@@ -42,7 +42,7 @@
   <DropdownMenu.Trigger>
     <Button
       variant="outline"
-      class=" z-20 2xl:h-8 h-6 select-none sm:px-2 p-1 2xl:text-base text-sm focus:border-slate-50 flex-shrink sm:max-w-52 max-w-32"
+      class="z-20 2xl:h-8 h-6 select-none sm:px-2 p-1 2xl:text-base text-sm focus:border-slate-50 flex-shrink sm:max-w-52 max-w-32"
     >
       <div class="overflow-ellipsis overflow-hidden max-w-full font-normal">
         {display_name}

@@ -41,7 +41,7 @@
 />
 
 <title>scramblr</title>
-<div class="h-full overflow-hidden">
+<div class="h-full overflow-hidden flex">
   {@render children?.()}
 </div>
 
