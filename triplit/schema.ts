@@ -1,28 +1,31 @@
-import { Schema as S, type ClientSchema, type Entity } from '@triplit/client';
-
-// This is your schema definition.
-//
-// For all of the supported types and options, check the documentation:
-//   https://triplit.com/docs/schemas/types
-//
-// Whenever you change your schema while the sync server is running
-// you'll need to run
-//
-//   `triplit schema push`
-//
-// Read more about schema management:
-//  https://www.triplit.dev/docs/schemas/updating
+import { Schema as S, type ClientSchema, type Entity } from "@triplit/client";
 
 export const schema = {
-  todos: {
+  sessions: {
     schema: S.Schema({
       id: S.Id(),
-      text: S.String(),
-      completed: S.Boolean({ default: false }),
+      user_id: S.Number(),
+      name: S.String({ default: S.Default.now() }),
+      order: S.Number({ default: 0 }),
+      scramble_type: S.String({ default: "333" }),
+      times: S.RelationMany("times", {
+        where: [["session_id", "=", "$id"]],
+      }),
       created_at: S.Date({ default: S.Default.now() }),
+    }),
+  },
+  times: {
+    schema: S.Schema({
+      id: S.Id(),
+      session_id: S.Number(),
+      time: S.Number(),
+      penalty: S.Number({ default: 0 }),
+      scramble: S.String({ nullable: true, default: "" }),
+      comment: S.String({ nullable: true, default: "" }),
+      timestamp: S.Date({ default: S.Default.now() }),
     }),
   },
 } satisfies ClientSchema;
 
-// Use the `Entity` type to extract clean types for your collections
-export type Todo = Entity<typeof schema, 'todos'>;
+export type Session = Entity<typeof schema, "sessions">;
+export type Time = Entity<typeof schema, "times">;

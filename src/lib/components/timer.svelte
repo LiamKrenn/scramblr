@@ -17,9 +17,14 @@
   interface Props {
     time?: number;
     in_solve?: boolean;
+    timeCallback?: (time: number) => void;
   }
 
-  let { time = $bindable(0), in_solve = $bindable(false) }: Props = $props();
+  let {
+    time = $bindable(0),
+    in_solve = $bindable(false),
+    timeCallback = () => {},
+  }: Props = $props();
 
   function startTimerUpdate() {
     timerInterval = setInterval(() => {
@@ -68,6 +73,7 @@
       display_time = timeToFormattedString(msecs, TIMER_DECIMALS);
       time = msecs;
       start_time = 0;
+      timeCallback(msecs);
       await new_scramble();
     }
   }

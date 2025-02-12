@@ -1,10 +1,10 @@
-import { TriplitClient } from '@triplit/client';
-import { schema } from '../../triplit/schema';
+import { TriplitClient } from "@triplit/client";
+import { schema } from "../../triplit/schema";
 import {
   PUBLIC_TRIPLIT_SERVER_URL,
   PUBLIC_TRIPLIT_TOKEN,
-} from '$env/static/public';
-import { browser } from '$app/environment';
+} from "$env/static/public";
+import { browser } from "$app/environment";
 
 // The TriplitClient has 4 main options
 // - storage: The storage engine you want to use. This can be
@@ -19,7 +19,7 @@ import { browser } from '$app/environment';
 // offline mode
 
 export const triplit = new TriplitClient({
-  storage: 'memory',
+  storage: "indexeddb",
   schema,
   serverUrl: PUBLIC_TRIPLIT_SERVER_URL,
   token: PUBLIC_TRIPLIT_TOKEN,

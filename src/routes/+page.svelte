@@ -17,6 +17,8 @@
   import VirtualList from "svelte-tiny-virtual-list";
   import { mediaQuery } from "@sveltelegos-blue/svelte-legos";
   import { timeToFormattedString } from "$lib/utils";
+  import { triplit } from "$lib/client";
+  import { browser } from "$app/environment";
 
   interface Props {
     data: PageData;
@@ -57,6 +59,7 @@
 
   onMount(async () => {
     await new_scramble();
+    if (!browser) return;
     if (logged_in) {
       // if (get(session_id) == '') {
       //   let sessions = await get_sessions();
@@ -65,6 +68,19 @@
       // const res = await fetch('/api/times');
       // const json = await res.json();
       // times.set(json);
+    }
+
+    const query = triplit.query("sessions").where("user_id", "=", 1).build();
+
+    const response = await triplit.fetch(query);
+
+    console.log(response);
+
+    if (response.length == 0) {
+      triplit.insert("sessions", {
+        name: "Default",
+        user_id: 1,
+      });
     }
   });
 
@@ -137,11 +153,18 @@
   //     });
   //   }
   // });
-  $effect(() => {
-    if (time) {
-      solve_done();
-    }
-  });
+
+  function timeCallback(time: number) {
+    console.log("time", time);
+
+    triplit.insert("times", {
+      time: time,
+      scramble: $scramble,
+      session_id: 1,
+    });
+    solve_done();
+  }
+
   let logged_in = $derived(data.user !== null);
 </script>
 
@@ -199,7 +222,7 @@
     <!-- Flex's -->
   {/if}
 
-  <Timer bind:time bind:in_solve />
+  <Timer bind:time bind:in_solve {timeCallback} />
 
   <div
     class="absolute mt-2 flex h-[49%] w-full max-w-[40%] flex-col items-center justify-end sm:h-[33%] {in_solve
