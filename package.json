@@ -9,7 +9,7 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "eslint .",
-    "custominstall": "npm install && cd node_modules/svelte-tiny-virtual-list && npm install && npm run build"
+    "custominstall": "npm install && cd node_modules/svelte-tiny-virtual-list && npm install && npm run build && cd ../.."
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^4.0.0",
