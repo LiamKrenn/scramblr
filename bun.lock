@@ -10,10 +10,10 @@
         "@types/jsonwebtoken": "^9.0.8",
         "autoprefixer": "^10.4.20",
         "cubing": "^0.54.1",
+        "svelte-tiny-virtual-list": "github:TutorLatin/svelte-tiny-virtual-list",
         "jsonwebtoken": "^9.0.2",
         "svelte-droplet": "^1.1.0",
         "svelte-persisted-store": "^0.12.0",
-        "svelte-tiny-virtual-list": "^2.1.2",
       },
       "devDependencies": {
         "@sveltejs/adapter-auto": "^4.0.0",
@@ -766,7 +766,7 @@
 
     "svelte-persisted-store": ["svelte-persisted-store@0.12.0", "", { "peerDependencies": { "svelte": "^3.48.0 || ^4 || ^5" } }, "sha512-BdBQr2SGSJ+rDWH8/aEV5GthBJDapVP0GP3fuUCA7TjYG5ctcB+O9Mj9ZC0+Jo1oJMfZUd1y9H68NFRR5MyIJA=="],
 
-    "svelte-tiny-virtual-list": ["svelte-tiny-virtual-list@2.1.2", "", {}, "sha512-jeP/WMvgFUR4mYXHGPiCexjX5DuzSO+3xzHNhxfcsFyy+uYPtnqI5UGb383swpzQAyXB0OBqYfzpYihD/5gxnA=="],
+    "svelte-tiny-virtual-list": ["svelte-tiny-virtual-list@github:TutorLatin/svelte-tiny-virtual-list#c231caa", { "peerDependencies": { "svelte": "^5.0.0" } }, "TutorLatin-svelte-tiny-virtual-list-c231caa"],
 
     "svelte-toolbelt": ["svelte-toolbelt@0.7.1", "", { "dependencies": { "clsx": "^2.1.1", "runed": "^0.23.2", "style-to-object": "^1.0.8" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-HcBOcR17Vx9bjaOceUvxkY3nGmbBmCBBbuWLLEWO6jtmWH8f/QoWmbyUfQZrpDINH39en1b8mptfPQT9VKQ1xQ=="],
 

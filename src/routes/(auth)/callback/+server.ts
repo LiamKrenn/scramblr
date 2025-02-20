@@ -37,6 +37,8 @@ export async function GET(req) {
   const token = sign(
     {
       id: user.me.id,
+      "x-triplit-user-id": user.me.id,
+      sub: user.me.id,
       name: user.me.name,
       email: user.me.email,
       avatar: {

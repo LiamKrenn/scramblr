@@ -22,6 +22,5 @@ export const triplit = new TriplitClient({
   storage: "indexeddb",
   schema,
   serverUrl: PUBLIC_TRIPLIT_SERVER_URL,
-  token: PUBLIC_TRIPLIT_TOKEN,
-  autoConnect: browser,
+  autoConnect: false,
 });

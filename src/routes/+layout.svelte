@@ -4,12 +4,17 @@
   import { new_scramble, type } from "$lib/scramble";
   import { onMount } from "svelte";
   import { get, writable } from "svelte/store";
+  import { sessions, times, token, user } from "$lib/stores";
+  import type { PageData } from "./$types";
+  import { triplit } from "$lib/client";
+  import type { Session, Time } from "../../triplit/schema";
 
   interface Props {
     children?: import("svelte").Snippet;
+    data: PageData;
   }
 
-  let { children }: Props = $props();
+  let { children, data }: Props = $props();
 
   async function detectSWUpdate() {
     const registration = await navigator.serviceWorker.ready;
@@ -30,15 +35,8 @@
   onMount(async () => {
     await detectSWUpdate();
     if (get(type) == "333") type.set("333");
-    //resize_to_fit(document);
   });
 </script>
-
-<svelte:window
-  onresize={() => {
-    //resize_to_fit(document);
-  }}
-/>
 
 <title>scramblr</title>
 <div class="h-full overflow-hidden flex">

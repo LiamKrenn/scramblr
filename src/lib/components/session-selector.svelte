@@ -5,31 +5,37 @@
   import { Plus, Settings } from "lucide-svelte";
   import ScrollArea from "./ui/scroll-area/scroll-area.svelte";
   import CreateSession from "./create-session.svelte";
-  import type { Session } from "$lib/types";
+  import { currentSession, sessions } from "$lib/stores";
+  import { type Session } from "../../../triplit/schema";
+  import { getSessionWithId } from "$lib/api";
 
   let create_session: CreateSession | undefined = $state();
   let display_name: string = $state("Select Session");
   let open: boolean = $state(false);
 
-  // rework
-  let sessions: any[] = [];
-  let session_id: string = $state("");
+  let session_id = "";
 
   async function setToSession(id: string) {
-    // let res: Session | undefined = await sync.getSession(id);
-    // if (res) {
-    //   // session_id.set(id);
-    //   // display_name = res.name;
-    // } else {
-    //   // let first_session = $sessions[0];
-    //   // session_id.set(first_session.id);
-    //   // display_name = first_session.name;
-    // }
+    let res: Session | null = await getSessionWithId(id);
+    console.log(res);
+
+    if (res) {
+      $currentSession = res.id;
+      display_name = res.name;
+      session_id = res.id;
+    } else {
+      let first_session = $sessions[0];
+      $currentSession = first_session.id;
+      display_name = first_session.name;
+      session_id = first_session.id;
+    }
   }
 
-  // session_id.subscribe(async (value) => {
-  //   await setToSession(value);
-  // });
+  currentSession.subscribe(async (value) => {
+    if (value) {
+      await setToSession(value);
+    }
+  });
 
   onMount(async () => {
     // setToSession($session_id);
@@ -51,14 +57,14 @@
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-52">
     <DropdownMenu.Label>Sessions</DropdownMenu.Label>
-    <DropdownMenu.RadioGroup bind:value={session_id}>
+    <DropdownMenu.RadioGroup bind:value={$currentSession}>
       <ScrollArea class="max-h-[40svh] !overflow-y-auto cscroll">
-        {#each sessions as session}
+        {#each $sessions as session}
           <DropdownMenu.RadioItem
             onclick={() => {
               open = !open;
             }}
-            value={session.id.toString()}
+            value={session.id}
             class="cursor-pointer select-none mr-1 w-48"
           >
             <p class="overflow-hidden overflow-ellipsis">

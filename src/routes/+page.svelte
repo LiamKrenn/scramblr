@@ -13,12 +13,13 @@
   import TimePopup from "$lib/components/time-popup.svelte";
   import SessionSelector from "$lib/components/session-selector.svelte";
   import { RefreshCw } from "lucide-svelte";
-  import type { Time } from "$lib/types";
   import VirtualList from "svelte-tiny-virtual-list";
   import { mediaQuery } from "@sveltelegos-blue/svelte-legos";
   import { timeToFormattedString } from "$lib/utils";
   import { triplit } from "$lib/client";
   import { browser } from "$app/environment";
+  import { type Session, type Time } from "../../triplit/schema";
+  import { currentSession, sessions, times, token, user } from "$lib/stores";
 
   interface Props {
     data: PageData;
@@ -27,7 +28,6 @@
   let { data }: Props = $props();
 
   let time = $state(0);
-  let time_count = $state(0);
   let in_solve = $state(false);
 
   let lowest_ao5 = $state(-1);
@@ -53,34 +53,31 @@
 
   let time_popup: TimePopup;
 
-  async function openTimePopup(id: string, index: number) {
-    // time_popup.openTimePopup(id, index);
+  async function openTimePopup(id: Time, index: number) {
+    time_popup.openTimePopup(id, index);
   }
 
   onMount(async () => {
     await new_scramble();
     if (!browser) return;
-    if (logged_in) {
-      // if (get(session_id) == '') {
-      //   let sessions = await get_sessions();
-      //   session_id.set(sessions[0]._id);
-      // }
-      // const res = await fetch('/api/times');
-      // const json = await res.json();
-      // times.set(json);
-    }
+    $user = data.user;
+    $token = data.token || null;
+    await triplit.endSession();
+    if ($token && $user) {
+      await triplit.startSession($token);
 
-    const query = triplit.query("sessions").where("user_id", "=", 1).build();
+      let ses = await triplit.fetch(triplit.query("sessions").build());
 
-    const response = await triplit.fetch(query);
-
-    console.log(response);
-
-    if (response.length == 0) {
-      triplit.insert("sessions", {
-        name: "Default",
-        user_id: 1,
-      });
+      if (ses.length == 0) {
+        const res = await triplit.insert("sessions", {
+          order: 1,
+          name: "Default",
+          user_id: $user.id,
+          scramble_type: "333",
+        });
+        if (!res.output) return;
+        $currentSession = res.output.id;
+      }
     }
   });
 
@@ -92,17 +89,17 @@
     aon: number,
     remove_top_bottom_count: number,
   ) {
-    // let ao_times = $times.slice(index, index + aon);
-    // if (ao_times.length < aon) {
-    //   return -1;
-    // }
-    // ao_times.sort((a, b) => a.time - b.time);
-    // for (let i = 0; i < remove_top_bottom_count; i++) {
-    //   ao_times.pop();
-    //   ao_times.shift();
-    // }
-    // const sum = ao_times.reduce((total, time) => total + time.time, 0);
-    // return sum / ao_times.length;
+    let ao_times = $times.slice(index, index + aon);
+    if (ao_times.length < aon) {
+      return -1;
+    }
+    ao_times.sort((a, b) => a.time - b.time);
+    for (let i = 0; i < remove_top_bottom_count; i++) {
+      ao_times.pop();
+      ao_times.shift();
+    }
+    const sum = ao_times.reduce((total, time) => total + time.time, 0);
+    return sum / ao_times.length;
   }
 
   function calc_ao5(index: number) {
@@ -116,6 +113,29 @@
   function calc_ao100(index: number) {
     return calc_aon(index, 100, 5);
   }
+
+  currentSession.subscribe((session) => {
+    const timeQuery = triplit.subscribe(
+      triplit
+        .query("times")
+        .where("session_id", "=", session || "")
+        .order("timestamp", "DESC")
+        .build(),
+      (results: Time[]) => {
+        console.log("Times: ", results);
+        $times = results;
+      },
+    );
+  });
+
+  const sessionsQuery = triplit.subscribe(
+    triplit.query("sessions").order("order", "DESC").build(),
+    (results: Session[]) => {
+      console.log("Sessions: ", results);
+      $sessions = results;
+    },
+  );
+
   // let times = $derived(
   //   liveQuery(async () => {
   //     fetching.set(true);
@@ -156,16 +176,16 @@
 
   function timeCallback(time: number) {
     console.log("time", time);
+    if (!$currentSession) return;
 
     triplit.insert("times", {
       time: time,
       scramble: $scramble,
-      session_id: 1,
+      session_id: $currentSession,
+      user_id: data.user?.id ?? 1,
     });
     solve_done();
   }
-
-  let logged_in = $derived(data.user !== null);
 </script>
 
 <TimePopup bind:this={time_popup} />
@@ -276,11 +296,11 @@
             class="absolute right-1 top-0 animate-spin p-0.5 2xl:top-1 2xl:p-0"
           />
         {/if} -->
-        {#if false}
-          <!-- $times?.length > 0 -->
-          <!-- <div class="h-full" bind:clientHeight={listHeight}>
+        {#if $times?.length > 0}
+          <!--  -->
+          <div class="h-full" bind:clientHeight={listHeight}>
             <VirtualList
-              height={listHeight}
+              height="100%"
               itemCount={$times.length}
               itemSize={$isDesktopTimes ? 32 : 20}
             >
@@ -327,23 +347,27 @@
                   <Separator class="h-0.5" />
                 </div>
               {/snippet}
-              {#snippet item({ index, style })}
+              {#snippet children({ index, style })}
+                <!-- {#if $times[index]} -->
                 <div {style}>
                   <TimeItem
                     time={$times[index]}
                     {openTimePopup}
                     {index}
-                    {time_count}
-                    {times}
+                    time_count={$times.length}
                     ao5={calc_ao5(index)}
                     ao12={calc_ao12(index)}
                     ao100={calc_ao100(index)}
                   />
                   <Separator />
                 </div>
+                <!-- {/if} -->
+              {/snippet}
+              {#snippet footer()}
+                <div></div>
               {/snippet}
             </VirtualList>
-          </div> -->
+          </div>
         {:else}
           <div
             class="mr-1.5 text-[10px] font-normal xs:text-xs 2xl:h-[32px] 2xl:text-lg"

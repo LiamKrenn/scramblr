@@ -4,11 +4,12 @@
   import { mediaQuery } from "@sveltelegos-blue/svelte-legos";
   import * as Dialog from "$lib/components/ui/dialog/index.js";
   import * as Drawer from "$lib/components/ui/drawer/index.js";
-  import type { Session } from "$lib/types";
   import { writable } from "svelte/store";
   import CreateSessionContent from "./create-session-content.svelte";
   import { disable_key_tracking } from "$lib/utils";
   import { type } from "$lib/scramble";
+  import { type Session } from "../../../triplit/schema";
+  import { user } from "$lib/stores";
 
   let open = writable(false);
   const isDesktop = mediaQuery("(min-width: 768px)");
@@ -24,26 +25,27 @@
     }
   });
 
-  let session: Session = {
-    id: "",
-    name: "",
-    scramble_type: "333",
-    order: 0,
-  };
+  // let session: Session = {
+  //   name: "",
+  //   scramble_type: "333",
+  //   user_id: $user?.id || -1,
+  //   order: 0,
+  //   created_at: new Date(),
+  // };
 </script>
 
 {#if $isDesktop}
   <Dialog.Root bind:open={$open}>
     <Dialog.Trigger></Dialog.Trigger>
     <Dialog.Content class="p-0 sm:max-w-[425px]">
-      <CreateSessionContent {session} {open} />
+      <CreateSessionContent {open} />
     </Dialog.Content>
   </Dialog.Root>
 {:else}
   <Drawer.Root bind:open={$open}>
     <Drawer.Trigger class=""></Drawer.Trigger>
     <Drawer.Content class="">
-      <CreateSessionContent {session} {open} />
+      <CreateSessionContent {open} />
     </Drawer.Content>
   </Drawer.Root>
 {/if}

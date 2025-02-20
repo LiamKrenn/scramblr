@@ -2,17 +2,19 @@
   import { mediaQuery } from "@sveltelegos-blue/svelte-legos";
   import * as Dialog from "$lib/components/ui/dialog/index.js";
   import * as Drawer from "$lib/components/ui/drawer/index.js";
-  import type { Time } from "$lib/types";
   import TimePopupContent from "./time-popup-content.svelte";
+  import type { Time } from "../../../triplit/schema";
 
-  let open = false;
+  let open = $state(false);
   const isDesktop = mediaQuery("(min-width: 768px)");
 
-  let time: Time | undefined;
+  let time = $state<Time | undefined>(undefined);
   let index: number = 0;
 
-  export async function openTimePopup(time: Time, index: number) {
-    time = time;
+  export async function openTimePopup(wtime: Time, index: number) {
+    console.log(time);
+
+    time = wtime;
     index = index;
     open = true;
   }
