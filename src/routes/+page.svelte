@@ -256,16 +256,15 @@
         </p>
       </div>
     {/if} -->
-    <p class="text-balance rounded-lg bg-orange-500/50 px-2 py-1">
+    <!-- <p class="text-balance rounded-lg bg-orange-500/50 px-2 py-1">
       Warning: This app is being reworked heavily right now!<br /> Some features
       may be broken or missing. <br />Expect things to&nbsp;<span
         class="underline">not</span
       >&nbsp;work.
-    </p>
-    <!-- <p class="relative flex text-balance rounded-lg bg-slate-800 px-2 py-1">
-      Note: This app currently only stores data locally! Cloud storage is in
-      development.
     </p> -->
+    <p class="relative flex text-balance rounded-lg bg-slate-800 px-2 py-1">
+      Note: Cloud storage is in development, but enabled. Expect data loss.
+    </p>
   </div>
 
   <div
