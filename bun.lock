@@ -10,10 +10,10 @@
         "@types/jsonwebtoken": "^9.0.8",
         "autoprefixer": "^10.4.20",
         "cubing": "^0.54.1",
-        "svelte-tiny-virtual-list": "github:TutorLatin/svelte-tiny-virtual-list",
         "jsonwebtoken": "^9.0.2",
         "svelte-droplet": "^1.1.0",
         "svelte-persisted-store": "^0.12.0",
+        "svelte5-tiny-virtual-list": "^3.0.0-alpha.1",
       },
       "devDependencies": {
         "@sveltejs/adapter-auto": "^4.0.0",
@@ -764,11 +764,13 @@
 
     "svelte-eslint-parser": ["svelte-eslint-parser@0.43.0", "", { "dependencies": { "eslint-scope": "^7.2.2", "eslint-visitor-keys": "^3.4.3", "espree": "^9.6.1", "postcss": "^8.4.39", "postcss-scss": "^4.0.9" }, "peerDependencies": { "svelte": "^3.37.0 || ^4.0.0 || ^5.0.0" }, "optionalPeers": ["svelte"] }, "sha512-GpU52uPKKcVnh8tKN5P4UZpJ/fUDndmq7wfsvoVXsyP+aY0anol7Yqo01fyrlaWGMFfm4av5DyrjlaXdLRJvGA=="],
 
+    "svelte-kit": ["svelte-kit@1.2.0", "", {}, "sha512-RRaOHBhpDv4g2v9tcq8iNw055Pt0MlLps6JVA7/40f4KAbtztXSI4T6MZYbHRirO708urfAAMx6Qow+tQfCHug=="],
+
     "svelte-persisted-store": ["svelte-persisted-store@0.12.0", "", { "peerDependencies": { "svelte": "^3.48.0 || ^4 || ^5" } }, "sha512-BdBQr2SGSJ+rDWH8/aEV5GthBJDapVP0GP3fuUCA7TjYG5ctcB+O9Mj9ZC0+Jo1oJMfZUd1y9H68NFRR5MyIJA=="],
 
-    "svelte-tiny-virtual-list": ["svelte-tiny-virtual-list@github:TutorLatin/svelte-tiny-virtual-list#c231caa", { "peerDependencies": { "svelte": "^5.0.0" } }, "TutorLatin-svelte-tiny-virtual-list-c231caa"],
-
     "svelte-toolbelt": ["svelte-toolbelt@0.7.1", "", { "dependencies": { "clsx": "^2.1.1", "runed": "^0.23.2", "style-to-object": "^1.0.8" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-HcBOcR17Vx9bjaOceUvxkY3nGmbBmCBBbuWLLEWO6jtmWH8f/QoWmbyUfQZrpDINH39en1b8mptfPQT9VKQ1xQ=="],
+
+    "svelte5-tiny-virtual-list": ["svelte5-tiny-virtual-list@3.0.0-alpha.1", "", { "dependencies": { "svelte-kit": "^1.2.0" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-/NKTSmFyLLnTmiiv4qqgIAiwrDyfzvhamiVmDWImFO3ArkIOZJLIHZUw1ui+1elRutekKFAnzvyUfT1w4UevyQ=="],
 
     "tabbable": ["tabbable@6.2.0", "", {}, "sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew=="],
 

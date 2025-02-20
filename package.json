@@ -8,8 +8,7 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "eslint .",
-    "custominstall": "npm install && cd node_modules/svelte-tiny-virtual-list && npm install && npm run build && cd ../.."
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^4.0.0",
@@ -48,6 +47,6 @@
     "jsonwebtoken": "^9.0.2",
     "svelte-droplet": "^1.1.0",
     "svelte-persisted-store": "^0.12.0",
-    "svelte-tiny-virtual-list": "github:TutorLatin/svelte-tiny-virtual-list"
+    "svelte5-tiny-virtual-list": "^3.0.0-alpha.1"
   }
 }

@@ -13,7 +13,7 @@
   import TimePopup from "$lib/components/time-popup.svelte";
   import SessionSelector from "$lib/components/session-selector.svelte";
   import { RefreshCw } from "lucide-svelte";
-  import VirtualList from "svelte-tiny-virtual-list";
+  import VirtualList from "svelte5-tiny-virtual-list";
   import { mediaQuery } from "@sveltelegos-blue/svelte-legos";
   import { timeToFormattedString } from "$lib/utils";
   import { triplit } from "$lib/client";
