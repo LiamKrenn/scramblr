@@ -44,6 +44,7 @@
     "@types/jsonwebtoken": "^9.0.8",
     "autoprefixer": "^10.4.20",
     "cubing": "^0.54.1",
+    "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "svelte-droplet": "^1.1.0",
     "svelte-persisted-store": "^0.12.0",

@@ -66,17 +66,21 @@
     if ($token && $user) {
       await triplit.startSession($token);
 
-      let ses = await triplit.fetch(triplit.query("sessions").build());
+      if ($currentSession === undefined) {
+        let ses = await triplit.fetch(triplit.query("sessions").build());
 
-      if (ses.length == 0) {
-        const res = await triplit.insert("sessions", {
-          order: 1,
-          name: "Default",
-          user_id: $user.id,
-          scramble_type: "333",
-        });
-        if (!res.output) return;
-        $currentSession = res.output.id;
+        if (ses.length == 0) {
+          const res = await triplit.insert("sessions", {
+            order: 1,
+            name: "Default",
+            user_id: $user.id,
+            scramble_type: "333",
+          });
+          if (!res.output) return;
+          $currentSession = res.output.id;
+        } else {
+          $currentSession = ses[0].id;
+        }
       }
     }
   });
