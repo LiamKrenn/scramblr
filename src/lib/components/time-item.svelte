@@ -27,11 +27,11 @@
 </script>
 
 <div
-  class="flex h-[20px] w-full basis-2 items-center justify-start rounded-none p-0 text-[10px] font-normal duration-150 xs:text-xs 2xl:h-[32px] 2xl:text-lg"
+  class="flex w-full basis-2 items-center justify-start rounded-none p-0 font-normal duration-150 xs:text-sm h-[32px] 2xl:text-lg"
 >
   <Separator orientation="vertical" />
   <Button
-    class="flex h-[20px] w-12 items-center justify-center rounded-none p-0 text-[10px] font-normal duration-150 xs:text-xs 2xl:h-[32px] 2xl:w-20 2xl:text-lg"
+    class="time-button !w-12 2xl:!w-20 "
     variant="ghost"
     onclick={async () => {
       await openTimePopup(time, index);
@@ -39,7 +39,7 @@
   >
   <Separator orientation="vertical" />
   <Button
-    class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0 text-[10px] font-normal duration-150 xs:text-xs 2xl:h-[32px] 2xl:text-lg"
+    class="time-button flex-1 grow"
     variant="ghost"
     onclick={async () => {
       await openTimePopup(time, index);
@@ -47,7 +47,7 @@
   >
   <Separator orientation="vertical" />
   <Button
-    class="flex h-[20px] flex-1 grow items-center  justify-center rounded-none p-0 text-[10px] font-normal duration-150 xs:text-xs 2xl:h-[32px] 2xl:text-lg"
+    class="time-button flex-1 grow"
     variant="ghost"
     onclick={async () => {
       await openTimePopup(time, index);
@@ -55,7 +55,7 @@
   >
   <Separator orientation="vertical" />
   <Button
-    class="flex  h-[20px] flex-1 grow items-center  justify-center rounded-none p-0 text-[10px] font-normal duration-150 xs:text-xs 2xl:h-[32px] 2xl:text-lg"
+    class="time-button flex-1 grow"
     variant="ghost"
     onclick={async () => {
       await openTimePopup(time, index);
@@ -63,7 +63,7 @@
   >
   <Separator orientation="vertical" />
   <Button
-    class="flex  h-[20px] flex-1 grow items-center  justify-center rounded-none p-0 text-[10px] font-normal duration-150 xs:text-xs 2xl:h-[32px] 2xl:text-lg"
+    class="time-button flex-1 grow"
     variant="ghost"
     onclick={async () => {
       await openTimePopup(time, index);
@@ -71,3 +71,9 @@
   >
   <Separator orientation="vertical" />
 </div>
+
+<style>
+  :global(.time-button) {
+    @apply flex h-[20px]  items-center  justify-center rounded-none p-0 text-xs font-normal duration-150 xs:text-sm 2xl:h-[32px] 2xl:text-lg;
+  }
+</style>

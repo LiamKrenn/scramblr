@@ -285,15 +285,15 @@
             <VirtualList
               height={listHeight}
               itemCount={$times.length}
-              itemSize={$isDesktopTimes ? 32 : 20}
+              itemSize={32}
             >
               {#snippet header()}
                 <div
-                  class="text-[10px] font-normal xs:text-xs 2xl:h-[32px] 2xl:text-lg"
+                  class="text-xs font-normal xs:text-sm h-[32px] 2xl:text-lg"
                 >
                   <Separator />
                   <div
-                    class="flex h-[20px] w-full items-center justify-start rounded-none p-0 2xl:h-[32px]"
+                    class="flex w-full items-center justify-start rounded-none p-0 h-[32px]"
                   >
                     <Separator orientation="vertical" />
                     <p
@@ -303,25 +303,25 @@
                     </p>
                     <Separator orientation="vertical" />
                     <p
-                      class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0"
+                      class="flex flex-1 grow items-center justify-center rounded-none p-0"
                     >
                       Time
                     </p>
                     <Separator orientation="vertical" />
                     <p
-                      class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0"
+                      class="flex flex-1 grow items-center justify-center rounded-none p-0"
                     >
                       ao5
                     </p>
                     <Separator orientation="vertical" />
                     <p
-                      class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0"
+                      class="flex flex-1 grow items-center justify-center rounded-none p-0"
                     >
                       ao12
                     </p>
                     <Separator orientation="vertical" />
                     <p
-                      class="flex h-[20px] flex-1 grow items-center justify-center rounded-none p-0"
+                      class="flex flex-1 grow items-center justify-center rounded-none p-0"
                     >
                       ao100
                     </p>
@@ -346,7 +346,9 @@
                   </div>
                 {/if}
               {/snippet}
-              {#snippet footer()}{/snippet}
+              {#snippet footer()}
+                <div class="h-2"></div>
+              {/snippet}
             </VirtualList>
           </div>
         {:else}
