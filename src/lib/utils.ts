@@ -49,6 +49,24 @@ export function timeToFormattedString(time: number, decimals: number = 3) {
   return `${minutes}:${seconds}`;
 }
 
+export function timeToListString(
+  time: number,
+  penalty: number,
+  decimals: number = 3
+) {
+  console.log("pen", penalty);
+  if (penalty < 0) {
+    return "DNF";
+  }
+  let timeString = timeToFormattedString(time + penalty, decimals);
+
+  if (penalty !== 0) {
+    return timeString + "+";
+  } else {
+    return timeString;
+  }
+}
+
 export function getUUID() {
   return crypto.randomUUID();
 }

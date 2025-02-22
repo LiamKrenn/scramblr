@@ -4,6 +4,8 @@
   import * as Drawer from "$lib/components/ui/drawer/index.js";
   import TimePopupContent from "./time-popup-content.svelte";
   import type { Time } from "../../../triplit/schema";
+  import { triplit } from "$lib/client";
+  import { getNTimesSinceTime } from "$lib/api";
 
   let open = $state(false);
   const isDesktop = mediaQuery("(min-width: 768px)");
@@ -20,7 +22,17 @@
   }
 
   async function deleteTime(id: string) {
-    // sync.deleteTime(id);
+    let res = prompt("The Number Of Deleted Values From Current Index?", "1");
+    if (res == null) return;
+    let num = parseInt(res);
+    if (Number.isNaN(num)) return;
+
+    let times = await getNTimesSinceTime(id, num);
+
+    times.forEach((time) => {
+      triplit.delete("times", time.id);
+    });
+
     open = false;
   }
 
@@ -32,7 +44,7 @@
 {#if $isDesktop}
   <Dialog.Root bind:open>
     <Dialog.Trigger></Dialog.Trigger>
-    <Dialog.Content class="p-0 sm:max-w-[425px]">
+    <Dialog.Content showX={false} class="p-0 sm:max-w-[425px]">
       {#if time != undefined}
         <TimePopupContent {time} {deleteTime} {close} {index} />
       {/if}

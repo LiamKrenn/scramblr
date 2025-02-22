@@ -2,8 +2,10 @@
   import { CircleCheckBig, RefreshCw, UploadIcon } from "lucide-svelte";
   import { FileDrop } from "svelte-droplet";
   import Progress from "./ui/progress/progress.svelte";
-  import type { Session, Time } from "$lib/types";
   import { getUUID } from "$lib/utils";
+  import { type Session, type Time } from "../../../triplit/schema";
+  import { triplit } from "$lib/client";
+  import { user } from "$lib/stores";
 
   let done = $state(false);
 
@@ -11,6 +13,7 @@
   let global_time_count = 0;
   async function handleFiles(files: File[]) {
     // TODO: efficiency - load & convert first and then insert
+
     for (const file of files) {
       //for (let i = 0; i < 20; i++) {
 
@@ -72,14 +75,15 @@
         }
 
         let new_session: Session = {
-          id: "0",
           name: cs_session_props.name,
           order: cs_session_props.rank,
           scramble_type: srcType,
+          user_id: $user?.id || -1,
+          created_at: new Date(),
         };
 
-        // let session_uuid = await sync.createSession(new_session);
-        // session_id_map[cs_session_id] = session_uuid;
+        let res = await triplit.insert("sessions", new_session);
+        session_id_map[cs_session_id] = res.output?.id || "0";
         times_processed++;
       }
 
@@ -92,17 +96,18 @@
           let c_time = time[0][1];
 
           let new_time: Time = {
-            id: "0",
             time: c_time,
             session_id: session_id_map[session_id],
             scramble: time[1],
             comment: time[2],
-            timestamp: time[3] * 1000,
+            timestamp: new Date(time[3] * 1000),
             penalty: time[0][0],
-            archived: false,
+            user_id: $user?.id || -1,
           };
 
-          // await sync.createTime(new_time);
+          let res = await triplit.insert("times", new_time);
+
+          console.log(res);
 
           times_processed++;
           // global_time_count++;

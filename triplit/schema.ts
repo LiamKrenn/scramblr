@@ -40,6 +40,9 @@ const schema = {
         postUpdate: {
           filter: [["user_id", "=", "$role.userId"]],
         },
+        delete: {
+          filter: [["user_id", "=", "$role.userId"]],
+        },
       },
     },
   },
@@ -66,6 +69,9 @@ const schema = {
           filter: [["user_id", "=", "$role.userId"]],
         },
         postUpdate: {
+          filter: [["user_id", "=", "$role.userId"]],
+        },
+        delete: {
           filter: [["user_id", "=", "$role.userId"]],
         },
       },

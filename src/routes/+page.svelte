@@ -21,6 +21,7 @@
   import { type Session, type Time } from "../../triplit/schema";
   import { currentSession, sessions, times, token, user } from "$lib/stores";
   import { clearData } from "$lib/api";
+  import { Button } from "$lib/components/ui/button";
 
   interface Props {
     data: PageData;
@@ -399,7 +400,6 @@
       <Separator class="mx-1 grow-0 rounded" orientation="vertical" />
 
       <!-- Middle -->
-
       <div class="hidden w-full flex-1 grow flex-col lg:flex">
         <!-- Stats -->
         <div class="w-full grow px-2">

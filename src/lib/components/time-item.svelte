@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { timeToFormattedString } from "$lib/utils";
+  import { timeToFormattedString, timeToListString } from "$lib/utils";
 
   import Button from "$lib/components/ui/button/button.svelte";
   import Separator from "./ui/separator/separator.svelte";
@@ -31,7 +31,7 @@
 >
   <Separator orientation="vertical" />
   <Button
-    class="time-button !w-12 2xl:!w-20 "
+    class="time-button !w-12 2xl:!w-20"
     variant="ghost"
     onclick={async () => {
       await openTimePopup(time, index);
@@ -43,7 +43,7 @@
     variant="ghost"
     onclick={async () => {
       await openTimePopup(time, index);
-    }}>{timeToFormattedString(time.time, 3)}</Button
+    }}>{timeToListString(time.time, time.penalty, 3)}</Button
   >
   <Separator orientation="vertical" />
   <Button
@@ -74,6 +74,6 @@
 
 <style>
   :global(.time-button) {
-    @apply flex   items-center  justify-center rounded-none p-0 text-xs font-normal duration-150 xs:text-sm h-[32px] 2xl:text-lg;
+    @apply flex  items-center  justify-center !rounded-none p-0 text-xs font-normal duration-150 xs:text-sm !h-[32px] 2xl:text-lg;
   }
 </style>
