@@ -20,6 +20,7 @@
   import { browser } from "$app/environment";
   import { type Session, type Time } from "../../triplit/schema";
   import { currentSession, sessions, times, token, user } from "$lib/stores";
+  import { clearData } from "$lib/api";
 
   interface Props {
     data: PageData;
@@ -34,23 +35,6 @@
   let lowest_ao12 = $state(-1);
   let lowest_ao100 = $state(-1);
 
-  async function solve_done() {
-    // let time_json: Time = {
-    //   id: "",
-    //   time: time,
-    //   scramble: $scramble,
-    //   session_id: get(session_id),
-    //   penalty: 0,
-    //   timestamp: Date.now(),
-    // };
-    // fetching.set(true);
-    // sync.createTime(time_json);
-    // time = 0;
-    // if (logged_in) {
-    // }
-    // fetching.set(false);
-  }
-
   let time_popup: TimePopup;
 
   async function openTimePopup(id: Time, index: number) {
@@ -64,28 +48,39 @@
     $token = data.token || null;
     await triplit.endSession();
     if ($token && $user) {
+      let oldSessions = await triplit.fetch(
+        triplit.query("sessions").where("user_id", "!=", $user.id).build(),
+      );
+      let oldTimes = await triplit.fetch(
+        triplit.query("times").where("user_id", "!=", $user.id).build(),
+      );
+
+      if (oldSessions.length !== 0 || oldTimes.length !== 0) {
+        await clearData();
+      }
+
       await triplit.startSession($token);
+    }
 
-      if ($currentSession === undefined) {
-        let ses = await triplit.fetch(triplit.query("sessions").build());
+    if ($currentSession === undefined || $sessions.length === 0) {
+      let ses = await triplit.fetch(triplit.query("sessions").build());
 
-        if (ses.length == 0) {
-          const res = await triplit.insert("sessions", {
-            order: 1,
-            name: "Default",
-            user_id: $user.id,
-            scramble_type: "333",
-          });
-          if (!res.output) return;
-          $currentSession = res.output.id;
-        } else {
-          $currentSession = ses[0].id;
-        }
+      if (ses.length == 0) {
+        const res = await triplit.insert("sessions", {
+          order: 1,
+          name: "Default",
+          user_id: $user?.id || -1,
+          scramble_type: "333",
+        });
+        if (!res.output) return;
+        $currentSession = res.output.id;
+      } else {
+        $currentSession = ses[0].id;
       }
     }
   });
 
-  let listHeight = $state(100);
+  let listHeight = $state(0);
   const isDesktopTimes = mediaQuery("(min-width: 1436px)");
 
   function calc_aon(
@@ -140,43 +135,29 @@
     },
   );
 
-  // let times = $derived(
-  //   liveQuery(async () => {
-  //     fetching.set(true);
-  //     const res = await sync.db.times
-  //       .where("session_id")
-  //       .equals($session_id)
-  //       .and((time) => time.archived != true)
-  //       .reverse()
-  //       .sortBy("timestamp");
-  //     time_count = await sync.getTimeCountOfSession($session_id);
-  //     fetching.set(false);
-  //     return res;
-  //   }),
-  // );
-  // $effect(() => {
-  //   if ($times && $session_id) {
-  //     lowest_ao5 = -1;
-  //     lowest_ao12 = -1;
-  //     lowest_ao100 = -1;
-  //     let i = 0;
-  //     $times.forEach((time_el) => {
-  //       let temp5 = calc_ao5(i);
-  //       let temp12 = calc_ao12(i);
-  //       let temp100 = calc_ao100(i);
-  //       if (lowest_ao5 == -1 || (temp5 != -1 && temp5 < lowest_ao5)) {
-  //         lowest_ao5 = temp5;
-  //       }
-  //       if (lowest_ao12 == -1 || (temp12 != -1 && temp12 < lowest_ao12)) {
-  //         lowest_ao12 = temp12;
-  //       }
-  //       if (lowest_ao100 == -1 || (temp100 != -1 && temp100 < lowest_ao100)) {
-  //         lowest_ao100 = temp100;
-  //       }
-  //       i += 1;
-  //     });
-  //   }
-  // });
+  function calculateBestAON() {
+    lowest_ao5 = -1;
+    lowest_ao12 = -1;
+    lowest_ao100 = -1;
+    for (let i = 0; i < $times.length; i++) {
+      let temp5 = calc_ao5(i);
+      let temp12 = calc_ao12(i);
+      let temp100 = calc_ao100(i);
+      if (lowest_ao5 == -1 || (temp5 != -1 && temp5 < lowest_ao5)) {
+        lowest_ao5 = temp5;
+      }
+      if (lowest_ao12 == -1 || (temp12 != -1 && temp12 < lowest_ao12)) {
+        lowest_ao12 = temp12;
+      }
+      if (lowest_ao100 == -1 || (temp100 != -1 && temp100 < lowest_ao100)) {
+        lowest_ao100 = temp100;
+      }
+    }
+  }
+
+  times.subscribe(() => {
+    calculateBestAON();
+  });
 
   function timeCallback(time: number) {
     console.log("time", time);
@@ -188,7 +169,6 @@
       session_id: $currentSession,
       user_id: data.user?.id ?? 1,
     });
-    solve_done();
   }
 </script>
 
@@ -303,7 +283,7 @@
           <!--  -->
           <div class="h-full" bind:clientHeight={listHeight}>
             <VirtualList
-              height="100%"
+              height={listHeight}
               itemCount={$times.length}
               itemSize={$isDesktopTimes ? 32 : 20}
             >
@@ -351,24 +331,22 @@
                 </div>
               {/snippet}
               {#snippet children({ index, style })}
-                <!-- {#if $times[index]} -->
-                <div {style}>
-                  <TimeItem
-                    time={$times[index]}
-                    {openTimePopup}
-                    {index}
-                    time_count={$times.length}
-                    ao5={calc_ao5(index)}
-                    ao12={calc_ao12(index)}
-                    ao100={calc_ao100(index)}
-                  />
-                  <Separator />
-                </div>
-                <!-- {/if} -->
+                {#if $times[index]}
+                  <div {style}>
+                    <TimeItem
+                      time={$times[index]}
+                      {openTimePopup}
+                      {index}
+                      time_count={$times.length}
+                      ao5={calc_ao5(index)}
+                      ao12={calc_ao12(index)}
+                      ao100={calc_ao100(index)}
+                    />
+                    <Separator />
+                  </div>
+                {/if}
               {/snippet}
-              {#snippet footer()}
-                <div></div>
-              {/snippet}
+              {#snippet footer()}{/snippet}
             </VirtualList>
           </div>
         {:else}

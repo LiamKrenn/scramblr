@@ -37,8 +37,10 @@
     }
   });
 
-  onMount(async () => {
-    // setToSession($session_id);
+  onMount(() => {
+    if (!$currentSession) {
+      $currentSession = "";
+    }
   });
 </script>
 

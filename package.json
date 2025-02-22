@@ -16,7 +16,7 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@triplit/cli": "latest",
     "@types/eslint": "^9.6.1",
-    "bits-ui": "^1.0.0-next.91",
+    "bits-ui": "^1.3.2",
     "clsx": "^2.1.1",
     "eslint": "^9.20.0",
     "eslint-plugin-svelte": "^2.45.1",
