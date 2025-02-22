@@ -54,7 +54,6 @@ export function timeToListString(
   penalty: number,
   decimals: number = 3
 ) {
-  console.log("pen", penalty);
   if (penalty < 0) {
     return "DNF";
   }

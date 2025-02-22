@@ -5,7 +5,7 @@
   import { getUUID } from "$lib/utils";
   import { type Session, type Time } from "../../../triplit/schema";
   import { triplit } from "$lib/client";
-  import { user } from "$lib/stores";
+  import { token, user } from "$lib/stores";
 
   let done = $state(false);
 
@@ -91,6 +91,9 @@
       for (let key of session_keys) {
         let session = cstimer_json[key];
         let session_id = key.split("session")[1];
+
+        let bulk_times: Time[] = [];
+
         for (let time of session) {
           // TODO: Multi-Phase Timer
           let c_time = time[0][1];
@@ -105,9 +108,15 @@
             user_id: $user?.id || -1,
           };
 
-          let res = await triplit.insert("times", new_time);
+          bulk_times.push(new_time);
+          if (bulk_times.length >= 100) {
+            console.log("bulk insert", bulk_times);
+            let res = await triplit.http.bulkInsert({ times: bulk_times });
 
-          console.log(res);
+            console.log(res);
+
+            bulk_times = [];
+          }
 
           times_processed++;
           // global_time_count++;
@@ -124,6 +133,8 @@
           // }
           //}
         }
+        triplit.http.bulkInsert({ times: bulk_times });
+        bulk_times = [];
       }
 
       done = true;
