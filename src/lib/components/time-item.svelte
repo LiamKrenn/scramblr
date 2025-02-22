@@ -74,6 +74,6 @@
 
 <style>
   :global(.time-button) {
-    @apply flex h-[20px]  items-center  justify-center rounded-none p-0 text-xs font-normal duration-150 xs:text-sm 2xl:h-[32px] 2xl:text-lg;
+    @apply flex   items-center  justify-center rounded-none p-0 text-xs font-normal duration-150 xs:text-sm h-[32px] 2xl:text-lg;
   }
 </style>
