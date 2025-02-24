@@ -1,11 +1,15 @@
+import { get } from "svelte/store";
 import { triplit } from "./client";
-import { sessions, times } from "./stores";
+import { sessions, times, token } from "./stores";
 
 export async function clearData() {
   await triplit.endSession();
   await triplit.clear();
   sessions.set([]);
   times.set([]);
+  if (get(token)) {
+    await triplit.startSession(get(token));
+  }
 }
 
 export async function getSessionWithId(id: string) {

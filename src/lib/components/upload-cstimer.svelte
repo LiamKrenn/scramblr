@@ -6,6 +6,7 @@
   import { type Session, type Time } from "../../../triplit/schema";
   import { triplit } from "$lib/client";
   import { token, user } from "$lib/stores";
+  import { clearData } from "$lib/api";
 
   let done = $state(false);
 
@@ -35,9 +36,13 @@
       time_count += session_keys.length;
       time_count -= 100;
 
-      // resed idb
-      // sync.deleteAllSessions();
-      // sync.deleteAllTimes();
+      await clearData();
+      await triplit.endSession();
+      console.log($token);
+
+      if ($token) {
+        await triplit.startSession($token);
+      }
 
       let session_id_map: { [cs_id: string]: string } = {};
 

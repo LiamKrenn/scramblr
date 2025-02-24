@@ -36,6 +36,9 @@
     await detectSWUpdate();
     if (get(type) == "333") type.set("333");
   });
+
+  $token = data.token || null;
+  $user = data.user;
 </script>
 
 <title>scramblr</title>
