@@ -1,4 +1,5 @@
 import { TriplitClient } from "@triplit/client";
+import { IndexedDbExperimentalKVStore } from "@triplit/entity-db";
 import { schema } from "../../triplit/schema";
 import {
   PUBLIC_TRIPLIT_SERVER_URL,
@@ -18,8 +19,12 @@ import { browser } from "$app/environment";
 // Without the serverUrl or token, the client will operate in
 // offline mode
 
+// You can edit batch size to see what works best
+const storage = new IndexedDbExperimentalKVStore("<your-db-name>", {
+  batchSize: 2500,
+});
 export const triplit = new TriplitClient({
-  storage: "indexeddb",
+  storage: "memory",
   schema,
   serverUrl: PUBLIC_TRIPLIT_SERVER_URL,
   autoConnect: false,

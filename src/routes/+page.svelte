@@ -61,6 +61,7 @@
       }
 
       await triplit.startSession($token);
+      console.log("Session started");
     }
 
     if ($currentSession === undefined || $sessions.length === 0) {
@@ -114,16 +115,19 @@
     return calc_aon(index, 100, 5);
   }
 
+  let timeQuery = () => {};
   currentSession.subscribe((session) => {
-    const timeQuery = triplit.subscribe(
+    timeQuery();
+    let now = new Date();
+    timeQuery = triplit.subscribe(
       triplit
         .query("times")
         .where("session_id", "=", session || "")
         .order("timestamp", "DESC")
         .build(),
       (results: Time[]) => {
-        console.log("Times: ", results);
-        $times = results;
+        console.log("time ", Date.now() - now.getTime());
+        times.set(results);
       },
     );
   });
