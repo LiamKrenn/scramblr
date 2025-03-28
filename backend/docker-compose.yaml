@@ -26,6 +26,7 @@ services:
       - .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/electric?sslmode=disable
+      ELECTRIC_SECRET: ${ELECTRIC_SECRET}
     ports:
       - "3100:3000"
     depends_on:
