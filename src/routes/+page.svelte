@@ -16,9 +16,7 @@
   import VirtualList from "svelte5-tiny-virtual-list";
   import { mediaQuery } from "@sveltelegos-blue/svelte-legos";
   import { timeToFormattedString } from "$lib/utils";
-  import { triplit } from "$lib/client";
   import { browser } from "$app/environment";
-  import { type Session, type Time } from "../../triplit/schema";
   import { currentSession, sessions, times, token, user } from "$lib/stores";
 
   interface Props {
@@ -53,37 +51,37 @@
 
   let time_popup: TimePopup;
 
-  async function openTimePopup(id: Time, index: number) {
-    time_popup.openTimePopup(id, index);
-  }
+  // async function openTimePopup(id: Time, index: number) {
+  //   time_popup.openTimePopup(id, index);
+  // }
 
-  onMount(async () => {
-    await new_scramble();
-    if (!browser) return;
-    $user = data.user;
-    $token = data.token || null;
-    await triplit.endSession();
-    if ($token && $user) {
-      await triplit.startSession($token);
+  // onMount(async () => {
+  //   await new_scramble();
+  //   if (!browser) return;
+  //   $user = data.user;
+  //   $token = data.token || null;
+  //   await triplit.endSession();
+  //   if ($token && $user) {
+  //     await triplit.startSession($token);
 
-      if ($currentSession === undefined) {
-        let ses = await triplit.fetch(triplit.query("sessions").build());
+  //     if ($currentSession === undefined) {
+  //       let ses = await triplit.fetch(triplit.query("sessions").build());
 
-        if (ses.length == 0) {
-          const res = await triplit.insert("sessions", {
-            order: 1,
-            name: "Default",
-            user_id: $user.id,
-            scramble_type: "333",
-          });
-          if (!res.output) return;
-          $currentSession = res.output.id;
-        } else {
-          $currentSession = ses[0].id;
-        }
-      }
-    }
-  });
+  //       if (ses.length == 0) {
+  //         const res = await triplit.insert("sessions", {
+  //           order: 1,
+  //           name: "Default",
+  //           user_id: $user.id,
+  //           scramble_type: "333",
+  //         });
+  //         if (!res.output) return;
+  //         $currentSession = res.output.id;
+  //       } else {
+  //         $currentSession = ses[0].id;
+  //       }
+  //     }
+  //   }
+  // });
 
   let listHeight = $state(100);
   const isDesktopTimes = mediaQuery("(min-width: 1436px)");
@@ -118,27 +116,27 @@
     return calc_aon(index, 100, 5);
   }
 
-  currentSession.subscribe((session) => {
-    const timeQuery = triplit.subscribe(
-      triplit
-        .query("times")
-        .where("session_id", "=", session || "")
-        .order("timestamp", "DESC")
-        .build(),
-      (results: Time[]) => {
-        console.log("Times: ", results);
-        $times = results;
-      },
-    );
-  });
+  // currentSession.subscribe((session) => {
+  //   const timeQuery = triplit.subscribe(
+  //     triplit
+  //       .query("times")
+  //       .where("session_id", "=", session || "")
+  //       .order("timestamp", "DESC")
+  //       .build(),
+  //     (results: Time[]) => {
+  //       console.log("Times: ", results);
+  //       $times = results;
+  //     },
+  //   );
+  // });
 
-  const sessionsQuery = triplit.subscribe(
-    triplit.query("sessions").order("order", "DESC").build(),
-    (results: Session[]) => {
-      console.log("Sessions: ", results);
-      $sessions = results;
-    },
-  );
+  // const sessionsQuery = triplit.subscribe(
+  //   triplit.query("sessions").order("order", "DESC").build(),
+  //   (results: Session[]) => {
+  //     console.log("Sessions: ", results);
+  //     $sessions = results;
+  //   },
+  // );
 
   // let times = $derived(
   //   liveQuery(async () => {
@@ -182,12 +180,12 @@
     console.log("time", time);
     if (!$currentSession) return;
 
-    triplit.insert("times", {
-      time: time,
-      scramble: $scramble,
-      session_id: $currentSession,
-      user_id: data.user?.id ?? 1,
-    });
+    // triplit.insert("times", {
+    //   time: time,
+    //   scramble: $scramble,
+    //   session_id: $currentSession,
+    //   user_id: data.user?.id ?? 1,
+    // });
     solve_done();
   }
 </script>
@@ -353,7 +351,7 @@
               {#snippet children({ index, style })}
                 <!-- {#if $times[index]} -->
                 <div {style}>
-                  <TimeItem
+                  <!-- <TimeItem
                     time={$times[index]}
                     {openTimePopup}
                     {index}
@@ -361,7 +359,7 @@
                     ao5={calc_ao5(index)}
                     ao12={calc_ao12(index)}
                     ao100={calc_ao100(index)}
-                  />
+                  /> -->
                   <Separator />
                 </div>
                 <!-- {/if} -->

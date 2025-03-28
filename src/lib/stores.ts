@@ -1,6 +1,5 @@
 import { writable, type Writable } from "svelte/store";
 import type { WCAUser } from "./types";
-import { triplit } from "./client";
 import type { Time, Session } from "../../triplit/schema";
 import { persisted } from "svelte-persisted-store";
 

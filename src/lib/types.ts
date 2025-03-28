@@ -12,23 +12,22 @@ export type WCAUser = {
   "x-triplit-user-id": number;
 };
 
-// export type Session = {
-//   id: string;
-//   user_id?: number;
-//   name: string;
-//   order: number;
-//   scramble_type: string;
-//   updated?: number;
-// };
+type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
-// export type Time = {
-// 	id: string;
-// 	session_id: string;
-// 	time: number;
-// 	penalty: number;
-// 	scramble?: string;
-// 	comment?: string;
-// 	timestamp: number;
-// 	updated?: number;
-// 	archived?: boolean;
-// };
+export type Session = {
+  id: UUID;
+  name?: string | null;
+  order?: number;
+  state?: number;
+};
+
+export type Time = {
+  id: UUID;
+  session_id: UUID;
+  time: number;
+  penalty?: number;
+  scramble?: string | null;
+  comment?: string | null;
+  timestamp?: Date | null;
+  state?: number;
+};

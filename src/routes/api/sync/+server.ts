@@ -1,3 +1,4 @@
+import { ELECTRIC_SECRET, ELECTRIC_URL } from "$env/static/private";
 import { check_auth } from "$lib/server/utils.server";
 import type { RequestHandler } from "./$types";
 
@@ -7,7 +8,7 @@ export const GET: RequestHandler = async (req) => {
     return new Response(`Unauthorized`, { status: 401 });
   }
 
-  const originUrl = new URL(`http://localhost:3000/v1/shape`);
+  const originUrl = new URL(`${ELECTRIC_URL}/v1/shape`);
 
   // Copy over the relevant query params that the Electric client adds
   // so that we return the right part of the Shape log.
@@ -17,8 +18,17 @@ export const GET: RequestHandler = async (req) => {
     }
   });
 
-  originUrl.searchParams.set(`columns`, `id,name,value,state`);
-  originUrl.searchParams.set("where", "owner='" + user.id + "'");
+  let columns = "";
+  const table = originUrl.searchParams.get("table");
+  if (table == "times") {
+    columns = `id,session_id,time,penalty,scramble,comment,timestamp,state`;
+  } else if (table == "sessions") {
+    columns = `id,name,"order",state`;
+  }
+
+  originUrl.searchParams.set(`columns`, columns);
+  originUrl.searchParams.set("where", "user_id='" + user.id + "'");
+  originUrl.searchParams.set("api_secret", `${ELECTRIC_SECRET}`);
 
   // When proxying long-polling requests, content-encoding &
   // content-length are added erroneously (saying the body is
@@ -26,7 +36,9 @@ export const GET: RequestHandler = async (req) => {
   // content decoding errors in the browser.
   //
   // Similar-ish problem to https://github.com/wintercg/fetch/issues/23
+
   let resp = await fetch(originUrl.toString());
+
   if (resp.headers.get(`content-encoding`)) {
     const headers = new Headers(resp.headers);
     headers.delete(`content-encoding`);

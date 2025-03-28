@@ -6,8 +6,6 @@
   import { get, writable } from "svelte/store";
   import { sessions, times, token, user } from "$lib/stores";
   import type { PageData } from "./$types";
-  import { triplit } from "$lib/client";
-  import type { Session, Time } from "../../triplit/schema";
 
   interface Props {
     children?: import("svelte").Snippet;
