@@ -1,9 +1,5 @@
-import {
-  WCA_ORIGIN,
-  APPLICATION_ID,
-  CLIENT_SECRET,
-  APP_ROUTE,
-} from "$env/static/private";
+import { WCA_ORIGIN, APPLICATION_ID, CLIENT_SECRET } from "$env/static/private";
+import { PUBLIC_APP_ROUTE } from "$env/static/public";
 import jwt from "jsonwebtoken";
 const { sign } = jwt;
 
@@ -18,7 +14,7 @@ export async function GET(req) {
     body: JSON.stringify({
       client_id: APPLICATION_ID!,
       client_secret: CLIENT_SECRET!,
-      redirect_uri: `${APP_ROUTE}/callback`,
+      redirect_uri: `${PUBLIC_APP_ROUTE}/callback`,
       grant_type: "authorization_code",
       code,
     }),

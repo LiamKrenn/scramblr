@@ -4,6 +4,9 @@
     "": {
       "name": "svelte-template",
       "dependencies": {
+        "@electric-sql/client": "^1.0.0",
+        "@electric-sql/pglite": "^0.2.17",
+        "@electric-sql/pglite-sync": "^0.3.0",
         "@sveltelegos-blue/svelte-legos": "^0.2.0",
         "@triplit/client": "latest",
         "@triplit/svelte": "latest",
@@ -48,6 +51,14 @@
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
 
     "@ampproject/remapping": ["@ampproject/remapping@2.3.0", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.5", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw=="],
+
+    "@electric-sql/client": ["@electric-sql/client@1.0.0", "", { "optionalDependencies": { "@rollup/rollup-darwin-arm64": "^4.18.1" } }, "sha512-kGiVbBIlMqc/CeJpWZuLjxNkm0836NWxeMtIWH2w5IUK8pUL13hyxg3ZkR7+FlTGhpKuZRiCP5nPOH9D6wbhPw=="],
+
+    "@electric-sql/experimental": ["@electric-sql/experimental@1.0.0", "", { "optionalDependencies": { "@rollup/rollup-darwin-arm64": "^4.18.1" }, "peerDependencies": { "@electric-sql/client": "1.0.0" } }, "sha512-wOKZyph3cvJ4J5fDwqDpR7nilPOHEFwAtbAM5X/PhV3JZCSzmkbosaQRWsxbHQ80MJv7gNFP960+TyqGAjqouQ=="],
+
+    "@electric-sql/pglite": ["@electric-sql/pglite@0.2.17", "", {}, "sha512-qEpKRT2oUaWDH6tjRxLHjdzMqRUGYDnGZlKrnL4dJ77JVMcP2Hpo3NYnOSPKdZdeec57B6QPprCUFg0picx5Pw=="],
+
+    "@electric-sql/pglite-sync": ["@electric-sql/pglite-sync@0.3.0", "", { "dependencies": { "@electric-sql/client": "1.0.0", "@electric-sql/experimental": "1.0.0" }, "peerDependencies": { "@electric-sql/pglite": "^0.2.17" } }, "sha512-2zkW5N65qoe1xKwkJhlXgbyVGrF86EGlPBe6y3f2FGxUud4SnUi1kPJ7JMMl4laA3FxRd6bBn6PnMsjvqM31vw=="],
 
     "@esbuild/aix-ppc64": ["@esbuild/aix-ppc64@0.23.1", "", { "os": "aix", "cpu": "ppc64" }, "sha512-6VhYk1diRqrhBAqpJEdjASR/+WVRtfjpqKuNw11cLiaWpAT/Uu+nokB+UJnevzy/P9C/ty6AOe0dwueMrGh/iQ=="],
 

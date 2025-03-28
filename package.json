@@ -38,6 +38,9 @@
   },
   "type": "module",
   "dependencies": {
+    "@electric-sql/client": "^1.0.0",
+    "@electric-sql/pglite": "^0.2.17",
+    "@electric-sql/pglite-sync": "^0.3.0",
     "@sveltelegos-blue/svelte-legos": "^0.2.0",
     "@triplit/client": "latest",
     "@triplit/svelte": "latest",
