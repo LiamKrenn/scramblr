@@ -33,7 +33,7 @@
 {#if $isDesktop}
   <Dialog.Root bind:open>
     <Dialog.Trigger></Dialog.Trigger>
-    <Dialog.Content class="p-0 sm:max-w-[425px]">
+    <Dialog.Content class="p-0 sm:max-w-[425px]" hideX>
       {#if time != undefined}
         <TimePopupContent {time} {deleteTimeClick} {close} {index} />
       {/if}

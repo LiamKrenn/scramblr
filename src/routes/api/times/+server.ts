@@ -1,9 +1,4 @@
-import {
-  db,
-  getSessionAuth,
-  getTimeAuth,
-  type TimeDB,
-} from "$lib/server/db.server";
+import { db, getSession, getTime, type TimeDB } from "$lib/server/db.server";
 import { check_auth } from "$lib/server/utils.server";
 import type { Time } from "$lib/types";
 import type { RequestHandler } from "./$types";
@@ -15,14 +10,21 @@ export const GET: RequestHandler = async () => {
 export const PUT: RequestHandler = async (event) => {
   let user = await check_auth(event.cookies);
   if (!user) {
-    return new Response("Unauthorized", { status: 401 });
+    throw new Response("Unauthorized", { status: 401 });
   }
 
   const payload_session = (await event.request.json()) as Time;
 
   // Check auth for time and session
-  const existing_time = await getTimeAuth(payload_session.id, user.id);
-  await getSessionAuth(payload_session.session_id, user.id);
+  const existing_time = await getTime(payload_session.id);
+  const time_session = await getSession(payload_session.session_id);
+
+  if (existing_time?.user_id !== user.id) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  if (time_session?.user_id !== user.id) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
   const new_session: TimeDB = {
     id: payload_session.id,

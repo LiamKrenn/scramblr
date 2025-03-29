@@ -23,7 +23,7 @@
     }}
     variant="destructive"
     class="absolute right-4 top-4 mb-1"
-    >Delete <Trash class="-mr-1 p-1" />
+    >Delete <Trash class="-mr-1 p-1 !h-full !aspect-square !w-auto" />
   </Button>
   <p class="mb-1">
     Scramble: <span class="rounded bg-slate-800 px-1">{time.scramble}</span>
