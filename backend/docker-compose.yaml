@@ -32,12 +32,5 @@ services:
     depends_on:
       - postgres
 
-  frontend:
-    build: .
-    ports:
-      - "52523:52523"
-    environment:
-      - PORT=52523
-    depends_on:
-      - postgres
-      - electric
+volumes:
+  postgres_data: 
