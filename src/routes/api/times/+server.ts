@@ -19,9 +19,6 @@ export const PUT: RequestHandler = async (event) => {
   const existing_time = await getTime(payload_session.id);
   const time_session = await getSession(payload_session.session_id);
 
-  if (existing_time?.user_id !== user.id) {
-    return new Response("Unauthorized", { status: 401 });
-  }
   if (time_session?.user_id !== user.id) {
     return new Response("Unauthorized", { status: 401 });
   }
@@ -40,6 +37,9 @@ export const PUT: RequestHandler = async (event) => {
   };
 
   if (existing_time) {
+    if (existing_time.user_id !== user.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     try {
       await db.query(
         `UPDATE times SET session_id = $1, time = $2, penalty = $3, scramble = $4, comment = $5, timestamp = $6, state = $7, archived = $8

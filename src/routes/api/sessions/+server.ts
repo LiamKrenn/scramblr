@@ -1,4 +1,4 @@
-import { db, getSessionAuth } from "$lib/server/db.server";
+import { db, getSession } from "$lib/server/db.server";
 import { check_auth } from "$lib/server/utils.server";
 import type { Session } from "$lib/types";
 import type { RequestHandler } from "./$types";
@@ -13,6 +13,7 @@ export const GET: RequestHandler = async () => {
 
 export const PUT: RequestHandler = async (event) => {
   let user = await check_auth(event.cookies);
+
   if (!user) {
     return new Response("Unauthorized", { status: 401 });
   }
@@ -27,10 +28,14 @@ export const PUT: RequestHandler = async (event) => {
     user_id: user.id,
   };
 
-  // Check if session already exists and auth
-  const existing_session = await getSessionAuth(payload_session.id, user.id);
+  // Check if session already exists
+  const existing_session = await getSession(payload_session.id);
 
   if (existing_session) {
+    if (existing_session.user_id !== user.id) {
+      console.log(existing_session, user.id);
+      return new Response("Unauthorized", { status: 401 });
+    }
     try {
       await db.query(
         `UPDATE sessions SET name = $1, "order" = $2, state = $3 WHERE id = $4 AND user_id = $5`,
