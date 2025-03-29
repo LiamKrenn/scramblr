@@ -10,19 +10,6 @@ async function getHighestOrder(): Promise<number> {
   return res.rows[0].max || 0;
 }
 
-export async function createSessionWithSession(session: {
-  id: string;
-  name: string;
-  order: number;
-}) {
-  const res = await pg.query<Session>(
-    'INSERT INTO sessions (id, name, "order", state, archived) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-    [session.id, session.name, session.order, 1, false]
-  );
-
-  return res.rows[0];
-}
-
 export async function createSession(name: string) {
   let new_session: Session = {
     id: getUUID(),
@@ -98,4 +85,7 @@ export async function resetAll() {
   await fetch("/api/reset", {
     method: "DELETE",
   });
+
+  await pg.query("DELETE FROM sessions");
+  await pg.query("DELETE FROM times");
 }

@@ -285,7 +285,7 @@
           <!--  -->
           <div class="h-full" bind:clientHeight={listHeight}>
             <VirtualList
-              height="100"
+              height={listHeight}
               itemCount={$times.length}
               itemSize={$isDesktopTimes ? 32 : 20}
             >

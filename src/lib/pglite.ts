@@ -1,7 +1,10 @@
 import { ShapeStream, Shape } from "@electric-sql/client";
 import { PGlite } from "@electric-sql/pglite";
 import { live } from "@electric-sql/pglite/live";
-import { electricSync } from "@electric-sql/pglite-sync";
+import {
+  electricSync,
+  type SyncShapesToTablesResult,
+} from "@electric-sql/pglite-sync";
 import { PUBLIC_APP_ROUTE } from "$env/static/public";
 import localsql from "./local.sql?raw";
 import type { Session, Time } from "$lib/types";
@@ -18,67 +21,82 @@ export const pg = await PGlite.create({
 
 await pg.exec(localsql);
 
-await pg.electric.syncShapesToTables({
-  shapes: {
-    times: {
-      shape: {
-        url: `${PUBLIC_APP_ROUTE}/api/sync`,
-        params: {
-          table: "times",
+let sync: SyncShapesToTablesResult;
+
+export async function initSync() {
+  sync = await pg.electric.syncShapesToTables({
+    shapes: {
+      times: {
+        shape: {
+          url: `${PUBLIC_APP_ROUTE}/api/sync`,
+          params: {
+            table: "times",
+          },
         },
+        table: "times",
+        primaryKey: ["id"],
       },
-      table: "times",
-      primaryKey: ["id"],
-    },
-    sessions: {
-      shape: {
-        url: `${PUBLIC_APP_ROUTE}/api/sync`,
-        params: {
-          table: "sessions",
+      sessions: {
+        shape: {
+          url: `${PUBLIC_APP_ROUTE}/api/sync`,
+          params: {
+            table: "sessions",
+          },
         },
+        table: "sessions",
+        primaryKey: ["id"],
       },
-      table: "sessions",
-      primaryKey: ["id"],
     },
-  },
-  key: "sync",
-});
+    key: "sync",
+  });
+}
+
+export async function closeSync() {
+  if (sync) {
+    await sync.unsubscribe();
+  }
+}
+
+initSync();
 
 // Session Outward Sync
 pg.live.query("SELECT * FROM sessions WHERE state = 1", [], async (data) => {
   const sessions = data.rows as Session[];
 
-  for (let i = 0; i < sessions.length; i++) {
-    try {
-      // try syncing
-      const res = await fetch(`api/sessions`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(sessions[i]),
-      });
+  // if no sessions, return
+  if (sessions.length === 0) {
+    return;
+  }
 
-      console.log(res);
+  try {
+    // try syncing
+    const res = await fetch(`api/sessions`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(sessions),
+    });
 
-      // mark sent
-      await pg.query("UPDATE sessions SET state = 2 WHERE id = $1", [
-        sessions[i].id,
-      ]);
+    console.log(res);
 
-      if (res?.status !== 200) {
-        throw new Error("Failed to sync");
-      } else {
-        // retry failed syncs
-        await pg.query("UPDATE sessions SET state = 1 WHERE state = 3");
-      }
-    } catch (err) {
-      console.warn(err);
-      // mark failed syncs
-      await pg.query("UPDATE sessions SET state = 3 WHERE id = $1", [
-        sessions[i].id,
-      ]);
+    // mark sent
+    await pg.query("UPDATE sessions SET state = 2 WHERE id = ANY($1)", [
+      sessions.map((s) => s.id),
+    ]);
+
+    if (res?.status !== 200) {
+      throw new Error("Failed to sync");
+    } else {
+      // retry failed syncs
+      await pg.query("UPDATE sessions SET state = 1 WHERE state = 3");
     }
+  } catch (err) {
+    console.warn(err);
+    // mark failed syncs
+    await pg.query("UPDATE sessions SET state = 3 WHERE id = ANY($1)", [
+      sessions.map((s) => s.id),
+    ]);
   }
 });
 
@@ -86,30 +104,37 @@ pg.live.query("SELECT * FROM sessions WHERE state = 1", [], async (data) => {
 pg.live.query("SELECT * FROM times WHERE state = 1", [], async (data) => {
   const times = data.rows as Time[];
 
-  for (let i = 0; i < times.length; i++) {
-    try {
-      // try syncing
-      const res = await fetch(`api/times`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(times[i]),
-      });
+  // if no times, return#
+  if (times.length === 0) {
+    return;
+  }
 
-      // mark sent
-      await pg.query("UPDATE times SET state = 2 WHERE id = $1", [times[i].id]);
+  try {
+    // try syncing
+    const res = await fetch(`api/times`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(times),
+    });
 
-      if (res?.status !== 200) {
-        throw new Error("Failed to sync");
-      } else {
-        // retry failed syncs
-        await pg.query("UPDATE times SET state = 1 WHERE state = 3");
-      }
-    } catch (err) {
-      console.warn(err);
-      // mark failed syncs
-      await pg.query("UPDATE times SET state = 3 WHERE id = $1", [times[i].id]);
+    // mark sent
+    await pg.query("UPDATE times SET state = 2 WHERE id = ANY($1)", [
+      times.map((t) => t.id),
+    ]);
+
+    if (res?.status !== 200) {
+      throw new Error("Failed to sync");
+    } else {
+      // retry failed syncs
+      await pg.query("UPDATE times SET state = 1 WHERE state = 3");
     }
+  } catch (err) {
+    console.warn(err);
+    // mark failed syncs
+    await pg.query("UPDATE times SET state = 3 WHERE id = ANY($1)", [
+      times.map((t) => t.id),
+    ]);
   }
 });
