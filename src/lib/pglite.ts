@@ -1,5 +1,9 @@
 import { ShapeStream, Shape } from "@electric-sql/client";
-import { PGlite } from "@electric-sql/pglite";
+import {
+  PGlite,
+  type Extensions,
+  type PGliteOptions,
+} from "@electric-sql/pglite";
 import { live } from "@electric-sql/pglite/live";
 import {
   electricSync,
@@ -9,15 +13,22 @@ import { PUBLIC_APP_ROUTE } from "$env/static/public";
 import localsql from "./local.sql?raw";
 import type { Session, Time } from "$lib/types";
 import { getUUID } from "$lib/utils";
+import { PGliteWorker } from "@electric-sql/pglite/worker";
 
-export const pg = await PGlite.create({
-  dataDir: "idb://scramblr",
-  relaxedDurability: true,
-  extensions: {
-    electric: electricSync(),
-    live,
-  },
-});
+export const pg = await PGliteWorker.create(
+  new Worker(new URL("./pglite-worker.js", import.meta.url), {
+    type: "module",
+  }),
+  {
+    dataDir: "idb://scramblr",
+    relaxedDurability: true,
+    initialMemory: 256 * 1024 * 1024, // 256MB
+    extensions: {
+      electric: electricSync(),
+      live,
+    },
+  }
+);
 
 await pg.exec(localsql);
 
@@ -48,6 +59,7 @@ export async function initSync() {
       },
     },
     key: "sync",
+    useCopy: true,
   });
 }
 

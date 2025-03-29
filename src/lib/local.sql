@@ -113,4 +113,5 @@ BEFORE INSERT ON times
 FOR EACH ROW
 EXECUTE FUNCTION upsert_time();
 
-
+DROP INDEX IF EXISTS idx_times_active;
+CREATE INDEX idx_times_active ON times (session_id, timestamp, archived) INCLUDE (id, time, penalty);

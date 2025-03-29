@@ -61,10 +61,6 @@
     time_popup.openTimePopup(id, index);
   }
 
-  pg.live.query("SELECT * FROM times", [], (data) => {
-    console.log("data", data);
-  });
-
   onMount(async () => {
     await new_scramble();
     if (!browser) return;
