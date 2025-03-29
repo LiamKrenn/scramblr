@@ -32,7 +32,7 @@ services:
     depends_on:
       - postgres
 
-  app:
+  frontend:
     build: .
     ports:
       - "52523:52523"
