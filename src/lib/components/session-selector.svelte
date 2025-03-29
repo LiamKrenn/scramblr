@@ -25,10 +25,10 @@
       display_name = res.name;
       session_id = res.id;
     } else {
-      let first_session = $sessions[0];
-      $currentSession = first_session.id;
-      display_name = first_session.name;
-      session_id = first_session.id;
+      // let first_session = $sessions[0];
+      // $currentSession = first_session.id;
+      // display_name = first_session.name;
+      // session_id = first_session.id;
     }
   }
 
@@ -42,6 +42,7 @@
 
   onMount(async () => {
     await pg.waitReady;
+    if ($currentSession === "undefined") return;
     setToSession($currentSession);
   });
 </script>

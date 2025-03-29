@@ -20,7 +20,7 @@
   import { currentSession, sessions, times, token, user } from "$lib/stores";
   import { type Time } from "$lib/types";
   import { createTime } from "$lib/db";
-  import { pg } from "$lib/pglite";
+  import { initSync, pg } from "$lib/pglite";
 
   interface Props {
     data: PageData;
@@ -45,7 +45,9 @@
       timestamp: new Date().toISOString().replace("T", " ").replace("Z", ""),
     };
 
-    await createTime(time_json);
+    let res = await createTime(time_json);
+
+    console.log(res);
 
     // fetching.set(true);
     // sync.createTime(time_json);
@@ -83,6 +85,9 @@
         // }
       }
     }
+
+    await pg.waitReady;
+    await initSync();
   });
 
   let listHeight = $state(100);
@@ -156,9 +161,9 @@
   //   }
   // });
 
-  function timeCallback(time: number) {
-    console.log("time", time);
+  async function timeCallback(time: number) {
     if (!$currentSession) return;
+    console.log("time", time);
 
     // triplit.insert("times", {
     //   time: time,
@@ -166,7 +171,7 @@
     //   session_id: $currentSession,
     //   user_id: data.user?.id ?? 1,
     // });
-    solve_done();
+    await solve_done();
   }
 </script>
 

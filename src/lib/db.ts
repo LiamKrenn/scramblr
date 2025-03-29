@@ -2,6 +2,7 @@ import { pg } from "./pglite";
 import { currentSession } from "./stores";
 import type { Session, Time } from "./types";
 import { getUUID } from "./utils";
+import bestao5 from "./queries/ao5.sql?raw";
 
 async function getHighestOrder(): Promise<number> {
   const res = await pg.query<{ max: number | null }>(
@@ -88,4 +89,10 @@ export async function resetAll() {
 
   await pg.query("DELETE FROM sessions");
   await pg.query("DELETE FROM times");
+}
+
+export async function getBestAo5(session_id: string) {
+  const res = await pg.query<Time>(bestao5, [session_id]);
+
+  return res.rows;
 }

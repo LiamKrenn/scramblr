@@ -35,6 +35,7 @@ await pg.exec(localsql);
 let sync: SyncShapesToTablesResult;
 
 export async function initSync() {
+  console.log("Initializing sync...");
   sync = await pg.electric.syncShapesToTables({
     shapes: {
       times: {
@@ -68,8 +69,6 @@ export async function closeSync() {
     await sync.unsubscribe();
   }
 }
-
-initSync();
 
 // Session Outward Sync
 pg.live.query("SELECT * FROM sessions WHERE state = 1", [], async (data) => {
