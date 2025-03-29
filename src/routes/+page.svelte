@@ -250,7 +250,7 @@
       >&nbsp;work.
     </p> -->
     <p class="relative flex text-balance rounded-lg bg-slate-800 px-2 py-1">
-      Note: Cloud storage is in development, but enabled. Expect data loss.
+      Note: Cloud storage is in development. Expect Bugs.
     </p>
   </div>
 
