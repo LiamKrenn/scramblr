@@ -19,6 +19,7 @@ export type Session = {
   name: string;
   order?: number;
   state?: number;
+  archived?: boolean;
 };
 
 export type Time = {
@@ -30,4 +31,5 @@ export type Time = {
   comment?: string | null;
   timestamp?: string | null;
   state?: number;
+  archived?: boolean;
 };

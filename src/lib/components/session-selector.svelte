@@ -8,6 +8,7 @@
   import { currentSession, sessions } from "$lib/stores";
   import { type Session } from "$lib/types";
   import { getSession } from "$lib/db";
+  import { pg } from "$lib/pglite";
   // import { getSessionWithId } from "$lib/api";
 
   let create_session: CreateSession | undefined = $state();
@@ -40,7 +41,8 @@
   });
 
   onMount(async () => {
-    // setToSession($session_id);
+    await pg.waitReady;
+    setToSession($currentSession);
   });
 </script>
 

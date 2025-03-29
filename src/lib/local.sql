@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS sessions (
   id UUID PRIMARY KEY,
   name VARCHAR(64) NOT NULL,
   "order" SMALLINT DEFAULT 0,
-  state SMALLINT DEFAULT 0
+  state SMALLINT DEFAULT 0,
+  archived BOOLEAN DEFAULT FALSE NOT NULL
 );
 
 -- create times
@@ -15,7 +16,8 @@ CREATE TABLE IF NOT EXISTS times (
   scramble VARCHAR(1024),
   comment VARCHAR(1024),
   timestamp TIMESTAMP,
-  state SMALLINT DEFAULT 0
+  state SMALLINT DEFAULT 0,
+  archived BOOLEAN DEFAULT FALSE NOT NULL
 );
 
 -- create trigger to set state to 1 if it was 0 before update

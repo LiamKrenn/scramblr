@@ -20,6 +20,7 @@
   import { currentSession, sessions, times, token, user } from "$lib/stores";
   import { type Time } from "$lib/types";
   import { createTime } from "$lib/db";
+  import { pg } from "$lib/pglite";
 
   interface Props {
     data: PageData;
@@ -59,6 +60,10 @@
   async function openTimePopup(id: Time, index: number) {
     time_popup.openTimePopup(id, index);
   }
+
+  pg.live.query("SELECT * FROM times", [], (data) => {
+    console.log("data", data);
+  });
 
   onMount(async () => {
     await new_scramble();

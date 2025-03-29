@@ -11,9 +11,13 @@ export const sessions: Writable<Session[]> = writable([]);
 
 export const currentSession = persisted<string>("currentSession", "undefined");
 
-const session_query = pg.live.query("SELECT * FROM sessions", [], (data) => {
-  sessions.set(data.rows as Session[]);
-});
+const session_query = pg.live.query(
+  'SELECT * FROM sessions WHERE archived = false ORDER BY "order"',
+  [],
+  (data) => {
+    sessions.set(data.rows as Session[]);
+  }
+);
 
 let time_query;
 
@@ -25,7 +29,7 @@ currentSession.subscribe(async (session) => {
   }
 
   time_query = pg.live.query(
-    "SELECT * FROM times WHERE session_id = $1 ORDER BY timestamp DESC",
+    "SELECT * FROM times WHERE session_id = $1 AND archived = false ORDER BY timestamp DESC",
     [session],
     (data) => {
       times.set(data.rows as Time[]);

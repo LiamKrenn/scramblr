@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS times (
   scramble VARCHAR(1024),
   comment VARCHAR(1024),
   timestamp TIMESTAMP,
-  state SMALLINT DEFAULT 0
+  state SMALLINT DEFAULT 0,
+  archived BOOLEAN DEFAULT FALSE NOT NULL
 );
 
 

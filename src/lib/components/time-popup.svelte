@@ -4,6 +4,7 @@
   import * as Drawer from "$lib/components/ui/drawer/index.js";
   import TimePopupContent from "./time-popup-content.svelte";
   import type { Time } from "$lib/types";
+  import { deleteTime } from "$lib/db";
 
   let open = $state(false);
   const isDesktop = mediaQuery("(min-width: 768px)");
@@ -19,8 +20,8 @@
     open = true;
   }
 
-  async function deleteTime(id: string) {
-    // sync.deleteTime(id);
+  async function deleteTimeClick(id: string) {
+    await deleteTime(id);
     open = false;
   }
 
@@ -34,7 +35,7 @@
     <Dialog.Trigger></Dialog.Trigger>
     <Dialog.Content class="p-0 sm:max-w-[425px]">
       {#if time != undefined}
-        <TimePopupContent {time} {deleteTime} {close} {index} />
+        <TimePopupContent {time} {deleteTimeClick} {close} {index} />
       {/if}
     </Dialog.Content>
   </Dialog.Root>
@@ -43,7 +44,7 @@
     <Drawer.Trigger class="absolute"></Drawer.Trigger>
     <Drawer.Content class="">
       {#if time != undefined}
-        <TimePopupContent {time} {deleteTime} {close} {index} />
+        <TimePopupContent {time} {deleteTimeClick} {close} {index} />
       {/if}
     </Drawer.Content>
   </Drawer.Root>

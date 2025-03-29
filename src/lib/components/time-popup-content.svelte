@@ -7,11 +7,11 @@
   interface Props {
     time: Time;
     index: number;
-    deleteTime: (id: string) => void;
+    deleteTimeClick: (id: string) => void;
     close: () => void;
   }
 
-  let { time, index, deleteTime, close }: Props = $props();
+  let { time, index, deleteTimeClick, close }: Props = $props();
 </script>
 
 <div class="p-4">
@@ -19,7 +19,7 @@
   <p class="my-2 text-4xl">{timeToFormattedString(time.time, 3)}</p>
   <Button
     onclick={() => {
-      deleteTime(time.id);
+      deleteTimeClick(time.id);
     }}
     variant="destructive"
     class="absolute right-4 top-4 mb-1"

@@ -34,12 +34,14 @@ export const PUT: RequestHandler = async (event) => {
     timestamp: payload_session.timestamp,
     state: 2,
     user_id: user.id,
+    archived: payload_session.archived,
   };
 
   if (existing_time) {
     try {
       await db.query(
-        `UPDATE times SET session_id = $1, time = $2, penalty = $3, scramble = $4, comment = $5, timestamp = $6, state = $7 WHERE id = $8 AND user_id = $9`,
+        `UPDATE times SET session_id = $1, time = $2, penalty = $3, scramble = $4, comment = $5, timestamp = $6, state = $7, archived = $8
+          WHERE id = $9 AND user_id = $10`,
         [
           new_session.session_id,
           new_session.time,
@@ -48,6 +50,7 @@ export const PUT: RequestHandler = async (event) => {
           new_session.comment,
           new_session.timestamp,
           2,
+          new_session.archived,
           new_session.id,
           user.id,
         ]
@@ -60,7 +63,8 @@ export const PUT: RequestHandler = async (event) => {
   } else {
     try {
       await db.query(
-        `INSERT INTO times (id, session_id, time, penalty, scramble, comment, timestamp, state, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+        `INSERT INTO times (id, session_id, time, penalty, scramble, comment, timestamp, state, user_id, archived) VALUES
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
         [
           new_session.id,
           new_session.session_id,
@@ -71,6 +75,7 @@ export const PUT: RequestHandler = async (event) => {
           new_session.timestamp,
           2,
           user.id,
+          new_session.archived,
         ]
       );
     } catch (err) {

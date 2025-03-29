@@ -21,9 +21,9 @@ export const GET: RequestHandler = async (req) => {
   let columns = "";
   const table = originUrl.searchParams.get("table");
   if (table == "times") {
-    columns = `id,session_id,time,penalty,scramble,comment,timestamp,state`;
+    columns = `id,session_id,time,penalty,scramble,comment,timestamp,state,archived`;
   } else if (table == "sessions") {
-    columns = `id,name,"order",state`;
+    columns = `id,name,"order",state,archived`;
   }
 
   originUrl.searchParams.set(`columns`, columns);
