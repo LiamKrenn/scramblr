@@ -41,6 +41,3 @@ services:
     depends_on:
       - postgres
       - electric
-
-volumes:
-  postgres_data: 
