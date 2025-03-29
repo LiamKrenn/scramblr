@@ -26,17 +26,32 @@ export const pg = await PGlite.create({
 
 await pg.exec(localsql);
 
-await pg.electric.syncShapeToTable({
-  shape: {
-    url: `${PUBLIC_APP_ROUTE}/api/sync`,
-    params: {
+await pg.electric.syncShapesToTables({
+  shapes: {
+    times: {
+      shape: {
+        url: `${PUBLIC_APP_ROUTE}/api/sync`,
+        params: {
+          table: "times",
+          // experimental_compaction: 'true'
+        },
+      },
       table: "times",
-      // experimental_compaction: 'true'
+      primaryKey: ["id"],
+    },
+    sessions: {
+      shape: {
+        url: `${PUBLIC_APP_ROUTE}/api/sync`,
+        params: {
+          table: "sessions",
+          // experimental_compaction: 'true'
+        },
+      },
+      table: "sessions",
+      primaryKey: ["id"],
     },
   },
-  table: "times",
-  primaryKey: ["id"],
-  shapeKey: "times",
+  key: "sync",
 });
 
 // pg.live.query("SELECT * FROM foo WHERE state = 1", [], async (data) => {

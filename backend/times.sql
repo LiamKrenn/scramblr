@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS times (
-  id UUID PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id UUID NOT NULL,
   time INTEGER NOT NULL,
   user_id INTEGER NOT NULL,

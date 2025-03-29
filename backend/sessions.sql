@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS sessions (
-  id UUID PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id INTEGER NOT NULL,
   name VARCHAR(64),
   "order" SMALLINT DEFAULT 0,
