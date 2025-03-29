@@ -77,15 +77,6 @@
             </p>
           </DropdownMenu.RadioItem>
         {/each}
-        <DropdownMenu.RadioItem
-          onclick={() => {
-            open = !open;
-          }}
-          value={"undefined"}
-          class="cursor-pointer select-none mr-1 w-48"
-        >
-          <p class="overflow-hidden overflow-ellipsis">None</p>
-        </DropdownMenu.RadioItem>
       </ScrollArea>
       <DropdownMenu.Separator />
       <DropdownMenu.Item
