@@ -25,3 +25,8 @@ CREATE TRIGGER after_update_set_synced_true
 AFTER UPDATE ON sessions
 FOR EACH ROW
 EXECUTE FUNCTION set_sessions_state_to_synced();
+
+CREATE TRIGGER after_create_set_synced_true
+AFTER INSERT ON sessions
+FOR EACH ROW
+EXECUTE FUNCTION set_sessions_state_to_synced();

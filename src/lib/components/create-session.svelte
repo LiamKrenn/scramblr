@@ -8,7 +8,6 @@
   import CreateSessionContent from "./create-session-content.svelte";
   import { disable_key_tracking } from "$lib/utils";
   import { type } from "$lib/scramble";
-  import { type Session } from "../../../triplit/schema";
   import { user } from "$lib/stores";
 
   let open = writable(false);

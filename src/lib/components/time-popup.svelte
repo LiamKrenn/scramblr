@@ -3,7 +3,7 @@
   import * as Dialog from "$lib/components/ui/dialog/index.js";
   import * as Drawer from "$lib/components/ui/drawer/index.js";
   import TimePopupContent from "./time-popup-content.svelte";
-  import type { Time } from "../../../triplit/schema";
+  import type { Time } from "$lib/types";
 
   let open = $state(false);
   const isDesktop = mediaQuery("(min-width: 768px)");

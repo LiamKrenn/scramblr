@@ -29,3 +29,9 @@ CREATE TRIGGER after_update_set_synced_true
 AFTER UPDATE ON times
 FOR EACH ROW
 EXECUTE FUNCTION set_times_state_to_synced();
+
+CREATE TRIGGER after_create_set_synced_true
+AFTER INSERT ON times
+FOR EACH ROW
+EXECUTE FUNCTION set_times_state_to_synced();
+

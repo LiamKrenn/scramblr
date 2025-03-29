@@ -6,8 +6,9 @@
   import ScrollArea from "./ui/scroll-area/scroll-area.svelte";
   import CreateSession from "./create-session.svelte";
   import { currentSession, sessions } from "$lib/stores";
-  import { type Session } from "../../../triplit/schema";
-  import { getSessionWithId } from "$lib/api";
+  import { type Session } from "$lib/types";
+  import { getSession } from "$lib/db";
+  // import { getSessionWithId } from "$lib/api";
 
   let create_session: CreateSession | undefined = $state();
   let display_name: string = $state("Select Session");
@@ -16,9 +17,8 @@
   let session_id = "";
 
   async function setToSession(id: string) {
-    let res: Session | null = await getSessionWithId(id);
+    let res: Session | null = await getSession(id);
     console.log(res);
-
     if (res) {
       $currentSession = res.id;
       display_name = res.name;
@@ -32,8 +32,10 @@
   }
 
   currentSession.subscribe(async (value) => {
-    if (value) {
+    if (value !== "undefined") {
       await setToSession(value);
+    } else {
+      display_name = "None";
     }
   });
 
@@ -51,6 +53,7 @@
       class="z-20 2xl:h-8 h-6 select-none sm:px-2 p-1 2xl:text-base text-sm focus:border-slate-50 flex-shrink sm:max-w-52 max-w-32"
     >
       <div class="overflow-ellipsis overflow-hidden max-w-full font-normal">
+        <!-- {display_name} -->
         {display_name}
       </div>
     </Button>
@@ -72,6 +75,15 @@
             </p>
           </DropdownMenu.RadioItem>
         {/each}
+        <DropdownMenu.RadioItem
+          onclick={() => {
+            open = !open;
+          }}
+          value={"undefined"}
+          class="cursor-pointer select-none mr-1 w-48"
+        >
+          <p class="overflow-hidden overflow-ellipsis">None</p>
+        </DropdownMenu.RadioItem>
       </ScrollArea>
       <DropdownMenu.Separator />
       <DropdownMenu.Item

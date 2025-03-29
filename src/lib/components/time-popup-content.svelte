@@ -2,7 +2,7 @@
   import { timeToFormattedString } from "$lib/utils";
   import { CopyIcon, Trash } from "lucide-svelte";
   import Button from "./ui/button/button.svelte";
-  import type { Time } from "../../../triplit/schema";
+  import type { Time } from "$lib/types";
 
   interface Props {
     time: Time;
@@ -29,7 +29,9 @@
     Scramble: <span class="rounded bg-slate-800 px-1">{time.scramble}</span>
   </p>
   <p class="mb-1">Comment:</p>
-  <p class="mb-1">Solved on: {new Date(time.timestamp).toLocaleString()}</p>
+  <p class="mb-1">
+    Solved on: {new Date(time.timestamp || "").toLocaleString()}
+  </p>
   <div class="flex">
     <Button
       onclick={close}

@@ -3,7 +3,7 @@
 
   import Button from "$lib/components/ui/button/button.svelte";
   import Separator from "./ui/separator/separator.svelte";
-  import type { Time } from "../../../triplit/schema";
+  import type { Time } from "$lib/types";
 
   interface Props {
     time: Time;

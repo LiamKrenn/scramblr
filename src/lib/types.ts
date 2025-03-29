@@ -16,18 +16,18 @@ type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 export type Session = {
   id: UUID;
-  name?: string | null;
+  name: string;
   order?: number;
   state?: number;
 };
 
 export type Time = {
   id: UUID;
-  session_id: UUID;
+  session_id: string;
   time: number;
   penalty?: number;
   scramble?: string | null;
   comment?: string | null;
-  timestamp?: Date | null;
+  timestamp?: string | null;
   state?: number;
 };

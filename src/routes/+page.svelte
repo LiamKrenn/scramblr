@@ -15,9 +15,11 @@
   import { RefreshCw } from "lucide-svelte";
   import VirtualList from "svelte5-tiny-virtual-list";
   import { mediaQuery } from "@sveltelegos-blue/svelte-legos";
-  import { timeToFormattedString } from "$lib/utils";
+  import { getUUID, timeToFormattedString } from "$lib/utils";
   import { browser } from "$app/environment";
   import { currentSession, sessions, times, token, user } from "$lib/stores";
+  import { type Time } from "$lib/types";
+  import { createTime } from "$lib/db";
 
   interface Props {
     data: PageData;
@@ -33,14 +35,17 @@
   let lowest_ao100 = $state(-1);
 
   async function solve_done() {
-    // let time_json: Time = {
-    //   id: "",
-    //   time: time,
-    //   scramble: $scramble,
-    //   session_id: get(session_id),
-    //   penalty: 0,
-    //   timestamp: Date.now(),
-    // };
+    let time_json: Time = {
+      id: getUUID(),
+      time: time,
+      scramble: $scramble,
+      session_id: $currentSession,
+      penalty: 0,
+      timestamp: new Date().toISOString().replace("T", " ").replace("Z", ""),
+    };
+
+    await createTime(time_json);
+
     // fetching.set(true);
     // sync.createTime(time_json);
     // time = 0;
@@ -51,37 +56,33 @@
 
   let time_popup: TimePopup;
 
-  // async function openTimePopup(id: Time, index: number) {
-  //   time_popup.openTimePopup(id, index);
-  // }
+  async function openTimePopup(id: Time, index: number) {
+    time_popup.openTimePopup(id, index);
+  }
 
-  // onMount(async () => {
-  //   await new_scramble();
-  //   if (!browser) return;
-  //   $user = data.user;
-  //   $token = data.token || null;
-  //   await triplit.endSession();
-  //   if ($token && $user) {
-  //     await triplit.startSession($token);
-
-  //     if ($currentSession === undefined) {
-  //       let ses = await triplit.fetch(triplit.query("sessions").build());
-
-  //       if (ses.length == 0) {
-  //         const res = await triplit.insert("sessions", {
-  //           order: 1,
-  //           name: "Default",
-  //           user_id: $user.id,
-  //           scramble_type: "333",
-  //         });
-  //         if (!res.output) return;
-  //         $currentSession = res.output.id;
-  //       } else {
-  //         $currentSession = ses[0].id;
-  //       }
-  //     }
-  //   }
-  // });
+  onMount(async () => {
+    await new_scramble();
+    if (!browser) return;
+    $user = data.user;
+    $token = data.token || null;
+    if ($token && $user) {
+      if ($currentSession === undefined) {
+        // let ses = await triplit.fetch(triplit.query("sessions").build());
+        // if (ses.length == 0) {
+        //   const res = await triplit.insert("sessions", {
+        //     order: 1,
+        //     name: "Default",
+        //     user_id: $user.id,
+        //     scramble_type: "333",
+        //   });
+        //   if (!res.output) return;
+        //   $currentSession = res.output.id;
+        // } else {
+        //   $currentSession = ses[0].id;
+        // }
+      }
+    }
+  });
 
   let listHeight = $state(100);
   const isDesktopTimes = mediaQuery("(min-width: 1436px)");
@@ -115,28 +116,6 @@
   function calc_ao100(index: number) {
     return calc_aon(index, 100, 5);
   }
-
-  // currentSession.subscribe((session) => {
-  //   const timeQuery = triplit.subscribe(
-  //     triplit
-  //       .query("times")
-  //       .where("session_id", "=", session || "")
-  //       .order("timestamp", "DESC")
-  //       .build(),
-  //     (results: Time[]) => {
-  //       console.log("Times: ", results);
-  //       $times = results;
-  //     },
-  //   );
-  // });
-
-  // const sessionsQuery = triplit.subscribe(
-  //   triplit.query("sessions").order("order", "DESC").build(),
-  //   (results: Session[]) => {
-  //     console.log("Sessions: ", results);
-  //     $sessions = results;
-  //   },
-  // );
 
   // let times = $derived(
   //   liveQuery(async () => {
@@ -301,7 +280,7 @@
           <!--  -->
           <div class="h-full" bind:clientHeight={listHeight}>
             <VirtualList
-              height="100%"
+              height="100"
               itemCount={$times.length}
               itemSize={$isDesktopTimes ? 32 : 20}
             >
@@ -349,20 +328,20 @@
                 </div>
               {/snippet}
               {#snippet children({ index, style })}
-                <!-- {#if $times[index]} -->
-                <div {style}>
-                  <!-- <TimeItem
-                    time={$times[index]}
-                    {openTimePopup}
-                    {index}
-                    time_count={$times.length}
-                    ao5={calc_ao5(index)}
-                    ao12={calc_ao12(index)}
-                    ao100={calc_ao100(index)}
-                  /> -->
-                  <Separator />
-                </div>
-                <!-- {/if} -->
+                {#if $times[index]}
+                  <div {style}>
+                    <TimeItem
+                      time={$times[index]}
+                      {openTimePopup}
+                      {index}
+                      time_count={$times.length}
+                      ao5={calc_ao5(index)}
+                      ao12={calc_ao12(index)}
+                      ao100={calc_ao100(index)}
+                    />
+                    <Separator />
+                  </div>
+                {/if}
               {/snippet}
               {#snippet footer()}
                 <div></div>
