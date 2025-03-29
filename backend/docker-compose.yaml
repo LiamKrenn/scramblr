@@ -2,7 +2,7 @@ version: "3.3"
 name: "electric_quickstart"
 
 services:
-  postgres:
+  scramblr_postgres:
     image: postgres:16-alpine
     env_file:
       - .env
@@ -13,7 +13,7 @@ services:
     ports:
       - 55432:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Use a named volume for persistence
+      - scramblr_postgres_data:/var/lib/postgresql/data  # Use a named volume for persistence
     command:
       - -c
       - listen_addresses=*
@@ -25,12 +25,12 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/electric?sslmode=disable
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@scramblr_postgres:5432/electric?sslmode=disable
       ELECTRIC_SECRET: ${ELECTRIC_SECRET}
     ports:
       - "3100:3000"
     depends_on:
-      - postgres
+      - scramblr_postgres
 
 volumes:
-  postgres_data: 
+  scramblr_postgres_data: 
