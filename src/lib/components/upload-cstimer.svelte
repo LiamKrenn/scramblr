@@ -4,6 +4,12 @@
   import Progress from "./ui/progress/progress.svelte";
   import type { Session, Time } from "$lib/types";
   import { getUUID } from "$lib/utils";
+  import {
+    createSession,
+    createSessionWithSession,
+    createTime,
+    resetAll,
+  } from "$lib/db";
 
   let done = $state(false);
 
@@ -32,9 +38,9 @@
       time_count += session_keys.length;
       time_count -= 100;
 
-      // resed idb
-      // sync.deleteAllSessions();
-      // sync.deleteAllTimes();
+      // resed db
+      resetAll();
+      // TODO: reset local?
 
       let session_id_map: { [cs_id: string]: string } = {};
 
@@ -72,14 +78,18 @@
         }
 
         let new_session: Session = {
-          id: "0",
+          id: getUUID(),
           name: cs_session_props.name,
           order: cs_session_props.rank,
-          scramble_type: srcType,
+          archived: false,
         };
 
-        // let session_uuid = await sync.createSession(new_session);
-        // session_id_map[cs_session_id] = session_uuid;
+        createSessionWithSession({
+          id: new_session.id,
+          name: new_session.name,
+          order: new_session.order || 0,
+        });
+        session_id_map[cs_session_id] = new_session.id;
         times_processed++;
       }
 
@@ -87,22 +97,39 @@
       for (let key of session_keys) {
         let session = cstimer_json[key];
         let session_id = key.split("session")[1];
+
+        let bulk_times: Time[] = [];
+
         for (let time of session) {
           // TODO: Multi-Phase Timer
           let c_time = time[0][1];
 
           let new_time: Time = {
-            id: "0",
+            id: getUUID(),
             time: c_time,
             session_id: session_id_map[session_id],
             scramble: time[1],
             comment: time[2],
-            timestamp: time[3] * 1000,
+            timestamp: new Date(time[3])
+              .toISOString()
+              .replace("T", " ")
+              .replace("Z", ""),
             penalty: time[0][0],
-            archived: false,
           };
 
-          // await sync.createTime(new_time);
+          createTime(new_time);
+
+          // await triplit.insert('times', new_time);
+
+          // bulk_times.push(new_time);
+          // if (bulk_times.length >= 100) {
+          //   console.log("bulk insert", bulk_times);
+          //   let res = await triplit.http.bulkInsert({ times: bulk_times });
+
+          //   console.log(res);
+
+          //   bulk_times = [];
+          // }
 
           times_processed++;
           // global_time_count++;
@@ -119,6 +146,8 @@
           // }
           //}
         }
+        // triplit.http.bulkInsert({ times: bulk_times });
+        bulk_times = [];
       }
 
       done = true;
