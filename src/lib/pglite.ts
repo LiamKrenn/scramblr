@@ -24,7 +24,9 @@ export const pg = await PGliteWorker.create(
     relaxedDurability: true,
     initialMemory: 256 * 1024 * 1024, // 256MB
     extensions: {
-      electric: electricSync(),
+      electric: electricSync({
+        // debug: true,
+      }),
       live,
     },
   }
@@ -40,9 +42,14 @@ export async function initSync() {
     shapes: {
       times: {
         shape: {
-          url: `${PUBLIC_APP_ROUTE}/api/sync`,
+          url: `${PUBLIC_APP_ROUTE}/api/sync?ts=${Date.now()}`,
           params: {
             table: "times",
+          },
+          headers: {
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            Pragma: "no-cache",
+            Expires: "Thu, 01 Jan 1970 00:00:00 GMT",
           },
         },
         table: "times",
@@ -50,9 +57,14 @@ export async function initSync() {
       },
       sessions: {
         shape: {
-          url: `${PUBLIC_APP_ROUTE}/api/sync`,
+          url: `${PUBLIC_APP_ROUTE}/api/sync?ts=${Date.now()}`,
           params: {
             table: "sessions",
+          },
+          headers: {
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            Pragma: "no-cache",
+            Expires: "Thu, 01 Jan 1970 00:00:00 GMT",
           },
         },
         table: "sessions",
@@ -81,10 +93,13 @@ pg.live.query("SELECT * FROM sessions WHERE state = 1", [], async (data) => {
 
   try {
     // try syncing
-    const res = await fetch(`api/sessions`, {
+    const res = await fetch(`api/sessions?ts=${Date.now()}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+        Expires: "Thu, 01 Jan 1970 00:00:00 GMT",
       },
       body: JSON.stringify(sessions),
     });
@@ -122,10 +137,13 @@ pg.live.query("SELECT * FROM times WHERE state = 1", [], async (data) => {
 
   try {
     // try syncing
-    const res = await fetch(`api/times`, {
+    const res = await fetch(`api/times?ts=${Date.now()}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+        Expires: "Thu, 01 Jan 1970 00:00:00 GMT",
       },
       body: JSON.stringify(times),
     });

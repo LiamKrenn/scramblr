@@ -8,6 +8,8 @@ export const GET: RequestHandler = async (req) => {
     return new Response(`Unauthorized`, { status: 401 });
   }
 
+  console.log(user.id);
+
   const originUrl = new URL(`${ELECTRIC_URL}/v1/shape`);
 
   // Copy over the relevant query params that the Electric client adds

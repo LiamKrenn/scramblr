@@ -13,12 +13,14 @@ services:
     ports:
       - 55432:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - /home/liam/scramblr-data:/var/lib/postgresql/data
     command:
       - -c
       - listen_addresses=*
       - -c
       - wal_level=logical
+    networks:
+      - coolify
 
   electric:
     image: electricsql/electric
@@ -31,7 +33,12 @@ services:
       - "3100:3000"
     depends_on:
       - postgres
+    networks:
+      - coolify
 
 volumes:
   postgres_data: 
 
+networks:
+  coolify:
+    external: true
