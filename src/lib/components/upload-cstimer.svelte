@@ -36,7 +36,7 @@
       time_count -= 100;
 
       // resed db
-      await closeSync();
+      // await closeSync();
       await resetAll();
 
       let sessions: Session[] = [];
@@ -145,7 +145,7 @@
       }
 
       done = true;
-      await initSync();
+      // await initSync();
 
       // let times = await sync.getTimes();
       // let sessions = await sync.getSessions();

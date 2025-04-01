@@ -73,7 +73,16 @@ export async function initSync() {
     },
     key: "sync",
     useCopy: true,
+    // onInitialSync: async () => {
+    //   console.log("Initial sync complete");
+    // },
   });
+
+  // await pg.waitReady;
+  // console.log("pg ready");
+  // setInterval(async () => {
+  //   console.log("uptodate..", sync.isUpToDate);
+  // }, 1000); // every 10 seconds
 }
 
 export async function closeSync() {
